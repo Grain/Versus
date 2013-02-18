@@ -21,7 +21,7 @@ int main()
         }
 
         window.clear(sf::Color::White);
-        window.draw(game.get_sprite());
+        window.draw(game.getSprite());
         window.display();
     }
 

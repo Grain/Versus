@@ -87,3 +87,7 @@ sf::Sprite Game::initializeGrid(sf::Color left, sf::Color right)
     return sf::Sprite(grid.getTexture());  //memory leak?
 }
 
+void Game::update()
+{
+
+}

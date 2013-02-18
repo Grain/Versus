@@ -19,6 +19,7 @@ class Game
     private:
         //functions
         sf::Sprite initializeGrid(sf::Color left, sf::Color right);
+        void update();
 
         //vars
         sf::RenderTexture canvas;
