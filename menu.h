@@ -1,7 +1,6 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include <SFML/Graphics.hpp>
 #include <vector>
 #include "button.h"
 
@@ -11,9 +10,9 @@ class Menu      //Menu will be similar to Game, will have RenderTexture that eve
         Menu();
         virtual ~Menu();
 
-        vector<Button*> buttons;
+        std::vector<Button*> buttons;
 
-        void newButton(string, void*func())
+        void newButton(std::string, void*func());
         void addButton(Button*);
         void deleteButton(Button*);
         void clearButton();

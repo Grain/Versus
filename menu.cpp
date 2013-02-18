@@ -29,7 +29,7 @@ Menu::~Menu()
 /***************************************************************/
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
-void Menu::newButton(string text, void (*func)())
+void Menu::newButton(std::string text, void *func())
 {
     Button *btn = new Button();
     btn->setWidth(100);
@@ -44,10 +44,9 @@ void Menu::addButton(Button*b)
 
 void Menu::deleteButton(Button*b)
 {
-    int i;
-    for (i = 0; i < buttons.size(); i++)
+    for (uint i = 0; i < buttons.size(); i++)
     {
-        if (&buttons[i] == b)
+        if (buttons[i] == b)
         {
             delete buttons[i];
             buttons.erase(buttons.begin()+i);
@@ -55,7 +54,7 @@ void Menu::deleteButton(Button*b)
     }
 }
 
-void Menu::clearButtons()
+void Menu::clearButton()
 {
     while (buttons.size() > 0)
     {
