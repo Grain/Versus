@@ -29,3 +29,34 @@ Menu::~Menu()
 /***************************************************************/
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
+Menu::newButton(string text, void (*func)())
+{
+    Button *btn = new Button();
+    btn->setWidth(100);
+    btn->setHeight(50);
+    buttons.push_back(btn);
+}
+Menu::addButton(Button*b)
+{
+    buttons.push_back(b);
+}
+Menu::delButton(Button*b)
+{
+    int i;
+    for (i = 0; i < buttons.size(); i++)
+    {
+        if (&buttons[i] == b)
+        {
+            delete buttons[i];
+            buttons.erase(buttons.begin()+i);
+        }
+    }
+}
+Menu::clrButton()
+{
+    while (buttons.size() > 0)
+    {
+        delete buttons[0];
+        buttons.erase(buttons.begin()))
+    }
+}
