@@ -57,16 +57,19 @@ sf::Sprite Game::initializeGrid(sf::Color left, sf::Color right)
 
     sf::RectangleShape temp(sf::Vector2f(944, 411));
 
+    //left side background colour
     temp.setFillColor(left);
     temp.setSize(sf::Vector2f(boxDimensions * gridDimensions + gridDimensions + 1, boxDimensions * gridDimensions + gridDimensions + 1));
     temp.setPosition(0, 0);
     grid.draw(temp);
 
+    //right side background colour
     temp.setFillColor(right);
     temp.setSize(sf::Vector2f(boxDimensions * gridDimensions + gridDimensions + 1,boxDimensions * gridDimensions + gridDimensions + 1));
     temp.setPosition((gridDimensions + middle) * boxDimensions + gridDimensions + middle + 1, 0);
     grid.draw(temp);
 
+    //vertical lines
     int i;
     for(i = 0; i <= 2 * gridDimensions + middle; ++i)
     {
@@ -75,6 +78,7 @@ sf::Sprite Game::initializeGrid(sf::Color left, sf::Color right)
         temp.setPosition(i * (boxDimensions + 1), 0);
         grid.draw(temp);
     }
+    //horizontal lines
     for(i = 0; i <= gridDimensions; ++i)
     {
         temp.setFillColor(sf::Color::Black);

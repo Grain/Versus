@@ -1,5 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include "game.h"
+#include "global.h"
+
+Settings settings;
 
 int main()
 {
