@@ -11,7 +11,7 @@ class Game
         Game();
         virtual ~Game();
         //getters
-        sf::Sprite get_sprite();
+        sf::Sprite getSprite();
         //setters
 
         //functions

@@ -3,26 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
-
-class Button
-{
-    int x,y, w,h;
-    sf::Color bgColor;
-    sf::Color fgColor;
-
-
-public:
-    Button();
-    virtual ~Button();
-
-    void setWidth(int);
-    void setHeight(int);
-    void setPos(int,int);
-
-    //function pointer
-    int *onClick();
-};
-
+#include "button.h"
 
 class Menu      //Menu will be similar to Game, will have RenderTexture that everything gets rendered on, then gets converted into sprite for drawing on the window
 {
@@ -34,9 +15,8 @@ class Menu      //Menu will be similar to Game, will have RenderTexture that eve
 
         void newButton(string, void*func())
         void addButton(Button*);
-        void delButton(Button*);
-        void clrButton();
-    protected:
+        void deleteButton(Button*);
+        void clearButton();
     private:
 };
 

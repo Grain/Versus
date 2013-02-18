@@ -29,7 +29,7 @@ Game::~Game()
 /*******************GETTERS*************************************/
 /***************************************************************/
 
-sf::Sprite Game::get_sprite()
+sf::Sprite Game::getSprite()
 {
     drawable.setTexture(canvas.getTexture());
     return drawable;
