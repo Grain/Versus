@@ -16,11 +16,20 @@ public:
     Button();
     virtual ~Button();
 
-    //setters
-    void setWidth(int i);
-    void setHeight(int i);
-    void setPos(int a, int b);
+    //getters
+    inline int getWidth();
+    inline int getHeight();
+    inline int getTop();
+    inline int getLeft();
+    inline int getRight();
+    inline int getBottom();
 
+    //setters
+    void setWidth(int);
+    void setHeight(int);
+    void setDim(int,int);
+    void setPos(int, int);
+    void setColor(sf::Color, sf::Color);
 };
 
 #endif // BUTTON_H
