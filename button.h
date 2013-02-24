@@ -3,6 +3,10 @@
 
 #include <SFML/Graphics.hpp>
 
+/**      Warning:      **/
+/** Should be declared **/
+/**    using 'new'     **/
+
 class Button
 {
 private:
@@ -10,8 +14,7 @@ private:
     int x, y, w, h;
     sf::Color bgColor;
     sf::Color fgColor;
-    //function pointer
-    void *onClick();     //can you make it so a click = mouseDown on button then mouseUp on button
+
 public:
     Button();
     virtual ~Button();
@@ -30,6 +33,12 @@ public:
     void setDim(int,int);
     void setPos(int, int);
     void setColor(sf::Color, sf::Color);
+
+    //functions
+    bool contains(sf::Vector2i); //checks if a point is located inside the object
+
+    //function pointer
+    void *onClick();     //can you make it so a click = mouseDown on button then mouseUp on button
 };
 
 #endif // BUTTON_H

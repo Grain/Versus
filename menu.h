@@ -16,6 +16,8 @@ class Menu      //Menu will be similar to Game, will have RenderTexture that eve
         void addButton(Button*);
         void deleteButton(Button*);
         void clearButton();
+
+        void update(sf::Vector2i);
     private:
 };
 

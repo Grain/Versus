@@ -1,4 +1,9 @@
 #include "menu.h"
+#include <SFML/Window.hpp>
+
+#define forbtn(i) for (uint i = 0; i < buttons.size(); i++)
+
+
 
 /***************************************************************/
 /*******************CONSTRUCTORS********************************/
@@ -61,4 +66,18 @@ void Menu::clearButton()
         delete buttons[0];
         buttons.erase(buttons.begin());
     }
+}
+
+
+
+void Menu::update(sf::Vector2i mpos)
+{
+    forbtn(i)
+    {
+        if (buttons[i]->contains(mpos))
+        {
+            //buttons[i]->onClick(); //BUG: Undefined reference
+        }
+    }
+
 }

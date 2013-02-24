@@ -88,5 +88,11 @@ void Button::setColor(sf::Color fg, sf::Color bg)
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
 
-
+bool Button::contains(sf::Vector2i pos)
+{
+    if (pos.x < getLeft() || pos.x > getRight() ||
+        pos.y < getTop() || pos.y > getBottom() )
+    { return false; }
+    return true;
+}
 
