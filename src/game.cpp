@@ -6,13 +6,15 @@
 
 Game::Game()
 {
-    canvas.create(xRes, yRes);
+    size = {xRes, yRes};
+    position = {0, 0};
 
-    field = initializeGrid(sf::Color::Yellow, sf::Color::Green);    //temp
+    canvas.create(size.x, size.y);
+
+    field = initializeGrid(sf::Color::Yellow, sf::Color::Green);    //temp colours
     field.setPosition(40, 0);
 
     canvas.clear(sf::Color::Transparent);
-    canvas.draw(field);
     canvas.display();
 }
 
@@ -29,11 +31,6 @@ Game::~Game()
 /*******************GETTERS*************************************/
 /***************************************************************/
 
-sf::Sprite Game::getSprite()
-{
-    drawable.setTexture(canvas.getTexture());
-    return drawable;
-}
 
 /***************************************************************/
 /*******************SETTERS*************************************/

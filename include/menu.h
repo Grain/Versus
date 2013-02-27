@@ -2,16 +2,16 @@
 #define MENU_H
 
 #include <SFML/Graphics.hpp>
+#include "Drawable.h"
 #include "global.h"
 
-class Menu
+class Menu : public Drawable
 {
     public:
         //ctor/dtor
         Menu();
         virtual ~Menu();
         //getters
-        sf::Sprite getSprite();
         //setters
 
         //functions
@@ -21,8 +21,6 @@ class Menu
         //functions
 
         //vars
-        sf::RenderTexture canvas;
-        sf::Sprite drawable;
 };
 
 #endif // MENU_H

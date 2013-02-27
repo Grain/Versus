@@ -2,16 +2,16 @@
 #define GAME_H
 
 #include <SFML/Graphics.hpp>
+#include "Drawable.h"
 #include "global.h"
 
-class Game
+class Game : public Drawable
 {
     public:
         //ctor/dtor
         Game();
         virtual ~Game();
         //getters
-        sf::Sprite getSprite();
         //setters
 
         //functions
@@ -33,8 +33,6 @@ class Game
 
         //vars
         sf::Sprite field;
-        sf::RenderTexture canvas;
-        sf::Sprite drawable;
         KeyState prevLeft, prevRight;
 };
 

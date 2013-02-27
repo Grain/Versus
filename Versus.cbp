@@ -45,10 +45,12 @@
 			<Add option="-static" />
 			<Add directory="C:\SFML-2.0-rc\lib" />
 		</Linker>
+		<Unit filename="include\drawable.h" />
 		<Unit filename="include\game.h" />
 		<Unit filename="include\global.h" />
 		<Unit filename="include\menu.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src\drawable.cpp" />
 		<Unit filename="src\game.cpp" />
 		<Unit filename="src\menu.cpp" />
 		<Extensions>
