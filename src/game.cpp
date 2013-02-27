@@ -6,9 +6,9 @@
 
 Game::Game()
 {
-    canvas.create(1024, 576);   //const this in something global
+    canvas.create(xRes, yRes);
 
-    sf::Sprite field = initializeGrid(sf::Color::Yellow, sf::Color::Green);
+    field = initializeGrid(sf::Color::Yellow, sf::Color::Green);    //temp
     field.setPosition(40, 0);
 
     canvas.clear(sf::Color::Transparent);
@@ -43,6 +43,13 @@ sf::Sprite Game::getSprite()
 /***************************************************************/
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
+
+void Game::update(sf::Vector2i mousePos)
+{
+    canvas.clear(sf::Color::Transparent);
+    canvas.draw(field);
+    canvas.display();
+}
 
 sf::Sprite Game::initializeGrid(sf::Color left, sf::Color right)
 {
@@ -89,9 +96,4 @@ sf::Sprite Game::initializeGrid(sf::Color left, sf::Color right)
 
     grid.display();
     return sf::Sprite(grid.getTexture());  //memory leak?
-}
-
-void Game::update()
-{
-
 }

@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+
 #include "game.h"
 #include "global.h"
 
@@ -6,7 +8,7 @@ Settings settings;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1024, 576), "Pro", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(xRes, yRes), "Versus", sf::Style::Close);
     Game game;
 
     window.setFramerateLimit(30);
@@ -23,11 +25,12 @@ int main()
                 window.close();
         }
 
+        game.update(sf::Mouse::getPosition(window));
+
         window.clear(sf::Color::White);
         window.draw(game.getSprite());
         window.display();
     }
 
     return 0;
-
 }

@@ -15,6 +15,7 @@ class Game
         //setters
 
         //functions
+        void update(sf::Vector2i);
     protected:
     private:
         struct KeyState
@@ -28,10 +29,10 @@ class Game
         };
 
         //functions
-        sf::Sprite initializeGrid(sf::Color left, sf::Color right);
-        void update();
+        sf::Sprite initializeGrid(sf::Color, sf::Color);
 
         //vars
+        sf::Sprite field;
         sf::RenderTexture canvas;
         sf::Sprite drawable;
         KeyState prevLeft, prevRight;

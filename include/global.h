@@ -1,6 +1,8 @@
 #ifndef GLOBAL_H_INCLUDED
 #define GLOBAL_H_INCLUDED
 
+#include <cstdio>
+
 struct Keys
 {
     sf::Keyboard::Key left;
@@ -18,5 +20,7 @@ struct Settings
     bool enableMouseTwoPlayer;
 };
 
+const int xRes = 1024;
+const int yRes = 576;
 
 #endif // GLOBAL_H_INCLUDED
