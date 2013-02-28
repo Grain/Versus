@@ -49,10 +49,12 @@
 		<Unit filename="include\game.h" />
 		<Unit filename="include\global.h" />
 		<Unit filename="include\menu.h" />
+		<Unit filename="include\tower.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src\drawable.cpp" />
 		<Unit filename="src\game.cpp" />
 		<Unit filename="src\menu.cpp" />
+		<Unit filename="src\tower.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

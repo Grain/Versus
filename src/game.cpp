@@ -14,7 +14,11 @@ Game::Game()
     field = initializeGrid(sf::Color::Yellow, sf::Color::Green);    //temp colours
     field.setPosition(40, 0);
 
+    tower.setPosition({41, 42});
+
     canvas.clear(sf::Color::Transparent);
+    canvas.draw(field);
+    canvas.draw(tower.getSprite());
     canvas.display();
 }
 
@@ -43,8 +47,12 @@ Game::~Game()
 
 void Game::update(sf::Vector2i mousePos)
 {
+    tower.setRotation(tower.getRotation() + 5); //temp
+    tower.update();
+
     canvas.clear(sf::Color::Transparent);
     canvas.draw(field);
+    canvas.draw(tower.getSprite());
     canvas.display();
 }
 

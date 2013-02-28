@@ -1,20 +1,35 @@
-#include "drawable.h"
+#include "tower.h"
 
 /***************************************************************/
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Drawable::Drawable()
+Tower::Tower()
 {
-    size = {100, 100};
-    position = {0, 0};
+    size = {40, 40};
+    base.setSize({40, 40});
+    turret.setSize({40, 40});   //consts
+    turret.setOrigin(turret.getSize().x / 2, turret.getSize().y / 2);
+    turret.setPosition((float)base.getSize().y / (float)2, (float)base.getSize().y / (float)2);
+
+    canvas.create(size.x, size.y);
+
+    base.setFillColor(sf::Color::Blue); //temp, need pictures
+    turret.setFillColor(sf::Color::Red);
+
+    canvas.clear(sf::Color::Transparent);
+
+    canvas.draw(base);
+    canvas.draw(turret);
+
+    canvas.display();
 }
 
 /***************************************************************/
 /*******************DESTRUCTORS*********************************/
 /***************************************************************/
 
-Drawable::~Drawable()
+Tower::~Tower()
 {
     //dtor
 }
@@ -23,27 +38,30 @@ Drawable::~Drawable()
 /*******************GETTERS*************************************/
 /***************************************************************/
 
-sf::Sprite Drawable::getSprite()
+float Tower::getRotation()
 {
-    drawable.setPosition(position);
-    drawable.setTexture(canvas.getTexture());
-    return drawable;
-}
-
-sf::Vector2f Drawable::getPosition()
-{
-    return position;
+    return turret.getRotation();
 }
 
 /***************************************************************/
 /*******************SETTERS*************************************/
 /***************************************************************/
 
-void Drawable::setPosition(sf::Vector2f i)
+void Tower::setRotation(float i)
 {
-    position = i;
+    turret.setRotation(i);
 }
 
 /***************************************************************/
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
+
+void Tower::update()
+{
+    canvas.clear(sf::Color::Transparent);
+
+    canvas.draw(base);
+    canvas.draw(turret);
+
+    canvas.display();
+}

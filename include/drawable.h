@@ -11,8 +11,11 @@ class Drawable
         virtual ~Drawable();
         //getters
         sf::Sprite getSprite();
+        sf::Vector2i getSize();     //size getters/setters needed or no?
+        sf::Vector2f getPosition();
         //setters
-
+        void setSize(sf::Vector2i);
+        void setPosition(sf::Vector2f);
         //functions
     protected:
         sf::RenderTexture canvas;

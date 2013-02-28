@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Drawable.h"
 #include "global.h"
+#include "tower.h"
 
 class Game : public Drawable
 {
@@ -34,6 +35,7 @@ class Game : public Drawable
         //vars
         sf::Sprite field;
         KeyState prevLeft, prevRight;
+        Tower tower;
 };
 
 #endif // GAME_H
