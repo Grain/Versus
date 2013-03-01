@@ -12,7 +12,8 @@ Tower::Tower()
     turret.setOrigin(turret.getSize().x / 2, turret.getSize().y / 2);
     turret.setPosition((float)base.getSize().y / (float)2, (float)base.getSize().y / (float)2);
 
-    canvas.create(size.x, size.y);
+    if(!canvas.create(size.x, size.y))
+        printf("Error in creating tower\n");    //maybe output identification of tower?
 
     base.setFillColor(sf::Color::Blue); //temp, need pictures
     turret.setFillColor(sf::Color::Red);
@@ -43,6 +44,11 @@ float Tower::getRotation()
     return turret.getRotation();
 }
 
+sf::Vector2i Tower::getCoordinates()
+{
+    return coordinates;
+}
+
 /***************************************************************/
 /*******************SETTERS*************************************/
 /***************************************************************/
@@ -50,6 +56,13 @@ float Tower::getRotation()
 void Tower::setRotation(float i)
 {
     turret.setRotation(i);
+}
+
+void Tower::setCoordinates(sf::Vector2i i)
+{
+    const int gridSize = 41; //grid box + border
+    coordinates = i;
+    position = {(float)(gridSize + i.x * gridSize), (float)(1 + i.y * gridSize)};
 }
 
 /***************************************************************/

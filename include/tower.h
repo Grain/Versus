@@ -2,6 +2,7 @@
 #define TOWER_H
 
 #include <Drawable.h>
+#include "global.h"
 
 
 class Tower : public Drawable
@@ -11,8 +12,10 @@ class Tower : public Drawable
         virtual ~Tower();
         //getters
         float getRotation();
+        sf::Vector2i getCoordinates();
         //setters
         void setRotation(float);
+        void setCoordinates(sf::Vector2i);
         //functions
         void update();
     protected:
@@ -20,6 +23,7 @@ class Tower : public Drawable
         //vars
         sf::RectangleShape base;    //40x40 base
         sf::RectangleShape turret;  //40x40 turret, can spin around (use transparent image to make smaller visual turret)
+        sf::Vector2i coordinates;
 };
 
 #endif // TOWER_H

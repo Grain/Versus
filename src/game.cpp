@@ -9,12 +9,13 @@ Game::Game()
     size = {xRes, yRes};
     position = {0, 0};
 
-    canvas.create(size.x, size.y);
+    if(!canvas.create(size.x, size.y))
+        printf("Error in creating Game\n");
 
     field = initializeGrid(sf::Color::Yellow, sf::Color::Green);    //temp colours
     field.setPosition(40, 0);
 
-    tower.setPosition({41, 42});
+    tower.setCoordinates({15, 5});
 
     canvas.clear(sf::Color::Transparent);
     canvas.draw(field);
@@ -47,7 +48,7 @@ Game::~Game()
 
 void Game::update(sf::Vector2i mousePos)
 {
-    tower.setRotation(tower.getRotation() + 5); //temp
+    tower.setRotation(mousePos.x); //temp
     tower.update();
 
     canvas.clear(sf::Color::Transparent);
@@ -64,7 +65,8 @@ sf::Sprite Game::initializeGrid(sf::Color left, sf::Color right)
 
     static sf::RenderTexture grid;
 
-    grid.create(boxDimensions * (2 * gridDimensions + middle) + gridDimensions * 2 + middle + 1, boxDimensions * gridDimensions + gridDimensions + 1);  //TODO: check for error in creating?
+    if(!grid.create(boxDimensions * (2 * gridDimensions + middle) + gridDimensions * 2 + middle + 1, boxDimensions * gridDimensions + gridDimensions + 1))
+        printf("error in initializeGrid\n");
     grid.clear(sf::Color::Transparent);
 
     sf::RectangleShape temp(sf::Vector2f(944, 411));
