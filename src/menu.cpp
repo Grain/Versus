@@ -7,10 +7,7 @@
 
 Menu::Menu()
 {
-    size = {xRes, yRes};
-    position = {0, 0};
-
-    if(!canvas.create(size.x, size.y))
+    if(!canvas.create(xRes, yRes))
         printf("Error in creating tower\n");    //maybe identification of tower?
     canvas.clear(sf::Color::Transparent);
     canvas.display();

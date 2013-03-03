@@ -2,6 +2,7 @@
 #define GLOBAL_H_INCLUDED
 
 #include <cstdio>
+#include <SFML/Graphics.hpp>
 
 struct Keys
 {
@@ -19,6 +20,8 @@ struct Settings
     int effectVolume, musicVolume;
     bool enableMouseTwoPlayer;
 };
+
+sf::Vector2i gridPosition(sf::Vector2i);
 
 const int xRes = 1024;
 const int yRes = 576;

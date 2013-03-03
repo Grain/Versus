@@ -1,6 +1,8 @@
 #ifndef DRAWABLE_H
 #define DRAWABLE_H
 
+//only used for things that are drawn to a lot, since RenderTextures have high memory usage.
+
 #include <SFML/Graphics.hpp>
 
 class Drawable
@@ -11,18 +13,11 @@ class Drawable
         virtual ~Drawable();
         //getters
         sf::Sprite getSprite();
-        sf::Vector2i getSize();     //size getters/setters needed or no?
-        sf::Vector2f getPosition();
         //setters
-        void setSize(sf::Vector2i);
-        void setPosition(sf::Vector2f);
         //functions
     protected:
         sf::RenderTexture canvas;
         sf::Sprite drawable;
-
-        sf::Vector2i size;
-        sf::Vector2f position;  //maybe both vector2f?
     private:
 };
 
