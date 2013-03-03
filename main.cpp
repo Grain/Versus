@@ -3,15 +3,17 @@
 
 #include "game.h"
 #include "global.h"
+#include "menu.h"
 
 Settings settings;
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(xRes, yRes), "Versus", sf::Style::Close);
-    Game game;
+    //Game game; this may need to be moved
+    Menu menu;
 
-    window.setFramerateLimit(30);
+    window.setFramerateLimit(60);
 
     // run the program as long as the window is open
     while (window.isOpen())
@@ -25,10 +27,11 @@ int main()
                 window.close();
         }
 
-        game.update(sf::Mouse::getPosition(window));
+        //game.update(sf::Mouse::getPosition(window));
 
         window.clear(sf::Color::White);
-        window.draw(game.getSprite());
+        //window.draw(game.getSprite()); // this may need to be moved.
+        window.draw(menu.getSprite());
         window.display();
     }
 

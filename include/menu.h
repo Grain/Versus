@@ -19,8 +19,11 @@ class Menu : public Drawable
     protected:
     private:
         //functions
-
+        sf::Sprite initializeBtns();
+        sf::Sprite initializeMenu();
         //vars
+        sf::Sprite mainMenu;
+        sf::Sprite mainBtns;
 };
 
 #endif // MENU_H
