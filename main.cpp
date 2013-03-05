@@ -8,7 +8,7 @@ Settings settings;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(xRes, yRes), "Versus", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(XRES, YRES), "Versus", sf::Style::Close);
     Game game;
 
     window.setFramerateLimit(30);

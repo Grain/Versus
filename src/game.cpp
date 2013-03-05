@@ -6,7 +6,7 @@
 
 Game::Game()
 {
-    if(!canvas.create(xRes, yRes))
+    if(!canvas.create(XRES, YRES))
         printf("Error in creating Game\n");
 
     initializeGrid(sf::Color::Yellow, sf::Color::Green);    //temp colours
@@ -67,11 +67,7 @@ void Game::update(sf::Vector2i mousePos)
 
 void Game::initializeGrid(sf::Color left, sf::Color right)
 {
-    const int boxDimensions = 40;   //each box in the grid is 40x40, not including the lines
-    const int gridDimensions = 10;  //grid is 10x10 on each side
-    const int middle = 3;  //3 box wide in the middle
-
-    if(!gridTexture.create(boxDimensions * (2 * gridDimensions + middle) + gridDimensions * 2 + middle + 1, boxDimensions * gridDimensions + gridDimensions + 1))
+    if(!gridTexture.create(BOXDIMENSIONS * (2 * GRIDX + MIDDLE) + GRIDX * 2 + MIDDLE + 1, BOXDIMENSIONS * GRIDY + GRIDY + 1))
         printf("error in initializeGrid\n");
     gridTexture.clear(sf::Color::Transparent);
 
@@ -79,31 +75,31 @@ void Game::initializeGrid(sf::Color left, sf::Color right)
 
     //left side background colour
     temp.setFillColor(left);
-    temp.setSize({boxDimensions * gridDimensions + gridDimensions + 1, boxDimensions * gridDimensions + gridDimensions + 1});
+    temp.setSize({BOXDIMENSIONS * GRIDX + GRIDX + 1, BOXDIMENSIONS * GRIDY + GRIDY + 1});
     temp.setPosition(0, 0);
     gridTexture.draw(temp);
 
     //right side background colour
     temp.setFillColor(right);
-    temp.setSize({boxDimensions * gridDimensions + gridDimensions + 1,boxDimensions * gridDimensions + gridDimensions + 1});
-    temp.setPosition((gridDimensions + middle) * boxDimensions + gridDimensions + middle + 1, 0);
+    temp.setSize({BOXDIMENSIONS * GRIDX + GRIDX + 1, BOXDIMENSIONS * GRIDY + GRIDY + 1});
+    temp.setPosition((GRIDX + MIDDLE) * BOXDIMENSIONS + GRIDY + MIDDLE + 1, 0);
     gridTexture.draw(temp);
 
     //vertical lines
     int i;
-    for(i = 0; i <= 2 * gridDimensions + middle; ++i)
+    for(i = 0; i <= 2 * GRIDX + MIDDLE; ++i)
     {
         temp.setFillColor(sf::Color::Black);
-        temp.setSize({1, boxDimensions * gridDimensions + gridDimensions + 1});
-        temp.setPosition(i * (boxDimensions + 1), 0);
+        temp.setSize({1, BOXDIMENSIONS * GRIDY + GRIDY + 1});
+        temp.setPosition(i * (BOXDIMENSIONS + 1), 0);
         gridTexture.draw(temp);
     }
     //horizontal lines
-    for(i = 0; i <= gridDimensions; ++i)
+    for(i = 0; i <= GRIDY; ++i)
     {
         temp.setFillColor(sf::Color::Black);
-        temp.setSize({boxDimensions * (2 * gridDimensions + middle) + gridDimensions * 2 + middle + 1, 1});
-        temp.setPosition(0, i * (boxDimensions + 1));
+        temp.setSize({BOXDIMENSIONS * (2 * GRIDX + MIDDLE) + GRIDX * 2 + MIDDLE + 1, 1});
+        temp.setPosition(0, i * (BOXDIMENSIONS + 1));
         gridTexture.draw(temp);
     }
 
