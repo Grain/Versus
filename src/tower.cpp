@@ -4,26 +4,15 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Tower::Tower()
+Tower::Tower(sf::RenderTexture* a, sf::Sprite* b) : Entity(a, b)
 {
-    size = {40, 40};
-    base.setSize({40, 40});
-    turret.setSize({40, 40});   //consts
-    turret.setOrigin(turret.getSize().x / 2, turret.getSize().y / 2);
-    turret.setPosition((float)base.getSize().y / (float)2, (float)base.getSize().y / (float)2);
-
-    if(!canvas.create(size.x, size.y))
-        printf("Error in creating tower\n");    //maybe output identification of tower?
+    base.setSize((sf::Vector2f)Tower::getSize());
+    turret.setSize((sf::Vector2f)Tower::getSize());
+    turret.setOrigin(Tower::getSize().x / 2, Tower::getSize().y / 2);
+    turret.setPosition(Tower::getSize().y / 2, Tower::getSize().y / 2);
 
     base.setFillColor(sf::Color::Blue); //temp, need pictures
     turret.setFillColor(sf::Color::Red);
-
-    canvas.clear(sf::Color::Transparent);
-
-    canvas.draw(base);
-    canvas.draw(turret);
-
-    canvas.display();
 }
 
 /***************************************************************/
@@ -49,6 +38,11 @@ sf::Vector2i Tower::getCoordinates()
     return coordinates;
 }
 
+sf::Vector2i Tower::getSize()
+{
+    return {40, 40};
+}
+
 /***************************************************************/
 /*******************SETTERS*************************************/
 /***************************************************************/
@@ -71,10 +65,16 @@ void Tower::setCoordinates(sf::Vector2i i)
 
 void Tower::update()
 {
-    canvas.clear(sf::Color::Transparent);
 
-    canvas.draw(base);
-    canvas.draw(turret);
+}
 
-    canvas.display();
+void Tower::draw(sf::RenderTexture * target)
+{
+    canvas->clear(sf::Color::Transparent);
+    canvas->draw(base);
+    canvas->draw(turret);
+    canvas->display();
+    drawable->setPosition(position);
+    drawable->setTexture(canvas->getTexture());
+    target->draw(*drawable);
 }

@@ -1,9 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "Drawable.h"
+#include "drawable.h"
 #include "global.h"
 #include "tower.h"
+#include <vector>
 
 class Game : public Drawable
 {
@@ -29,12 +30,18 @@ class Game : public Drawable
         };
 
         //functions
-        sf::Sprite initializeGrid(sf::Color, sf::Color);
+        void initializeGrid(sf::Color, sf::Color);
+
+        //Sprites and RenderTextures
+        sf::Sprite gridSprite;          //grid
+        sf::RenderTexture gridTexture;
+
+        sf::Sprite towerSprite;         //tower
+        sf::RenderTexture towerTexture;
 
         //vars
-        sf::Sprite field;
         KeyState prevLeft, prevRight;
-        Tower tower;
+        std::vector<Tower*> towers;
 };
 
 #endif // GAME_H

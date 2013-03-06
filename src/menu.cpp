@@ -1,27 +1,18 @@
 #include "menu.h"
 
-
 /***************************************************************/
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
 Menu::Menu()
 {
-    size = {xRes, yRes};
-    position = {0, 0};
+    if(!canvas.create(XRES, YRES))
+        printf("Error in creating menu in state %i\n", menuState);
 
-    if(!canvas.create(size.x, size.y))
-        printf("Error in main menu\n");    //maybe identification of tower?
-
-    static sf::RenderTexture grid;
-
-    mainMenu = initializeMenu();
-    mainMenu.setPosition(0, 0);
-    mainBtns = initializeBtns();
+    initializeMenu();
 
     canvas.clear(sf::Color::Transparent);
-    canvas.draw(mainMenu);
-    canvas.draw(mainBtns);
+    canvas.draw(menuSprite);
     canvas.display();
 }
 
@@ -38,74 +29,100 @@ Menu::~Menu()
 /*******************GETTERS*************************************/
 /***************************************************************/
 
+int Menu::getState()
+{
+    return menuState;
+}
+
 /***************************************************************/
 /*******************SETTERS*************************************/
 /***************************************************************/
+
+void Menu::setState(int state)
+{
+    menuState = state;
+}
 
 /***************************************************************/
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
 
-sf::Sprite Menu::initializeMenu()
+/*******************PUBLIC FUNCTIONS****************************/
+bool test;
+void Menu::update(sf::Vector2i mousePos)
 {
-    static sf::RenderTexture grid;
-
-    if(!grid.create(xRes,yRes))
-        printf("error in initializeGrid\n");
-    grid.clear(sf::Color::Transparent);
-
-    sf::RectangleShape temp;
-
-    temp.setFillColor(sf::Color::Black);
-    temp.setSize(sf::Vector2f(xRes, yRes));
-    temp.setPosition(0, 0);
-
-    grid.draw(temp);
-    grid.display();
-    return sf::Sprite(grid.getTexture());  //memory leak?
+    if (!mousePos.x >= XRES - 131 && mousePos.x <= XRES - 65 && mousePos.y >= YRES - 120 && mousePos.y <= YRES - 90 && startBtnMO == true)
+    {
+        startBtn.setTexture(&startBtnTexture, true);
+        startBtnMO = false;
+        printf("redrawing menu\n");
+        redrawMenu();
+    }
+    else if (mousePos.x >= XRES - 131 && mousePos.x <= XRES - 65 && mousePos.y >= YRES - 120 && mousePos.y <= YRES - 90 && startBtnMO == false)
+    {
+        startBtn.setTexture(&startBtnMOTexture, true);
+        startBtnMO = true;
+        printf("redrawing menu (MO)\n");
+        redrawMenu();
+    }
 }
 
-sf::Sprite Menu::initializeBtns()
+/*******************PRIVATE FUNCTIONS***************************/
+
+void Menu::initializeMenu()
 {
-    static sf::RenderTexture grid;
+    setState(0); // main menu
 
-    if(!grid.create(xRes,yRes))
-        printf("error in initializeBtns\n");
-    grid.clear(sf::Color::Transparent);
+    if (!menuTexture.create(XRES, YRES))
+        printf("error initializing menu.\n");
 
-/*******************BUTTONS*************************************/
-
-    sf::Texture startBtnTexture, optionsBtnTexture, exitBtnTexture;
-    sf::RectangleShape startBtn, optionsBtn, exitBtn;
+    background.setFillColor(sf::Color::Black);
+    background.setSize(sf::Vector2f(XRES, YRES));
+    background.setPosition(0, 0);
 
     if (!startBtnTexture.loadFromFile("btnStart.png"))
         printf("error creating start button\n");
     startBtn.setTexture(&startBtnTexture);
     startBtn.setSize(sf::Vector2f(66, 30));
-    startBtn.setPosition(xRes - 131, yRes - 120);
-    grid.draw(startBtn);
+    startBtn.setPosition(XRES - 131, YRES - 120);
 
     if (!optionsBtnTexture.loadFromFile("btnOptions.png"))
         printf("error creating options button\n");
     optionsBtn.setTexture(&optionsBtnTexture);
     optionsBtn.setSize(sf::Vector2f(106, 30));
-    optionsBtn.setPosition(xRes - 131, yRes - 85);
-    grid.draw(optionsBtn);
+    optionsBtn.setPosition(XRES - 131, YRES - 85);
 
     if (!exitBtnTexture.loadFromFile("btnExit.png"))
         printf("error creating exit button\n");
     exitBtn.setTexture(&exitBtnTexture);
     exitBtn.setSize(sf::Vector2f(52, 30));
-    exitBtn.setPosition(xRes - 131, yRes - 50);
-    grid.draw(exitBtn);
+    exitBtn.setPosition(XRES - 131, YRES - 50);
 
-/***************************************************************/
+    if (!startBtnMOTexture.loadFromFile("btnMOStart.png"))
+        printf("error loading start button mouse over\n");
 
-    grid.display();
-    return sf::Sprite(grid.getTexture());  //memory leak?
+    redrawMenu();
 }
 
-void Menu::update(sf::Vector2i mousePos)
+void Menu::redrawMenu()
 {
+    menuTexture.clear(sf::Color::Transparent);
+    menuTexture.draw(background);
+    menuTexture.draw(startBtn);
+    menuTexture.draw(optionsBtn);
+    menuTexture.draw(exitBtn);
+    menuTexture.display();
+    menuSprite.setTexture(menuTexture.getTexture());
+}
 
+int Menu::checkClick(sf::Vector2i mousePos)
+{
+    if (!mousePos.x >= XRES - 131 && mousePos.x <= XRES - 65 && mousePos.y >= YRES - 120 && mousePos.y <= YRES - 90)
+    {
+        return -1;
+    }
+    else if (mousePos.x >= XRES - 131 && mousePos.x <= XRES - 65 && mousePos.y >= YRES - 120 && mousePos.y <= YRES - 90)
+    {
+        return 1;
+    }
 }

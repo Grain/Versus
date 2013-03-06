@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Versus_Debug" />
+		<Option title="Versus" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
@@ -30,6 +30,7 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-std=c++0x" />
 			<Add option="-Wall" />
 			<Add option="-g" />
 			<Add option="-fexceptions" />
@@ -46,13 +47,16 @@
 			<Add directory="C:/SFML-2.0-rc/lib" />
 		</Linker>
 		<Unit filename="include/drawable.h" />
+		<Unit filename="include/entity.h" />
 		<Unit filename="include/game.h" />
 		<Unit filename="include/global.h" />
 		<Unit filename="include/menu.h" />
 		<Unit filename="include/tower.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/drawable.cpp" />
+		<Unit filename="src/entity.cpp" />
 		<Unit filename="src/game.cpp" />
+		<Unit filename="src/global.cpp" />
 		<Unit filename="src/menu.cpp" />
 		<Unit filename="src/tower.cpp" />
 		<Extensions>

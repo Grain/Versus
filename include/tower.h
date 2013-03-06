@@ -1,23 +1,25 @@
 #ifndef TOWER_H
 #define TOWER_H
 
-#include <Drawable.h>
+#include "entity.h"
 #include "global.h"
 
 
-class Tower : public Drawable
+class Tower : public Entity
 {
     public:
-        Tower();
+        Tower(sf::RenderTexture*, sf::Sprite*);
         virtual ~Tower();
         //getters
         float getRotation();
         sf::Vector2i getCoordinates();
+        static sf::Vector2i getSize();
         //setters
         void setRotation(float);
         void setCoordinates(sf::Vector2i);
         //functions
         void update();
+        void draw(sf::RenderTexture*);
     protected:
     private:
         //vars
