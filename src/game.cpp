@@ -6,6 +6,14 @@
 
 Game::Game()
 {
+    for(int a = 0; a < GRIDX * 2 + MIDDLE; ++a)
+    {
+        for(int b = 0; b < GRIDY; ++b)
+        {
+            map[a][b] = false;
+        }
+    }
+
     if(!canvas.create(XRES, YRES))
         printf("Error in creating Game\n");
 
@@ -48,8 +56,7 @@ void Game::update(sf::Vector2i mousePos)
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        towers.push_back(new Tower(&towerTexture, &towerSprite));
-        towers[towers.size() - 1]->setCoordinates(gridPosition(mousePos));
+        newTower(gridPosition(mousePos));
     }
     for(unsigned int i = 0; i < towers.size(); ++i)
     {
@@ -63,6 +70,19 @@ void Game::update(sf::Vector2i mousePos)
         towers[i]->draw(&canvas);
     }
     canvas.display();
+}
+
+void Game::newTower(sf::Vector2i i)
+{
+    if (i.x >= 0 && i.x < GRIDX * 2 + MIDDLE && i.y >= 0 && i.y < GRIDY)
+    {
+        if (map[i.x][i.y] == false)
+        {
+            map[i.x][i.y] = true;
+            towers.push_back(new Tower(&towerTexture, &towerSprite));
+            towers[towers.size() - 1]->setCoordinates(i);
+        }
+    }
 }
 
 void Game::initializeGrid(sf::Color left, sf::Color right)

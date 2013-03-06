@@ -31,6 +31,7 @@ class Game : public Drawable
 
         //functions
         void initializeGrid(sf::Color, sf::Color);
+        void newTower(sf::Vector2i);
 
         //Sprites and RenderTextures
         sf::Sprite gridSprite;          //grid
@@ -42,6 +43,7 @@ class Game : public Drawable
         //vars
         KeyState prevLeft, prevRight;
         std::vector<Tower*> towers;
+        bool map[GRIDX * 2 + MIDDLE][GRIDY];
 };
 
 #endif // GAME_H
