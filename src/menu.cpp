@@ -6,14 +6,14 @@
 
 Menu::Menu()
 {
-    if(!canvas.create(XRES, YRES))
-        printf("Error in creating menu in state %i\n", menuState);
+    //if(!canvas.create(XRES, YRES))
+    //    printf("Error in creating menu in state %i\n", menuState);
 
     initializeMenu();
 
-    canvas.clear(sf::Color::Transparent);
-    canvas.draw(menuSprite);
-    canvas.display();
+    //canvas.clear(sf::Color::Transparent);
+    //canvas.draw(menuSprite);
+    //canvas.display();
 }
 
 /***************************************************************/
@@ -34,6 +34,26 @@ int Menu::getState()
     return menuState;
 }
 
+sf::RectangleShape Menu::getBackground()
+{
+    return background;
+}
+
+sf::RectangleShape Menu::getStartBtn()
+{
+    return startBtn;
+}
+
+sf::RectangleShape Menu::getOptionsBtn()
+{
+    return optionsBtn;
+}
+
+sf::RectangleShape Menu::getExitBtn()
+{
+    return exitBtn;
+}
+
 /***************************************************************/
 /*******************SETTERS*************************************/
 /***************************************************************/
@@ -51,19 +71,36 @@ void Menu::setState(int state)
 bool test;
 void Menu::update(sf::Vector2i mousePos)
 {
-    if (!mousePos.x >= XRES - 131 && mousePos.x <= XRES - 65 && mousePos.y >= YRES - 120 && mousePos.y <= YRES - 90 && startBtnMO == true)
+    // todo: make more efficient
+    if (!(mousePos.x >= XRES - 131 && mousePos.x <= XRES - 65 && mousePos.y >= YRES - 120 && mousePos.y <= YRES - 90) && startBtnMO == true)
     {
-        startBtn.setTexture(&startBtnTexture, true);
+        startBtn.setTexture(&startBtnTexture);
         startBtnMO = false;
-        printf("redrawing menu\n");
-        redrawMenu();
     }
     else if (mousePos.x >= XRES - 131 && mousePos.x <= XRES - 65 && mousePos.y >= YRES - 120 && mousePos.y <= YRES - 90 && startBtnMO == false)
     {
-        startBtn.setTexture(&startBtnMOTexture, true);
+        startBtn.setTexture(&startBtnMOTexture);
         startBtnMO = true;
-        printf("redrawing menu (MO)\n");
-        redrawMenu();
+    }
+    else if (!(mousePos.x >= XRES - 131 && mousePos.x <= XRES - 25 && mousePos.y >= YRES - 85 && mousePos.y <= YRES - 55) && optionsBtnMO == true)
+    {
+        optionsBtn.setTexture(&optionsBtnTexture);
+        optionsBtnMO = false;
+    }
+    else if (mousePos.x >= XRES - 131 && mousePos.x <= XRES - 25 && mousePos.y >= YRES - 85 && mousePos.y <= YRES - 55 && optionsBtnMO == false)
+    {
+        optionsBtn.setTexture(&optionsBtnMOTexture);
+        optionsBtnMO = true;
+    }
+    else if (!(mousePos.x >= XRES - 131 && mousePos.x <= XRES - 79 && mousePos.y >= YRES - 50 && mousePos.y <= YRES - 20) && exitBtnMO == true)
+    {
+        exitBtn.setTexture(&exitBtnTexture);
+        exitBtnMO = false;
+    }
+    else if (mousePos.x >= XRES - 131 && mousePos.x <= XRES - 79 && mousePos.y >= YRES - 50 && mousePos.y <= YRES - 20 && exitBtnMO == false)
+    {
+        exitBtn.setTexture(&exitBtnMOTexture);
+        exitBtnMO = true;
     }
 }
 
@@ -105,18 +142,18 @@ void Menu::initializeMenu()
     if (!exitBtnMOTexture.loadFromFile("img/btnMOExit.png"))
         printf("error loading exit button mouse over\n");
 
-    redrawMenu();
+    //redrawMenu();
 }
 
 void Menu::redrawMenu()
 {
-    menuTexture.clear(sf::Color::Transparent);
-    menuTexture.draw(background);
-    menuTexture.draw(startBtn);
-    menuTexture.draw(optionsBtn);
-    menuTexture.draw(exitBtn);
-    menuTexture.display();
-    menuSprite.setTexture(menuTexture.getTexture());
+    //menuTexture.clear(sf::Color::Transparent);
+    //menuTexture.draw(background);
+    //menuTexture.draw(startBtn);
+    //menuTexture.draw(optionsBtn);
+    //menuTexture.draw(exitBtn);
+    //menuTexture.display();
+    //menuSprite.setTexture(menuTexture.getTexture());
 }
 
 int Menu::checkClick(sf::Vector2i mousePos)

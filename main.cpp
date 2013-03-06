@@ -54,7 +54,10 @@ int main()
         if (menu.getState() == 0)
         {
             menu.update(sf::Mouse::getPosition(window));
-            window.draw(menu.getSprite());
+            window.draw(menu.getBackground());
+            window.draw(menu.getStartBtn());
+            window.draw(menu.getOptionsBtn());
+            window.draw(menu.getExitBtn());
         }
         else if (menu.getState() == 1)
         {
