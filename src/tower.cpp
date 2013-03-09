@@ -4,7 +4,7 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Tower::Tower(sf::RenderTexture* a, sf::Sprite* b) : Entity(a, b)
+Tower::Tower()
 {
     base.setSize((sf::Vector2f)Tower::getSize());
     turret.setSize((sf::Vector2f)Tower::getSize());
@@ -28,7 +28,7 @@ Tower::~Tower()
 /*******************GETTERS*************************************/
 /***************************************************************/
 
-float Tower::getRotation()
+double Tower::getRotation()
 {
     return turret.getRotation();
 }
@@ -40,23 +40,25 @@ sf::Vector2i Tower::getCoordinates()
 
 sf::Vector2i Tower::getSize()
 {
-    return {40, 40};
+    return {BOXDIMENSIONS, BOXDIMENSIONS};
 }
 
 /***************************************************************/
 /*******************SETTERS*************************************/
 /***************************************************************/
 
-void Tower::setRotation(float i)
+void Tower::setRotation(double i)
 {
     turret.setRotation(i);
 }
 
 void Tower::setCoordinates(sf::Vector2i i)
 {
-    const int gridSize = 41; //grid box + border
+    const int gridSize = BOXDIMENSIONS + 1; //grid box + border
     coordinates = i;
     position = {(float)(gridSize + i.x * gridSize), (float)(1 + i.y * gridSize)};
+    base.setPosition(position);
+    turret.setPosition(position.x + Tower::getSize().y / 2, position.y + Tower::getSize().y / 2);
 }
 
 /***************************************************************/
@@ -68,13 +70,8 @@ void Tower::update()
 
 }
 
-void Tower::draw(sf::RenderTexture * target)
+void Tower::draw(sf::RenderTarget * target)
 {
-    canvas->clear(sf::Color::Transparent);
-    canvas->draw(base);
-    canvas->draw(turret);
-    canvas->display();
-    drawable->setPosition(position);
-    drawable->setTexture(canvas->getTexture());
-    target->draw(*drawable);
+    target->draw(base);
+    target->draw(turret);
 }

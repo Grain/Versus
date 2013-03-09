@@ -19,9 +19,13 @@ struct Settings
     Keys leftPlayer, rightPlayer;
     int effectVolume, musicVolume;
     bool enableMouseTwoPlayer;
+
+    bool doubleBuffered;
 };
 
 sf::Vector2i gridPosition(sf::Vector2i);
+
+extern Settings settings;
 
 const int XRES = 1024;
 const int YRES = 576;

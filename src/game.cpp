@@ -14,17 +14,11 @@ Game::Game()
         }
     }
 
-    if(!canvas.create(XRES, YRES))
-        printf("Error in creating Game\n");
-
-    initializeGrid(sf::Color::Yellow, sf::Color::Green);    //temp colours
-    gridSprite.setPosition(40, 0);
-
-    towerTexture.create(40, 40);
-
-    canvas.clear(sf::Color::Transparent);
-    canvas.draw(gridSprite);
-    canvas.display();
+    if (settings.doubleBuffered)
+    {
+        if(!canvas.create(XRES, YRES))
+            printf("Error creating game renderTexture\n");
+    }
 }
 
 /***************************************************************/
@@ -50,6 +44,31 @@ Game::~Game()
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
 
+void Game::draw(sf::RenderWindow * window)
+{
+    if (settings.doubleBuffered)
+    {
+        canvas.clear(sf::Color::Transparent);
+
+        initializeGrid(&canvas, sf::Color::Yellow, sf::Color::Green);    //temp colours
+        for(unsigned int i = 0; i < towers.size(); ++i)
+        {
+            towers[i]->draw(&canvas);
+        }
+        canvas.display();
+        drawable.setTexture(canvas.getTexture());
+        window->draw(drawable);
+    }
+    else
+    {
+        initializeGrid(window, sf::Color::Yellow, sf::Color::Green);    //temp colours
+        for(unsigned int i = 0; i < towers.size(); ++i)
+        {
+            towers[i]->draw(window);
+        }
+    }
+}
+
 void Game::update(sf::Vector2i mousePos)
 {
     printf("%d\n", towers.size());
@@ -58,18 +77,11 @@ void Game::update(sf::Vector2i mousePos)
     {
         newTower(gridPosition(mousePos));
     }
+
     for(unsigned int i = 0; i < towers.size(); ++i)
     {
         towers[i]->setRotation(mousePos.x);
     }
-
-    canvas.clear(sf::Color::Transparent);
-    canvas.draw(gridSprite);
-    for(unsigned int i = 0; i < towers.size(); ++i)
-    {
-        towers[i]->draw(&canvas);
-    }
-    canvas.display();
 }
 
 void Game::newTower(sf::Vector2i i)
@@ -79,31 +91,28 @@ void Game::newTower(sf::Vector2i i)
         if (map[i.x][i.y] == false)
         {
             map[i.x][i.y] = true;
-            towers.push_back(new Tower(&towerTexture, &towerSprite));
+            towers.push_back(new Tower());
             towers[towers.size() - 1]->setCoordinates(i);
         }
     }
 }
 
-void Game::initializeGrid(sf::Color left, sf::Color right)
+void Game::initializeGrid(sf::RenderTarget* target, sf::Color left, sf::Color right)
 {
-    if(!gridTexture.create(BOXDIMENSIONS * (2 * GRIDX + MIDDLE) + GRIDX * 2 + MIDDLE + 1, BOXDIMENSIONS * GRIDY + GRIDY + 1))
-        printf("error in initializeGrid\n");
-    gridTexture.clear(sf::Color::Transparent);
-
     sf::RectangleShape temp;
+    const int offset = (XRES - (BOXDIMENSIONS * (2 * GRIDX + MIDDLE) + GRIDX * 2 + MIDDLE + 1)) / 2;
 
     //left side background colour
     temp.setFillColor(left);
     temp.setSize({BOXDIMENSIONS * GRIDX + GRIDX + 1, BOXDIMENSIONS * GRIDY + GRIDY + 1});
-    temp.setPosition(0, 0);
-    gridTexture.draw(temp);
+    temp.setPosition(offset, 0);
+    target->draw(temp);
 
     //right side background colour
     temp.setFillColor(right);
     temp.setSize({BOXDIMENSIONS * GRIDX + GRIDX + 1, BOXDIMENSIONS * GRIDY + GRIDY + 1});
-    temp.setPosition((GRIDX + MIDDLE) * BOXDIMENSIONS + GRIDY + MIDDLE + 1, 0);
-    gridTexture.draw(temp);
+    temp.setPosition((GRIDX + MIDDLE) * BOXDIMENSIONS + GRIDY + MIDDLE + 1 + offset, 0);
+    target->draw(temp);
 
     //vertical lines
     int i;
@@ -111,18 +120,15 @@ void Game::initializeGrid(sf::Color left, sf::Color right)
     {
         temp.setFillColor(sf::Color::Black);
         temp.setSize({1, BOXDIMENSIONS * GRIDY + GRIDY + 1});
-        temp.setPosition(i * (BOXDIMENSIONS + 1), 0);
-        gridTexture.draw(temp);
+        temp.setPosition(i * (BOXDIMENSIONS + 1) + offset, 0);
+        target->draw(temp);
     }
     //horizontal lines
     for(i = 0; i <= GRIDY; ++i)
     {
         temp.setFillColor(sf::Color::Black);
         temp.setSize({BOXDIMENSIONS * (2 * GRIDX + MIDDLE) + GRIDX * 2 + MIDDLE + 1, 1});
-        temp.setPosition(0, i * (BOXDIMENSIONS + 1));
-        gridTexture.draw(temp);
+        temp.setPosition(offset, i * (BOXDIMENSIONS + 1));
+        target->draw(temp);
     }
-
-    gridTexture.display();
-    gridSprite.setTexture(gridTexture.getTexture());
 }

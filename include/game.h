@@ -1,12 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "drawable.h"
 #include "global.h"
 #include "tower.h"
 #include <vector>
 
-class Game : public Drawable
+class Game
 {
     public:
         //ctor/dtor
@@ -17,6 +16,7 @@ class Game : public Drawable
 
         //functions
         void update(sf::Vector2i);
+        void draw(sf::RenderWindow*);
     protected:
     private:
         struct KeyState
@@ -30,7 +30,7 @@ class Game : public Drawable
         };
 
         //functions
-        void initializeGrid(sf::Color, sf::Color);
+        void initializeGrid(sf::RenderTarget*, sf::Color, sf::Color);
         void newTower(sf::Vector2i);
 
         //Sprites and RenderTextures
@@ -41,6 +41,9 @@ class Game : public Drawable
         sf::RenderTexture towerTexture;
 
         //vars
+        sf::RenderTexture canvas;
+        sf::Sprite drawable;
+
         KeyState prevLeft, prevRight;
         std::vector<Tower*> towers;
         bool map[GRIDX * 2 + MIDDLE][GRIDY];
