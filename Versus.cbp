@@ -46,11 +46,13 @@
 			<Add option="-static" />
 			<Add directory="C:\SFML-2.0-rc\lib" />
 		</Linker>
+		<Unit filename="include\button.h" />
 		<Unit filename="include\game.h" />
 		<Unit filename="include\global.h" />
 		<Unit filename="include\menu.h" />
 		<Unit filename="include\tower.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src\button.cpp" />
 		<Unit filename="src\game.cpp" />
 		<Unit filename="src\global.cpp" />
 		<Unit filename="src\menu.cpp" />

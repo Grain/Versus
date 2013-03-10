@@ -11,9 +11,10 @@ Game::Game()
         for(int b = 0; b < GRIDY; ++b)
         {
             map[a][b] = false;
-            calculateDistances();
         }
     }
+
+    calculateDistances();
 
     if (settings.doubleBuffered)
     {
@@ -99,42 +100,60 @@ void Game::update(sf::Vector2i mousePos)
 
 void Game::newTower(sf::Vector2i i)
 {
-    //does not allow creating tower outside of grid OR creating tower on spawn points
-    if (i.x >= 0 && i.x < GRIDX * 2 + MIDDLE && i.y >= 0 && i.y < GRIDY && !(i.x == 0 && i.y == GRIDY / 2) && !(i.x == GRIDX * 2 + MIDDLE - 1 && i.y == GRIDY / 2))
+    //not allowing placing towers in middle should be in the gui
+
+    //does not allow creating tower outside of grid
+    if (i.x >= 0 && i.x < GRIDX * 2 + MIDDLE && i.y >= 0 && i.y < GRIDY)
     {
-        if (map[i.x][i.y] == false)
+        if ((i.x == 0 && i.y == GRIDY / 2) || (i.x == GRIDX * 2 + MIDDLE - 1 && i.y == GRIDY / 2))   //trying to place tower on spawn points
         {
-            map[i.x][i.y] = true;
-            calculateDistances();
-            towers.push_back(new Tower());
-            towers[towers.size() - 1]->setCoordinates(i);
+
         }
-    }
-
-    //print current distances
-    printf("\n");
-    printf("\n");
-
-    for(int a = 0; a < GRIDY; ++a)
-    {
-        for(int b = 0; b < GRIDX * 2 + MIDDLE; ++b)
+        else
         {
-            if(distancesRight[b][a] == 99999)
+            //todo: check for creeps on spot
+            if (map[i.x][i.y] == false) //if the spot is empty
             {
-                printf("*  ");
-                continue;
+                map[i.x][i.y] = true;
+                calculateDistances();
+                if (distancesRight[0][GRIDY / 2] == EMPTY)
+                {
+                    //no path available
+                    map[i.x][i.y] = false;
+                    calculateDistances();   //should i use distances for pathfinding, or actual paths??
+                }
+                else
+                {
+                    towers.push_back(new Tower());
+                    towers[towers.size() - 1]->setCoordinates(i);
+                }
             }
-            printf("%d ", distancesRight[b][a]);
-            if (distancesRight[b][a] < 10)
-                printf(" ");
         }
-        printf("\n");
     }
+
+//    //print current distances
+//    printf("\n");
+//    printf("\n");
+//
+//    for(int a = 0; a < GRIDY; ++a)
+//    {
+//        for(int b = 0; b < GRIDX * 2 + MIDDLE; ++b)
+//        {
+//            if(distancesRight[b][a] == FILLED)
+//            {
+//                printf("*  ");
+//                continue;
+//            }
+//            printf("%d ", distancesRight[b][a]);
+//            if (distancesRight[b][a] < 10)
+//                printf(" ");
+//        }
+//        printf("\n");
+//    }
 }
 
 void Game::calculateDistances()
 {
-    const int EMPTY = 9999;
 
     for(int a = 0; a < GRIDX * 2 + MIDDLE; ++a)
     {
@@ -142,8 +161,8 @@ void Game::calculateDistances()
         {
             if(map[a][b] == true)
             {
-                distancesLeft[a][b] = 99999;   //tower on that part
-                distancesRight[a][b] = 99999;
+                distancesLeft[a][b] = FILLED;   //tower on that part
+                distancesRight[a][b] = FILLED;
             }
             else
             {

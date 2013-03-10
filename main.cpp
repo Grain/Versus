@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
             }
         }
         window.clear(sf::Color::White);
-        game.update(sf::Mouse::getPosition(window));
-        game.draw(&window);
+        menu.update(sf::Mouse::getPosition(window));
+        menu.draw(&window);
         window.display();
     }
     return 0;

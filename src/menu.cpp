@@ -25,6 +25,10 @@ Menu::Menu()
             background.setTexture(&backgroundTexture);
         }
     }
+
+    exit.initialize(100, 50);
+    exit.setPosition({100, 130});
+    exit.loadTexture("resources/exit.png");
 }
 
 /***************************************************************/
@@ -58,6 +62,7 @@ void Menu::draw(sf::RenderWindow * window)
     {
         canvas.clear(sf::Color::Transparent);
         canvas.draw(background);
+        exit.draw(&canvas);
         canvas.display();
         drawable.setPosition(0, 0);
         drawable.setTexture(canvas.getTexture());
@@ -66,11 +71,16 @@ void Menu::draw(sf::RenderWindow * window)
     else
     {
         window->draw(background);
+        exit.draw(window);
     }
 }
 
 
 void Menu::update(sf::Vector2i mousePos)
 {
-
+    if(exit.update(mousePos))
+    {
+        //exit.setVisible(false);
+        printf("Asdf\n");
+    }
 }

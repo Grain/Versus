@@ -30,6 +30,9 @@ class Game
             bool back;
         };
 
+        static const int FILLED = 99999;
+        static const int EMPTY = 9999;
+
         //functions
         void initializeGrid(sf::RenderTarget*, sf::Color, sf::Color);
         void newTower(sf::Vector2i);
@@ -50,7 +53,7 @@ class Game
         std::vector<Tower*> towers;
         bool map[GRIDX * 2 + MIDDLE][GRIDY];
 
-        int distancesLeft[GRIDX * 2 + MIDDLE][GRIDY];   //left = left side creeps, right = right side creeps
+        int distancesLeft[GRIDX * 2 + MIDDLE][GRIDY];   //left = going to left side, right = going to right side
         int distancesRight[GRIDX * 2 + MIDDLE][GRIDY];
 
         int pathsLeft[GRIDX * 2 + MIDDLE][GRIDY];   //not int

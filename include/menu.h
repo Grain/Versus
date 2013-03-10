@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "global.h"
+#include "button.h"
 
 class Menu
 {
@@ -26,6 +27,8 @@ class Menu
 
         sf::RectangleShape background;
         sf::Texture backgroundTexture;
+
+        Button exit;
 };
 
 #endif // MENU_H
