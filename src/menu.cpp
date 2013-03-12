@@ -26,9 +26,25 @@ Menu::Menu()
         }
     }
 
-    exit.initialize(100, 50);
-    exit.setPosition({100, 130});
-    exit.loadTexture("resources/exit.png");
+    mainMenu.push_back(new Button());   //single player
+    mainMenu[0]->initialize(100, 50);
+    mainMenu[0]->setPosition({100, 225});
+    mainMenu[0]->loadTexture("resources/singlePlayer.png");
+
+    mainMenu.push_back(new Button());   //multi player
+    mainMenu[1]->initialize(100, 50);
+    mainMenu[1]->setPosition({100, 300});
+    mainMenu[1]->loadTexture("resources/exit.png");
+
+    mainMenu.push_back(new Button());   //options
+    mainMenu[2]->initialize(100, 50);
+    mainMenu[2]->setPosition({100, 375});
+    mainMenu[2]->loadTexture("resources/exit.png");
+
+    mainMenu.push_back(new Button());   //exit button
+    mainMenu[3]->initialize(100, 50);
+    mainMenu[3]->setPosition({100, 450});
+    mainMenu[3]->loadTexture("resources/exit.png");
 }
 
 /***************************************************************/
@@ -37,7 +53,10 @@ Menu::Menu()
 
 Menu::~Menu()
 {
-    //dtor
+    for(unsigned int i = 0; i < mainMenu.size(); ++i)
+    {
+        delete mainMenu[i];
+    }
 }
 
 /***************************************************************/
@@ -62,7 +81,12 @@ void Menu::draw(sf::RenderWindow * window)
     {
         canvas.clear(sf::Color::Transparent);
         canvas.draw(background);
-        exit.draw(&canvas);
+
+        for(unsigned int i = 0; i < mainMenu.size(); ++i)
+        {
+            mainMenu[i]->draw(&canvas);
+        }
+
         canvas.display();
         drawable.setPosition(0, 0);
         drawable.setTexture(canvas.getTexture());
@@ -71,16 +95,34 @@ void Menu::draw(sf::RenderWindow * window)
     else
     {
         window->draw(background);
-        exit.draw(window);
+        for(unsigned int i = 0; i < mainMenu.size(); ++i)
+        {
+            mainMenu[i]->draw(window);
+        }
     }
 }
 
 
 int Menu::update(sf::Vector2i mousePos)
 {
-    if(exit.update(mousePos))
+    for(unsigned int i = 0; i < mainMenu.size(); ++i)
     {
-        return 2;   //exit
+        if(mainMenu[i]->update(mousePos))
+        {
+            switch(i)
+            {
+                case 0: //single player
+                    return 1;
+                    break;
+                case 1: //multi player
+                    break;
+                case 2: //options
+                    break;
+                case 3: //exit
+                    return 2;
+                    break;
+            }
+        }
     }
 
     return 0;

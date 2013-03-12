@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     Game game;
     Menu menu;
-    bool inGame = true;
+    bool inGame = false;
 
     window.setFramerateLimit(30);
 
