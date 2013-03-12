@@ -16,7 +16,7 @@ class Game
         //setters
 
         //functions
-        void update(sf::Vector2i);
+        int update(sf::Vector2i);
         void draw(sf::RenderWindow*);
     protected:
     private:

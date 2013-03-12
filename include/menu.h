@@ -17,7 +17,7 @@ class Menu
 
         //functions
         void draw(sf::RenderWindow*);
-        void update(sf::Vector2i);
+        int update(sf::Vector2i);
     protected:
     private:
         //functions

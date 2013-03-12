@@ -10,7 +10,7 @@ Settings settings;
 
 int main(int argc, char *argv[])
 {
-    settings.doubleBuffered = true;
+    settings.doubleBuffered = false;
 
     if (argc > 1)
     {
@@ -21,8 +21,10 @@ int main(int argc, char *argv[])
     }
 
     sf::RenderWindow window(sf::VideoMode(XRES, YRES), "Versus", sf::Style::Close);
+
     Game game;
     Menu menu;
+    bool inGame = true;
 
     window.setFramerateLimit(30);
 
@@ -43,9 +45,39 @@ int main(int argc, char *argv[])
             }
         }
         window.clear(sf::Color::White);
-        menu.update(sf::Mouse::getPosition(window));
-        menu.draw(&window);
-        window.display();
+
+        if(inGame)  //yay no polymorphism
+        {
+            switch(game.update(sf::Mouse::getPosition(window)))
+            {
+                case 0:
+                    break;
+                case 1:
+                    inGame = false;
+                    break;
+                case 2:
+                    window.close();
+                    break;
+            }
+            game.draw(&window);
+            window.display();
+        }
+        else
+        {
+            switch(menu.update(sf::Mouse::getPosition(window)))
+            {
+                case 0:
+                    break;
+                case 1:
+                    inGame = true;
+                    break;
+                case 2:
+                    window.close();
+                    break;
+            }
+            menu.draw(&window);
+            window.display();
+        }
     }
     return 0;
 }

@@ -76,11 +76,12 @@ void Menu::draw(sf::RenderWindow * window)
 }
 
 
-void Menu::update(sf::Vector2i mousePos)
+int Menu::update(sf::Vector2i mousePos)
 {
     if(exit.update(mousePos))
     {
-        //exit.setVisible(false);
-        printf("Asdf\n");
+        return 2;   //exit
     }
+
+    return 0;
 }

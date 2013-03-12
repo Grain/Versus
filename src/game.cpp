@@ -74,7 +74,7 @@ void Game::draw(sf::RenderWindow * window)
     }
 }
 
-void Game::update(sf::Vector2i mousePos)
+int Game::update(sf::Vector2i mousePos)
 {
     //printf("%d\n", towers.size());
 
@@ -96,6 +96,8 @@ void Game::update(sf::Vector2i mousePos)
     {
         towers[i]->setRotation(mousePos.x);
     }
+
+    return 0;
 }
 
 void Game::newTower(sf::Vector2i i)
