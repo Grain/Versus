@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
     Game game;
     Menu menu;
     bool inGame = false;
+    bool focused = true;
 
     window.setFramerateLimit(30);
 
@@ -41,10 +42,10 @@ int main(int argc, char *argv[])
                     window.close();
                     break;
                 case sf::Event::GainedFocus:
-                    //asdf
+                    focused = true;
                     break;
                 case sf::Event::LostFocus:
-                    //asdf
+                    focused = false;
                     break;
                 default:
                     break;
@@ -54,33 +55,41 @@ int main(int argc, char *argv[])
 
         if(inGame)  //yay no polymorphism
         {
-            switch(game.update(sf::Mouse::getPosition(window)))
+            if (focused)
             {
-                case 0:
-                    break;
-                case 1:
-                    inGame = false;
-                    break;
-                case 2:
-                    window.close();
-                    break;
+                switch(game.update(sf::Mouse::getPosition(window)))
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        inGame = false;
+                        break;
+                    case 2:
+                        window.close();
+                        break;
+                }
             }
+
             game.draw(&window);
             window.display();
         }
         else
         {
-            switch(menu.update(sf::Mouse::getPosition(window)))
+            if (focused)
             {
-                case 0:
-                    break;
-                case 1:
-                    inGame = true;
-                    break;
-                case 2:
-                    window.close();
-                    break;
+                switch(menu.update(sf::Mouse::getPosition(window)))
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        inGame = true;
+                        break;
+                    case 2:
+                        window.close();
+                        break;
+                }
             }
+
             menu.draw(&window);
             window.display();
         }
