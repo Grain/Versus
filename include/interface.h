@@ -2,6 +2,7 @@
 #define INTERFACE_H
 
 #include "global.h"
+#include "button.h"
 
 class Interface
 {
@@ -29,6 +30,8 @@ class Interface
         //vars
         sf::Vector2i prevMouse;
 
+        //selectors
+        sf::Texture selector, reflectedSelector;
         //left
         KeyState prevLeft;
         sf::RectangleShape leftSelector;

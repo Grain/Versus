@@ -34,12 +34,12 @@ Menu::Menu()
     mainMenu.push_back(new Button());   //multi player
     mainMenu[1]->initialize(100, 50);
     mainMenu[1]->setPosition({100, 300});
-    mainMenu[1]->loadTexture("resources/exit.png");
+    mainMenu[1]->loadTexture("resources/multiPlayer.png");
 
     mainMenu.push_back(new Button());   //options
     mainMenu[2]->initialize(100, 50);
     mainMenu[2]->setPosition({100, 375});
-    mainMenu[2]->loadTexture("resources/exit.png");
+    mainMenu[2]->loadTexture("resources/settings.png");
 
     mainMenu.push_back(new Button());   //exit button
     mainMenu[3]->initialize(100, 50);

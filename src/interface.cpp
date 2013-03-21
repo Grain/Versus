@@ -4,13 +4,21 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Interface::Interface()
+Interface::Interface()  //todo: custom colours for selectors
 {
+    sf::Image temp;
+    temp.loadFromFile("resources/selector.png");
+    selector.loadFromImage(temp);
+    temp.flipVertically();
+    reflectedSelector.loadFromImage(temp);
+
     leftSelector.setSize({BOXDIMENSIONS, BOXDIMENSIONS});
+    leftSelector.setTexture(&reflectedSelector);
     leftSelector.setFillColor(sf::Color::Cyan);
     leftCoordinates = {0, GRIDY / 2};
 
     rightSelector.setSize({BOXDIMENSIONS, BOXDIMENSIONS});
+    rightSelector.setTexture(&selector);
     rightSelector.setFillColor(sf::Color::Magenta);
     rightCoordinates = {GRIDX * 2 + MIDDLE - 1, GRIDY / 2};
 
