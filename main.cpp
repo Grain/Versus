@@ -10,7 +10,7 @@ Settings settings;
 
 int main(int argc, char *argv[])
 {
-    settings.doubleBuffered = false;
+    settings.doubleBuffered = true;
 
     if (argc > 1)
     {
@@ -39,6 +39,12 @@ int main(int argc, char *argv[])
             {
                 case sf::Event::Closed:
                     window.close();
+                    break;
+                case sf::Event::GainedFocus:
+                    //asdf
+                    break;
+                case sf::Event::LostFocus:
+                    //asdf
                     break;
                 default:
                     break;

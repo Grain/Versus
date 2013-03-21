@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "tower.h"
+#include "interface.h"
 #include <vector>
 #include <queue>
 
@@ -20,16 +21,6 @@ class Game
         void draw(sf::RenderWindow*);
     protected:
     private:
-        struct KeyState
-        {
-            bool left;
-            bool right;
-            bool up;
-            bool down;
-            bool select;
-            bool back;
-        };
-
         static const int FILLED = 99999;
         static const int EMPTY = 9999;
 
@@ -49,7 +40,8 @@ class Game
         sf::RenderTexture canvas;
         sf::Sprite drawable;
 
-        KeyState prevLeft, prevRight;
+        Interface interface;
+
         std::vector<Tower*> towers;
         bool map[GRIDX * 2 + MIDDLE][GRIDY];
 

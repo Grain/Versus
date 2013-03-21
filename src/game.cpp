@@ -60,6 +60,7 @@ void Game::draw(sf::RenderWindow * window)
         {
             towers[i]->draw(&canvas);
         }
+        interface.draw(&canvas);
         canvas.display();
         drawable.setTexture(canvas.getTexture());
         window->draw(drawable);
@@ -71,6 +72,7 @@ void Game::draw(sf::RenderWindow * window)
         {
             towers[i]->draw(window);
         }
+        interface.draw(window);
     }
 }
 
@@ -86,6 +88,7 @@ int Game::update(sf::Vector2i mousePos)
 //        }
 //        printf("\n");
 //    }
+    interface.update(mousePos);
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
@@ -95,6 +98,7 @@ int Game::update(sf::Vector2i mousePos)
     for(unsigned int i = 0; i < towers.size(); ++i)
     {
         towers[i]->setRotation(mousePos.x);
+//        towers[i]->setRotation(towers[i]->getRotation() + 1);
     }
 
     return 0;

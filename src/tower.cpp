@@ -54,7 +54,7 @@ void Tower::setRotation(double i)
 
 void Tower::setCoordinates(sf::Vector2i i)
 {
-    const int gridSize = BOXDIMENSIONS + 1; //grid box + border
+    static const int gridSize = BOXDIMENSIONS + 1; //grid box + border
     coordinates = i;
     position = {(float)(gridSize + i.x * gridSize), (float)(1 + i.y * gridSize)};
     base.setPosition(position);
