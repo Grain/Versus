@@ -18,7 +18,7 @@ struct Settings
 {
     Keys leftPlayer, rightPlayer;
     int effectVolume, musicVolume;
-    bool enableMouseTwoPlayer;
+    bool enableMouse;
 
     bool doubleBuffered;
 };

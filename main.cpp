@@ -11,6 +11,7 @@ Settings settings;
 int main(int argc, char *argv[])
 {
     settings.doubleBuffered = true;
+    settings.enableMouse =  false;
 
     if (argc > 1)
     {

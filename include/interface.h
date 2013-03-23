@@ -7,14 +7,19 @@
 class Interface
 {
     public:
+        //enum
+        enum Players{left, right, both};
         //ctor/dtor
         Interface();
         virtual ~Interface();
         //getters
+        Players getPlayers();
         //setters
+        void setPlayers(Players);
         //functions
         void draw(sf::RenderTarget*);
         int update(sf::Vector2i);
+
     protected:
     private:
         struct KeyState
@@ -29,6 +34,7 @@ class Interface
 
         //vars
         sf::Vector2i prevMouse;
+        Players players;
 
         //selectors
         sf::Texture selector, reflectedSelector;

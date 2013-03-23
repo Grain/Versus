@@ -25,6 +25,8 @@ Interface::Interface()  //todo: custom colours for selectors
     prevMouse = {0, 0};
 
     prevLeft = prevRight = {false, false, false, false, false, false};
+
+    players = left;
 }
 
 /***************************************************************/
@@ -40,11 +42,19 @@ Interface::~Interface()
 /*******************GETTERS*************************************/
 /***************************************************************/
 
+Interface::Players Interface::getPlayers()
+{
+    return players;
+}
 
 /***************************************************************/
 /*******************SETTERS*************************************/
 /***************************************************************/
 
+void Interface::setPlayers(Players i)
+{
+    players = i;
+}
 
 /***************************************************************/
 /*******************FUNCTIONS***********************************/
@@ -52,10 +62,26 @@ Interface::~Interface()
 
 int Interface::update(sf::Vector2i mousePos)
 {
-    if (mousePos != prevMouse)  //todo: check for 2 player or no mouse option
+    if (mousePos != prevMouse && settings.enableMouse == true)
     {
-        //mouse things
+        if (players == left)
+        {
+            sf::Vector2i tempCoordinate = gridPosition(mousePos);
+            if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+            {
+                leftCoordinates = tempCoordinate;
+            }
+        }
+        else if (players == right)
+        {
+            sf::Vector2i tempCoordinate = gridPosition(mousePos);
+            if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+            {
+                rightCoordinates = tempCoordinate;
+            }
+        }
     }
+    prevMouse = mousePos;
 
     static const int gridSize = BOXDIMENSIONS + 1; //grid box + border
 
