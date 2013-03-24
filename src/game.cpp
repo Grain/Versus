@@ -22,8 +22,6 @@ Game::Game()
             printf("Error creating game renderTexture\n");
     }
 
-    newGame();
-
     players = both;
 }
 
@@ -195,6 +193,18 @@ int Game::update(sf::Vector2i mousePos)
         {
             prevKeys[i].right = false;
         }
+        if(sf::Keyboard::isKeyPressed(temp.select))
+        {
+            if(prevKeys[i].select == false)
+            {
+                newTower(selectorCoordinates[i]);
+            }
+            prevKeys[i].select = true;
+        }
+        else
+        {
+            prevKeys[i].select = false;
+        }
 
         if (selectorCoordinates[i].y < 0)
             selectorCoordinates[i].y = GRIDY - 1;
@@ -210,15 +220,10 @@ int Game::update(sf::Vector2i mousePos)
     {
         selector[i].setPosition((float)(gridSize + selectorCoordinates[i].x * gridSize), (float)(1 + selectorCoordinates[i].y * gridSize));
     }
-//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-//    {
-//        newTower(gridPosition(mousePos));
-//    }
 
     for(unsigned int i = 0; i < towers.size(); ++i)
     {
         towers[i]->setRotation(mousePos.x);
-//        towers[i]->setRotation(towers[i]->getRotation() + 1);
     }
 
     return 0;
@@ -232,6 +237,10 @@ void Game::newTower(sf::Vector2i i)
     if (i.x >= 0 && i.x < GRIDX * 2 + MIDDLE && i.y >= 0 && i.y < GRIDY)
     {
         if ((i.x == 0 && i.y == GRIDY / 2) || (i.x == GRIDX * 2 + MIDDLE - 1 && i.y == GRIDY / 2))   //trying to place tower on spawn points
+        {
+
+        }
+        else if(i.x >= GRIDX && i.x < GRIDX + MIDDLE)
         {
 
         }

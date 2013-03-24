@@ -16,10 +16,12 @@ int main(int argc, char *argv[])
     settings.leftPlayer.down = sf::Keyboard::S;
     settings.leftPlayer.left = sf::Keyboard::A;
     settings.leftPlayer.right = sf::Keyboard::D;
+    settings.leftPlayer.select = sf::Keyboard::J;
     settings.rightPlayer.up = sf::Keyboard::Up;
     settings.rightPlayer.down = sf::Keyboard::Down;
     settings.rightPlayer.left = sf::Keyboard::Left;
     settings.rightPlayer.right = sf::Keyboard::Right;
+    settings.rightPlayer.select = sf::Keyboard::Numpad1;
 
     if (argc > 1)
     {
@@ -92,6 +94,7 @@ int main(int argc, char *argv[])
                         break;
                     case 1:
                         inGame = true;
+                        game.newGame();
                         break;
                     case 2:
                         window.close();
