@@ -21,6 +21,10 @@ Game::Game()
         if(!canvas.create(XRES, YRES))
             printf("Error creating game renderTexture\n");
     }
+
+    newGame();
+
+    players = both;
 }
 
 /***************************************************************/
@@ -49,6 +53,31 @@ Game::~Game()
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
 
+void Game::newGame()
+{
+    sf::Image temp;
+    temp.loadFromFile("resources/selector.png");
+    selectorTextures[0].loadFromImage(temp);
+    temp.flipVertically();
+    selectorTextures[1].loadFromImage(temp);
+
+    for(int i = 0; i < 2; ++i)
+    {
+        selector[i].setSize({BOXDIMENSIONS, BOXDIMENSIONS});
+        selector[i].setTexture(&selectorTextures[i]);
+    }
+
+    selector[0].setFillColor(sf::Color::Cyan);
+    selectorCoordinates[0] = {0, GRIDY / 2};
+
+    selector[1].setFillColor(sf::Color::Magenta);
+    selectorCoordinates[1] = {GRIDX * 2 + MIDDLE - 1, GRIDY / 2};
+
+    prevMouse = {0, 0};
+
+    prevKeys[0] = prevKeys[1] = {false, false, false, false, false, false};
+}
+
 void Game::draw(sf::RenderWindow * window)
 {
     if (settings.doubleBuffered)
@@ -60,7 +89,10 @@ void Game::draw(sf::RenderWindow * window)
         {
             towers[i]->draw(&canvas);
         }
-        interface.draw(&canvas);
+        for(int i = 0; i < 2; ++i)
+        {
+            canvas.draw(selector[i]);
+        }
         canvas.display();
         drawable.setTexture(canvas.getTexture());
         window->draw(drawable);
@@ -72,28 +104,116 @@ void Game::draw(sf::RenderWindow * window)
         {
             towers[i]->draw(window);
         }
-        interface.draw(window);
+        for(int i = 0; i < 2; ++i)
+        {
+            window->draw(selector[i]);
+        }
     }
 }
 
 int Game::update(sf::Vector2i mousePos)
 {
-    //printf("%d\n", towers.size());
+    static const int gridSize = BOXDIMENSIONS + 1; //grid box + border
 
-//    for(int a = 0; a < GRIDY; ++a)
-//    {
-//        for(int b = 0; b < GRIDX * 2 + MIDDLE; ++b)
-//        {
-//            printf("%d\t", distancesLeft[a][b]);
-//        }
-//        printf("\n");
-//    }
-    interface.update(mousePos);
-
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    if (mousePos != prevMouse && settings.enableMouse == true)
     {
-        newTower(gridPosition(mousePos));
+        if (players == left)
+        {
+            sf::Vector2i tempCoordinate = gridPosition(mousePos);
+            if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+            {
+                selectorCoordinates[0] = tempCoordinate;
+            }
+        }
+        else if (players == right)
+        {
+            sf::Vector2i tempCoordinate = gridPosition(mousePos);
+            if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+            {
+                selectorCoordinates[1] = tempCoordinate;
+            }
+        }
     }
+    prevMouse = mousePos;
+
+    int begin, end;
+
+    if(players == left || players == both)
+        begin = 0;
+    else
+        begin = 1;
+    if(players == right || players == both)
+        end = 2;
+    else
+        end = 1;
+
+    for(int i = begin; i < end; ++i)
+    {
+        Keys temp;
+        if(i == 0)
+            temp = settings.leftPlayer;
+        else
+            temp = settings.rightPlayer;
+
+        if(sf::Keyboard::isKeyPressed(temp.up))
+        {
+            if(prevKeys[i].up == false)
+                selectorCoordinates[i].y -= 1;
+            prevKeys[i].up = true;
+        }
+        else
+        {
+            prevKeys[i].up = false;
+        }
+        if(sf::Keyboard::isKeyPressed(temp.down))
+        {
+            if(prevKeys[i].down == false)
+                selectorCoordinates[i].y += 1;
+            prevKeys[i].down = true;
+        }
+        else
+        {
+            prevKeys[i].down = false;
+        }
+        if(sf::Keyboard::isKeyPressed(temp.left))
+        {
+            if(prevKeys[i].left == false)
+                selectorCoordinates[i].x -= 1;
+            prevKeys[i].left = true;
+        }
+        else
+        {
+            prevKeys[i].left = false;
+        }
+        if(sf::Keyboard::isKeyPressed(temp.right))
+        {
+            if(prevKeys[i].right == false)
+                selectorCoordinates[i].x += 1;
+            prevKeys[i].right = true;
+        }
+        else
+        {
+            prevKeys[i].right = false;
+        }
+
+        if (selectorCoordinates[i].y < 0)
+            selectorCoordinates[i].y = GRIDY - 1;
+        if (selectorCoordinates[i].y > GRIDY - 1)
+            selectorCoordinates[i].y = 0;
+        if (selectorCoordinates[i].x < 0)
+            selectorCoordinates[i].x = GRIDX * 2 + MIDDLE - 1;
+        if (selectorCoordinates[i].x > GRIDX * 2 + MIDDLE - 1)
+            selectorCoordinates[i].x = 0;
+    }
+
+    for(int i = 0; i < 2; ++i)
+    {
+        selector[i].setPosition((float)(gridSize + selectorCoordinates[i].x * gridSize), (float)(1 + selectorCoordinates[i].y * gridSize));
+    }
+//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+//    {
+//        newTower(gridPosition(mousePos));
+//    }
 
     for(unsigned int i = 0; i < towers.size(); ++i)
     {

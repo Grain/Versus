@@ -11,7 +11,15 @@ Settings settings;
 int main(int argc, char *argv[])
 {
     settings.doubleBuffered = true;
-    settings.enableMouse =  false;
+    settings.enableMouse =  true;
+    settings.leftPlayer.up = sf::Keyboard::W;
+    settings.leftPlayer.down = sf::Keyboard::S;
+    settings.leftPlayer.left = sf::Keyboard::A;
+    settings.leftPlayer.right = sf::Keyboard::D;
+    settings.rightPlayer.up = sf::Keyboard::Up;
+    settings.rightPlayer.down = sf::Keyboard::Down;
+    settings.rightPlayer.left = sf::Keyboard::Left;
+    settings.rightPlayer.right = sf::Keyboard::Right;
 
     if (argc > 1)
     {

@@ -6,10 +6,10 @@
 
 struct Keys
 {
-    sf::Keyboard::Key left;
-    sf::Keyboard::Key right;
     sf::Keyboard::Key up;
     sf::Keyboard::Key down;
+    sf::Keyboard::Key left;
+    sf::Keyboard::Key right;
     sf::Keyboard::Key select;
     sf::Keyboard::Key back;
 };
