@@ -22,7 +22,7 @@ Game::Game()
             printf("Error creating game renderTexture\n");
     }
 
-    players = both;
+    players = left;
 }
 
 /***************************************************************/
@@ -78,6 +78,17 @@ void Game::newGame()
 
 void Game::draw(sf::RenderWindow * window)
 {
+    int begin, end;
+
+    if(players == left || players == both)
+        begin = 0;
+    else
+        begin = 1;
+    if(players == right || players == both)
+        end = 2;
+    else
+        end = 1;
+
     if (settings.doubleBuffered)
     {
         canvas.clear(sf::Color::Transparent);
@@ -87,7 +98,7 @@ void Game::draw(sf::RenderWindow * window)
         {
             towers[i]->draw(&canvas);
         }
-        for(int i = 0; i < 2; ++i)
+        for(int i = begin; i < end; ++i)
         {
             canvas.draw(selector[i]);
         }
@@ -102,7 +113,8 @@ void Game::draw(sf::RenderWindow * window)
         {
             towers[i]->draw(window);
         }
-        for(int i = 0; i < 2; ++i)
+
+        for(int i = begin; i < end; ++i)
         {
             window->draw(selector[i]);
         }
@@ -129,6 +141,18 @@ int Game::update(sf::Vector2i mousePos)
             if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
             {
                 selectorCoordinates[1] = tempCoordinate;
+            }
+        }
+
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            if(players == left)
+            {
+                newTower(selectorCoordinates[0]);
+            }
+            if(players == right)
+            {
+                newTower(selectorCoordinates[1]);
             }
         }
     }
@@ -223,7 +247,8 @@ int Game::update(sf::Vector2i mousePos)
 
     for(unsigned int i = 0; i < towers.size(); ++i)
     {
-        towers[i]->setRotation(mousePos.x);
+        towers[i]->setRotationTarget((sf::Vector2f)mousePos);
+//        towers[i]->setRotation(mousePos.x);
     }
 
     return 0;

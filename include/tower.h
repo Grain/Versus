@@ -1,7 +1,7 @@
 #ifndef TOWER_H
 #define TOWER_H
 #include "global.h"
-
+#include <cmath>
 
 class Tower
 {
@@ -14,6 +14,7 @@ class Tower
         static sf::Vector2i getSize();
         //setters
         void setRotation(double);
+        void setRotationTarget(sf::Vector2f);
         void setCoordinates(sf::Vector2i);
         //functions
         void update();
@@ -23,6 +24,8 @@ class Tower
         //vars
         sf::RectangleShape base;    //40x40 base
         sf::RectangleShape turret;  //40x40 turret, can spin around (use transparent image to make smaller visual turret)
+        sf::Texture baseTexture;
+        sf::Texture turretTexture;
         sf::Vector2i coordinates;
         sf::Vector2f position;
 };
