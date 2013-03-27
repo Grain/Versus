@@ -6,15 +6,19 @@
 
 Game::Game()
 {
-    for(int a = 0; a < GRIDX * 2 + MIDDLE; ++a)
+    sf::Image temp;
+    temp.loadFromFile("resources/selector.png");
+    selectorTextures[0].loadFromImage(temp);
+    temp.flipVertically();
+    selectorTextures[1].loadFromImage(temp);
+
+    for(int i = 0; i < 2; ++i)
     {
-        for(int b = 0; b < GRIDY; ++b)
-        {
-            map[a][b] = false;
-        }
+        selector[i].setSize({BOXDIMENSIONS, BOXDIMENSIONS});
+        selector[i].setTexture(&selectorTextures[i]);
     }
 
-    calculateDistances();
+    newGame();
 
     if (settings.doubleBuffered)
     {
@@ -22,7 +26,7 @@ Game::Game()
             printf("Error creating game renderTexture\n");
     }
 
-    players = left;
+    players = both;
 }
 
 /***************************************************************/
@@ -53,18 +57,6 @@ Game::~Game()
 
 void Game::newGame()
 {
-    sf::Image temp;
-    temp.loadFromFile("resources/selector.png");
-    selectorTextures[0].loadFromImage(temp);
-    temp.flipVertically();
-    selectorTextures[1].loadFromImage(temp);
-
-    for(int i = 0; i < 2; ++i)
-    {
-        selector[i].setSize({BOXDIMENSIONS, BOXDIMENSIONS});
-        selector[i].setTexture(&selectorTextures[i]);
-    }
-
     selector[0].setFillColor(sf::Color::Cyan);
     selectorCoordinates[0] = {0, GRIDY / 2};
 
@@ -74,6 +66,22 @@ void Game::newGame()
     prevMouse = {0, 0};
 
     prevKeys[0] = prevKeys[1] = {false, false, false, false, false, false};
+
+    for(unsigned int i = 0; i < towers.size(); ++i)
+    {
+        delete towers[i];
+    }
+    towers.clear();
+
+    for(int a = 0; a < GRIDX * 2 + MIDDLE; ++a)
+    {
+        for(int b = 0; b < GRIDY; ++b)
+        {
+            map[a][b] = false;
+        }
+    }
+
+    calculateDistances();
 }
 
 void Game::draw(sf::RenderWindow * window)
@@ -143,20 +151,34 @@ int Game::update(sf::Vector2i mousePos)
                 selectorCoordinates[1] = tempCoordinate;
             }
         }
+    }
+    prevMouse = mousePos;
 
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        if(players == left)
         {
-            if(players == left)
+            if (selectorCoordinates[0].x < GRIDX)
             {
                 newTower(selectorCoordinates[0]);
             }
-            if(players == right)
+            else
+            {
+                //error message
+            }
+        }
+        if(players == right)
+        {
+            if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
             {
                 newTower(selectorCoordinates[1]);
             }
+            else
+            {
+                //error message
+            }
         }
     }
-    prevMouse = mousePos;
 
     int begin, end;
 
@@ -221,7 +243,28 @@ int Game::update(sf::Vector2i mousePos)
         {
             if(prevKeys[i].select == false)
             {
-                newTower(selectorCoordinates[i]);
+                if (i == 0) //left
+                {
+                    if (selectorCoordinates[0].x < GRIDX)
+                    {
+                        newTower(selectorCoordinates[0]);
+                    }
+                    else
+                    {
+                        //error message
+                    }
+                }
+                if (i == 1) //right
+                {
+                    if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
+                    {
+                        newTower(selectorCoordinates[1]);
+                    }
+                    else
+                    {
+                        //error message
+                    }
+                }
             }
             prevKeys[i].select = true;
         }
@@ -249,6 +292,11 @@ int Game::update(sf::Vector2i mousePos)
     {
         towers[i]->setRotationTarget((sf::Vector2f)mousePos);
 //        towers[i]->setRotation(mousePos.x);
+    }
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))       //temp
+    {
+        return 1;
     }
 
     return 0;
