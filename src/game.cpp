@@ -15,9 +15,12 @@ Game::Game()
     timer.setColor(sf::Color(128, 128, 128));
     timer.setCharacterSize(26);
     timer.setStyle(sf::Text::Bold);
+    timer.setString("test");
+    timer.setOrigin(timer.getGlobalBounds().width / 2, timer.getGlobalBounds().height / 2);
+    timer.setPosition(XRES / 2, 400);
     timerBackground.setSize({80, 34});
-    timerBackground.setOrigin(timerBackground.getSize().x / 2, 0);
-    timerBackground.setPosition(XRES / 2, 400 - 2);
+    timerBackground.setOrigin(timerBackground.getSize().x / 2, timerBackground.getSize().y / 2);
+    timerBackground.setPosition(timer.getGlobalBounds().left + timer.getGlobalBounds().width / 2, timer.getGlobalBounds().top + timer.getGlobalBounds().height / 2);
     timerBackground.setFillColor(sf::Color::Transparent);
     timerBackground.setOutlineColor(sf::Color::Black);
     timerBackground.setOutlineThickness(2);
@@ -317,7 +320,7 @@ int Game::update(sf::Vector2i mousePos)
 
     time += 1.0 / FPS;
     timer.setString(formatTime(floor(time)));
-    timer.setOrigin(timer.getGlobalBounds().width / 2, 0);
+    timer.setOrigin(timer.getGlobalBounds().width / 2, timer.getGlobalBounds().height / 2);
     timer.setPosition(XRES / 2, 400);
     timerBar.setSize({(float)(fmod(time + 30.0, 30.0) / 30.0 * 80.0), timerBar.getSize().y});
 

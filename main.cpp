@@ -10,7 +10,7 @@ Settings settings;
 
 int main(int argc, char *argv[])
 {
-    settings.doubleBuffered = true;
+    settings.doubleBuffered = false;
     settings.enableMouse =  true;
     settings.leftPlayer.up = sf::Keyboard::W;
     settings.leftPlayer.down = sf::Keyboard::S;
