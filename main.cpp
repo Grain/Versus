@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     bool inGame = false;
     bool focused = true;
 
-    window.setFramerateLimit(30);
+    window.setFramerateLimit(FPS);
 
     // run the program as long as the window is open
     while (window.isOpen())

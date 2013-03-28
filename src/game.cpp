@@ -12,6 +12,19 @@ Game::Game()
     temp.flipVertically();
     selectorTextures[1].loadFromImage(temp);
 
+    timer.setColor(sf::Color(128, 128, 128));
+    timer.setCharacterSize(26);
+    timer.setStyle(sf::Text::Bold);
+    timerBackground.setSize({80, 34});
+    timerBackground.setOrigin(timerBackground.getSize().x / 2, 0);
+    timerBackground.setPosition(XRES / 2, 400 - 2);
+    timerBackground.setFillColor(sf::Color::Transparent);
+    timerBackground.setOutlineColor(sf::Color::Black);
+    timerBackground.setOutlineThickness(2);
+    timerBar.setSize({0, 34});
+    timerBar.setPosition(timerBackground.getGlobalBounds().left + timerBackground.getOutlineThickness(), timerBackground.getGlobalBounds().top + timerBackground.getOutlineThickness());
+    timerBar.setFillColor(sf::Color::Green);
+
     for(int i = 0; i < 2; ++i)
     {
         selector[i].setSize({BOXDIMENSIONS, BOXDIMENSIONS});
@@ -82,6 +95,8 @@ void Game::newGame()
     }
 
     calculateDistances();
+
+    time = -30;
 }
 
 void Game::draw(sf::RenderWindow * window)
@@ -110,6 +125,9 @@ void Game::draw(sf::RenderWindow * window)
         {
             canvas.draw(selector[i]);
         }
+        canvas.draw(timerBackground);
+        canvas.draw(timerBar);
+        canvas.draw(timer);
         canvas.display();
         drawable.setTexture(canvas.getTexture());
         window->draw(drawable);
@@ -126,6 +144,9 @@ void Game::draw(sf::RenderWindow * window)
         {
             window->draw(selector[i]);
         }
+        window->draw(timerBackground);
+        window->draw(timerBar);
+        window->draw(timer);
     }
 }
 
@@ -293,6 +314,12 @@ int Game::update(sf::Vector2i mousePos)
         towers[i]->setRotationTarget((sf::Vector2f)mousePos);
 //        towers[i]->setRotation(mousePos.x);
     }
+
+    time += 1.0 / FPS;
+    timer.setString(formatTime(floor(time)));
+    timer.setOrigin(timer.getGlobalBounds().width / 2, 0);
+    timer.setPosition(XRES / 2, 400);
+    timerBar.setSize({(float)(fmod(time + 30.0, 30.0) / 30.0 * 80.0), timerBar.getSize().y});
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))       //temp
     {
@@ -551,4 +578,22 @@ void Game::initializeGrid(sf::RenderTarget* target, sf::Color left, sf::Color ri
         temp.setPosition(offset, i * (BOXDIMENSIONS + 1));
         target->draw(temp);
     }
+}
+
+std::string Game::formatTime(int i)
+{
+    char temp[5];
+    std::string time;
+
+    if (i < 0)
+        time += '-';
+    sprintf(temp, "%d", i / 60);
+    time += temp;
+    time += ':';
+    if (abs(i % 60) < 10)
+        time += '0';
+    sprintf(temp, "%d", abs(i % 60));
+    time += temp;
+
+    return time;
 }

@@ -30,6 +30,8 @@ extern Settings settings;
 const int XRES = 1024;
 const int YRES = 576;
 
+const int FPS = 30;
+
 //grid consts
 const int BOXDIMENSIONS = 40;   //each box in the grid is 40x40, not including the lines
 const int GRIDX = 10;

@@ -40,6 +40,7 @@ class Game
         void initializeGrid(sf::RenderTarget*, sf::Color, sf::Color);
         void newTower(sf::Vector2i);
         void calculateDistances();
+        std::string formatTime(int);
 
         //vars
         Players players;
@@ -57,6 +58,11 @@ class Game
 
         int distancesLeft[GRIDX * 2 + MIDDLE][GRIDY];   //left = going to left side, right = going to right side
         int distancesRight[GRIDX * 2 + MIDDLE][GRIDY];
+
+        double time;
+        sf::Text timer;
+        sf::RectangleShape timerBackground;
+        sf::RectangleShape timerBar;
 };
 
 #endif // GAME_H
