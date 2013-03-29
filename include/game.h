@@ -3,12 +3,16 @@
 
 #include "global.h"
 #include "tower.h"
+#include "button.h"
 #include <vector>
 #include <queue>
 
 class Game
 {
     public:
+        //enums
+        enum Players{left, right, both};
+
         //ctor/dtor
         Game();
         virtual ~Game();
@@ -18,13 +22,11 @@ class Game
         //functions
         int update(sf::Vector2i);
         void draw(sf::RenderWindow*);
-        void newGame();
+        void newGame(Players);
     protected:
     private:
         static const int FILLED = 99999;
         static const int EMPTY = 9999;
-
-        enum Players{left, right, both};
 
         struct KeyState
         {
@@ -63,6 +65,14 @@ class Game
         sf::Text timer;
         sf::RectangleShape timerBackground;
         sf::RectangleShape timerBar;
+
+        sf::RectangleShape speedBackground;
+        sf::Texture speedBackgroundTexture;
+        Button speedUpButton;
+        unsigned int speedUpAnimation;
+        bool speedUp;
+
+        Button pauseButton;
 };
 
 #endif // GAME_H

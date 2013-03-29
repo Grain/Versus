@@ -12,11 +12,13 @@ int main(int argc, char *argv[])
 {
     settings.doubleBuffered = false;
     settings.enableMouse =  true;
+
     settings.leftPlayer.up = sf::Keyboard::W;
     settings.leftPlayer.down = sf::Keyboard::S;
     settings.leftPlayer.left = sf::Keyboard::A;
     settings.leftPlayer.right = sf::Keyboard::D;
     settings.leftPlayer.select = sf::Keyboard::J;
+
     settings.rightPlayer.up = sf::Keyboard::Up;
     settings.rightPlayer.down = sf::Keyboard::Down;
     settings.rightPlayer.left = sf::Keyboard::Left;
@@ -27,7 +29,7 @@ int main(int argc, char *argv[])
     {
         if (strcmp(argv[1], "-d") == 0)
         {
-            settings.doubleBuffered = false;
+            settings.doubleBuffered = !settings.doubleBuffered;
         }
     }
 
@@ -93,10 +95,14 @@ int main(int argc, char *argv[])
                     case 0:
                         break;
                     case 1:
-                        inGame = true;
-                        game.newGame();
+                        inGame = true;      //TODO: have a getter in menu for game options, and access that from here to make new game
+                        game.newGame(Game::left);
                         break;
                     case 2:
+                        inGame = true;
+                        game.newGame(Game::both);
+                        break;
+                    case 10:
                         window.close();
                         break;
                 }

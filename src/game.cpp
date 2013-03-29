@@ -15,9 +15,9 @@ Game::Game()
     timer.setColor(sf::Color(128, 128, 128));
     timer.setCharacterSize(26);
     timer.setStyle(sf::Text::Bold);
-    timer.setString("test");
+    timer.setString("0:30");
     timer.setOrigin(timer.getGlobalBounds().width / 2, timer.getGlobalBounds().height / 2);
-    timer.setPosition(XRES / 2, 400);
+    timer.setPosition(XRES / 2, 406);
     timerBackground.setSize({80, 34});
     timerBackground.setOrigin(timerBackground.getSize().x / 2, timerBackground.getSize().y / 2);
     timerBackground.setPosition(timer.getGlobalBounds().left + timer.getGlobalBounds().width / 2, timer.getGlobalBounds().top + timer.getGlobalBounds().height / 2);
@@ -28,21 +28,32 @@ Game::Game()
     timerBar.setPosition(timerBackground.getGlobalBounds().left + timerBackground.getOutlineThickness(), timerBackground.getGlobalBounds().top + timerBackground.getOutlineThickness());
     timerBar.setFillColor(sf::Color::Green);
 
+    speedBackgroundTexture.loadFromFile("resources/speed.png");
+    speedBackground.setSize({80, 40});
+    speedBackground.setOrigin(speedBackground.getSize().x / 2, timerBackground.getSize().y / 2);
+    speedBackground.setPosition(XRES / 2, 470);
+    speedBackground.setTexture(&speedBackgroundTexture, true);
+    speedBackground.setTextureRect(sf::IntRect(0, 0, speedBackground.getSize().x, speedBackground.getSize().y));
+    speedBackground.setFillColor(sf::Color::Blue);
+    speedBackground.setOutlineColor(sf::Color::Black);
+    speedBackground.setOutlineThickness(2);
+
+    pauseButton.initialize(84, 40);
+    pauseButton.setPosition({XRES / 2 - pauseButton.getSize().x / 2, 516});
+    pauseButton.loadTexture("resources/pause.png");
+    pauseButton.setVisible(true);
+
     for(int i = 0; i < 2; ++i)
     {
         selector[i].setSize({BOXDIMENSIONS, BOXDIMENSIONS});
         selector[i].setTexture(&selectorTextures[i]);
     }
 
-    newGame();
-
     if (settings.doubleBuffered)
     {
         if(!canvas.create(XRES, YRES))
             printf("Error creating game renderTexture\n");
     }
-
-    players = both;
 }
 
 /***************************************************************/
@@ -71,8 +82,10 @@ Game::~Game()
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
 
-void Game::newGame()
+void Game::newGame(Game::Players a)
 {
+    players = a;
+
     selector[0].setFillColor(sf::Color::Cyan);
     selectorCoordinates[0] = {0, GRIDY / 2};
 
@@ -100,6 +113,9 @@ void Game::newGame()
     calculateDistances();
 
     time = -30;
+
+    speedUp = false;
+    speedUpAnimation = 0;
 }
 
 void Game::draw(sf::RenderWindow * window)
@@ -131,6 +147,10 @@ void Game::draw(sf::RenderWindow * window)
         canvas.draw(timerBackground);
         canvas.draw(timerBar);
         canvas.draw(timer);
+        canvas.draw(speedBackground);
+
+        pauseButton.draw(&canvas);
+
         canvas.display();
         drawable.setTexture(canvas.getTexture());
         window->draw(drawable);
@@ -150,6 +170,9 @@ void Game::draw(sf::RenderWindow * window)
         window->draw(timerBackground);
         window->draw(timerBar);
         window->draw(timer);
+        window->draw(speedBackground);
+
+        pauseButton.draw(window);
     }
 }
 
@@ -157,6 +180,7 @@ int Game::update(sf::Vector2i mousePos)
 {
     static const int gridSize = BOXDIMENSIONS + 1; //grid box + border
 
+    ///////////////mouse control selector
     if (mousePos != prevMouse && settings.enableMouse == true)
     {
         if (players == left)
@@ -178,6 +202,7 @@ int Game::update(sf::Vector2i mousePos)
     }
     prevMouse = mousePos;
 
+    //////////////////keyboard control selector
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         if(players == left)
@@ -307,9 +332,17 @@ int Game::update(sf::Vector2i mousePos)
             selectorCoordinates[i].x = 0;
     }
 
+    ////////////////////////////////
+
     for(int i = 0; i < 2; ++i)
     {
         selector[i].setPosition((float)(gridSize + selectorCoordinates[i].x * gridSize), (float)(1 + selectorCoordinates[i].y * gridSize));
+    }
+
+    if (pauseButton.update(mousePos))
+    {
+        //pause
+        return 1;
     }
 
     for(unsigned int i = 0; i < towers.size(); ++i)
@@ -321,12 +354,18 @@ int Game::update(sf::Vector2i mousePos)
     time += 1.0 / FPS;
     timer.setString(formatTime(floor(time)));
     timer.setOrigin(timer.getGlobalBounds().width / 2, timer.getGlobalBounds().height / 2);
-    timer.setPosition(XRES / 2, 400);
+    timer.setPosition(XRES / 2, timer.getPosition().y);
     timerBar.setSize({(float)(fmod(time + 30.0, 30.0) / 30.0 * 80.0), timerBar.getSize().y});
+
+    speedUpAnimation++;
+    if(speedUpAnimation > speedBackgroundTexture.getSize().x - 80)
+        speedUpAnimation = 0;
+    speedBackground.setTextureRect(sf::IntRect(speedUpAnimation, 0, speedBackground.getSize().x, speedBackground.getSize().y));
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))       //temp
     {
         return 1;
+        //should do same as pressing pause button
     }
 
     return 0;

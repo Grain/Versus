@@ -115,11 +115,12 @@ int Menu::update(sf::Vector2i mousePos)
                     return 1;
                     break;
                 case 1: //multi player
+                    return 2;
                     break;
                 case 2: //options
                     break;
                 case 3: //exit
-                    return 2;
+                    return 10;
                     break;
             }
         }
