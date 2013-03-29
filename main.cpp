@@ -12,18 +12,21 @@ int main(int argc, char *argv[])
 {
     settings.doubleBuffered = false;
     settings.enableMouse =  true;
+    settings.fastForwardSpeed = 3;
 
     settings.leftPlayer.up = sf::Keyboard::W;
     settings.leftPlayer.down = sf::Keyboard::S;
     settings.leftPlayer.left = sf::Keyboard::A;
     settings.leftPlayer.right = sf::Keyboard::D;
     settings.leftPlayer.select = sf::Keyboard::J;
+    settings.leftPlayer.speed = sf::Keyboard::Space;
 
     settings.rightPlayer.up = sf::Keyboard::Up;
     settings.rightPlayer.down = sf::Keyboard::Down;
     settings.rightPlayer.left = sf::Keyboard::Left;
     settings.rightPlayer.right = sf::Keyboard::Right;
     settings.rightPlayer.select = sf::Keyboard::Numpad1;
+    settings.rightPlayer.speed = sf::Keyboard::Numpad0;
 
     if (argc > 1)
     {

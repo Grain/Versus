@@ -12,6 +12,7 @@ struct Keys
     sf::Keyboard::Key right;
     sf::Keyboard::Key select;
     sf::Keyboard::Key back;
+    sf::Keyboard::Key speed;
 };
 
 struct Settings
@@ -21,6 +22,7 @@ struct Settings
     bool enableMouse;
 
     bool doubleBuffered;
+    int fastForwardSpeed;
 };
 
 sf::Vector2i gridPosition(sf::Vector2i);

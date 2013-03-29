@@ -67,12 +67,19 @@ class Game
         sf::RectangleShape timerBar;
 
         sf::RectangleShape speedBackground;
+        sf::RectangleShape fastForward;
+        sf::Texture fastForwardTexture;
         sf::Texture speedBackgroundTexture;
-        Button speedUpButton;
         unsigned int speedUpAnimation;
-        bool speedUp;
+        int speedUp;
 
-        Button pauseButton;
+        Button pause;
+        Button resume;
+        Button exit;
+        sf::RectangleShape pauseBackground;
+        sf::Texture pauseBackgroundTexture;
+        bool paused;
+        bool prevEscape;
 };
 
 #endif // GAME_H

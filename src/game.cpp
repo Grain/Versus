@@ -37,11 +37,26 @@ Game::Game()
     speedBackground.setFillColor(sf::Color::Blue);
     speedBackground.setOutlineColor(sf::Color::Black);
     speedBackground.setOutlineThickness(2);
+    fastForwardTexture.loadFromFile("resources/fastForward.png");
+    fastForward.setSize(speedBackground.getSize());
+    fastForward.setPosition(speedBackground.getGlobalBounds().left + 2, speedBackground.getGlobalBounds().top + 2);
+    fastForward.setTexture(&fastForwardTexture);
 
-    pauseButton.initialize(84, 40);
-    pauseButton.setPosition({XRES / 2 - pauseButton.getSize().x / 2, 516});
-    pauseButton.loadTexture("resources/pause.png");
-    pauseButton.setVisible(true);
+    pause.initialize(84, 40);
+    pause.setPosition({XRES / 2 - pause.getSize().x / 2, 516});
+    pause.loadTexture("resources/pause.png");
+    resume.initialize(100, 50);
+    resume.setPosition({XRES / 2 - resume.getSize().x / 2, 200});
+    resume.loadTexture("resources/resume.png");
+    resume.setVisible(false);
+    exit.initialize(100, 50);
+    exit.setPosition({XRES / 2 - exit.getSize().x / 2, 300});
+    exit.loadTexture("resources/exit.png");
+    exit.setVisible(false);
+    pauseBackgroundTexture.loadFromFile("resources/translucent.png");
+    pauseBackground.setSize({XRES, YRES});
+    pauseBackground.setPosition({0, 0});
+    pauseBackground.setTexture(&pauseBackgroundTexture);
 
     for(int i = 0; i < 2; ++i)
     {
@@ -116,6 +131,11 @@ void Game::newGame(Game::Players a)
 
     speedUp = false;
     speedUpAnimation = 0;
+
+    paused = false;
+    prevEscape = false;
+    resume.setVisible(false);
+    exit.setVisible(false);
 }
 
 void Game::draw(sf::RenderWindow * window)
@@ -148,8 +168,14 @@ void Game::draw(sf::RenderWindow * window)
         canvas.draw(timerBar);
         canvas.draw(timer);
         canvas.draw(speedBackground);
+        canvas.draw(fastForward);
 
-        pauseButton.draw(&canvas);
+        pause.draw(&canvas);
+
+        if(paused)
+            canvas.draw(pauseBackground);
+        resume.draw(&canvas);
+        exit.draw(&canvas);
 
         canvas.display();
         drawable.setTexture(canvas.getTexture());
@@ -171,8 +197,14 @@ void Game::draw(sf::RenderWindow * window)
         window->draw(timerBar);
         window->draw(timer);
         window->draw(speedBackground);
+        window->draw(fastForward);
 
-        pauseButton.draw(window);
+        pause.draw(window);
+
+        if(paused)
+            window->draw(pauseBackground);
+        resume.draw(window);
+        exit.draw(window);
     }
 }
 
@@ -180,119 +212,56 @@ int Game::update(sf::Vector2i mousePos)
 {
     static const int gridSize = BOXDIMENSIONS + 1; //grid box + border
 
-    ///////////////mouse control selector
-    if (mousePos != prevMouse && settings.enableMouse == true)
+    if (paused)
     {
-        if (players == left)
+        if (resume.update(mousePos))
         {
-            sf::Vector2i tempCoordinate = gridPosition(mousePos);
-            if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
-            {
-                selectorCoordinates[0] = tempCoordinate;
-            }
+            resume.setVisible(!paused);
+            exit.setVisible(!paused);
+            paused = !paused;
         }
-        else if (players == right)
+        if (exit.update(mousePos))
         {
-            sf::Vector2i tempCoordinate = gridPosition(mousePos);
-            if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
-            {
-                selectorCoordinates[1] = tempCoordinate;
-            }
+            return 1;
         }
     }
-    prevMouse = mousePos;
-
-    //////////////////keyboard control selector
-    if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    {
-        if(players == left)
-        {
-            if (selectorCoordinates[0].x < GRIDX)
-            {
-                newTower(selectorCoordinates[0]);
-            }
-            else
-            {
-                //error message
-            }
-        }
-        if(players == right)
-        {
-            if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
-            {
-                newTower(selectorCoordinates[1]);
-            }
-            else
-            {
-                //error message
-            }
-        }
-    }
-
-    int begin, end;
-
-    if(players == left || players == both)
-        begin = 0;
     else
-        begin = 1;
-    if(players == right || players == both)
-        end = 2;
-    else
-        end = 1;
-
-    for(int i = begin; i < end; ++i)
     {
-        Keys temp;
-        if(i == 0)
-            temp = settings.leftPlayer;
-        else
-            temp = settings.rightPlayer;
+        if (pause.update(mousePos))
+        {
+            resume.setVisible(!paused);
+            exit.setVisible(!paused);
+            paused = !paused;
+            return 0;
+        }
 
-        if(sf::Keyboard::isKeyPressed(temp.up))
+        ///////////////mouse control selector
+        if (mousePos != prevMouse && settings.enableMouse == true)
         {
-            if(prevKeys[i].up == false)
-                selectorCoordinates[i].y -= 1;
-            prevKeys[i].up = true;
-        }
-        else
-        {
-            prevKeys[i].up = false;
-        }
-        if(sf::Keyboard::isKeyPressed(temp.down))
-        {
-            if(prevKeys[i].down == false)
-                selectorCoordinates[i].y += 1;
-            prevKeys[i].down = true;
-        }
-        else
-        {
-            prevKeys[i].down = false;
-        }
-        if(sf::Keyboard::isKeyPressed(temp.left))
-        {
-            if(prevKeys[i].left == false)
-                selectorCoordinates[i].x -= 1;
-            prevKeys[i].left = true;
-        }
-        else
-        {
-            prevKeys[i].left = false;
-        }
-        if(sf::Keyboard::isKeyPressed(temp.right))
-        {
-            if(prevKeys[i].right == false)
-                selectorCoordinates[i].x += 1;
-            prevKeys[i].right = true;
-        }
-        else
-        {
-            prevKeys[i].right = false;
-        }
-        if(sf::Keyboard::isKeyPressed(temp.select))
-        {
-            if(prevKeys[i].select == false)
+            if (players == left)
             {
-                if (i == 0) //left
+                sf::Vector2i tempCoordinate = gridPosition(mousePos);
+                if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+                {
+                    selectorCoordinates[0] = tempCoordinate;
+                }
+            }
+            else if (players == right)
+            {
+                sf::Vector2i tempCoordinate = gridPosition(mousePos);
+                if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+                {
+                    selectorCoordinates[1] = tempCoordinate;
+                }
+            }
+        }
+        prevMouse = mousePos;
+
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            if(players == left)
+            {
+                if (selectorCoordinates[0] == gridPosition(mousePos))
                 {
                     if (selectorCoordinates[0].x < GRIDX)
                     {
@@ -303,7 +272,10 @@ int Game::update(sf::Vector2i mousePos)
                         //error message
                     }
                 }
-                if (i == 1) //right
+            }
+            if(players == right)
+            {
+                if (selectorCoordinates[1] == gridPosition(mousePos))
                 {
                     if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
                     {
@@ -315,57 +287,181 @@ int Game::update(sf::Vector2i mousePos)
                     }
                 }
             }
-            prevKeys[i].select = true;
+        }
+
+        //////////////////keyboard control selector
+
+        int begin, end;
+
+        if(players == left || players == both)
+            begin = 0;
+        else
+            begin = 1;
+        if(players == right || players == both)
+            end = 2;
+        else
+            end = 1;
+
+        for(int i = begin; i < end; ++i)
+        {
+            Keys temp;
+            if(i == 0)
+                temp = settings.leftPlayer;
+            else
+                temp = settings.rightPlayer;
+
+            if(sf::Keyboard::isKeyPressed(temp.up))
+            {
+                if(prevKeys[i].up == false)
+                    selectorCoordinates[i].y -= 1;
+                prevKeys[i].up = true;
+            }
+            else
+            {
+                prevKeys[i].up = false;
+            }
+            if(sf::Keyboard::isKeyPressed(temp.down))
+            {
+                if(prevKeys[i].down == false)
+                    selectorCoordinates[i].y += 1;
+                prevKeys[i].down = true;
+            }
+            else
+            {
+                prevKeys[i].down = false;
+            }
+            if(sf::Keyboard::isKeyPressed(temp.left))
+            {
+                if(prevKeys[i].left == false)
+                    selectorCoordinates[i].x -= 1;
+                prevKeys[i].left = true;
+            }
+            else
+            {
+                prevKeys[i].left = false;
+            }
+            if(sf::Keyboard::isKeyPressed(temp.right))
+            {
+                if(prevKeys[i].right == false)
+                    selectorCoordinates[i].x += 1;
+                prevKeys[i].right = true;
+            }
+            else
+            {
+                prevKeys[i].right = false;
+            }
+            if(sf::Keyboard::isKeyPressed(temp.select))
+            {
+                if(prevKeys[i].select == false)
+                {
+                    if (i == 0) //left
+                    {
+                        if (selectorCoordinates[0].x < GRIDX)
+                        {
+                            newTower(selectorCoordinates[0]);
+                        }
+                        else
+                        {
+                            //error message
+                        }
+                    }
+                    if (i == 1) //right
+                    {
+                        if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
+                        {
+                            newTower(selectorCoordinates[1]);
+                        }
+                        else
+                        {
+                            //error message
+                        }
+                    }
+                }
+                prevKeys[i].select = true;
+            }
+            else
+            {
+                prevKeys[i].select = false;
+            }
+
+            if (selectorCoordinates[i].y < 0)
+                selectorCoordinates[i].y = GRIDY - 1;
+            if (selectorCoordinates[i].y > GRIDY - 1)
+                selectorCoordinates[i].y = 0;
+            if (selectorCoordinates[i].x < 0)
+                selectorCoordinates[i].x = GRIDX * 2 + MIDDLE - 1;
+            if (selectorCoordinates[i].x > GRIDX * 2 + MIDDLE - 1)
+                selectorCoordinates[i].x = 0;
+        }
+
+        ////////////////////////////////
+
+        for(int i = 0; i < 2; ++i)
+        {
+            selector[i].setPosition((float)(gridSize + selectorCoordinates[i].x * gridSize), (float)(1 + selectorCoordinates[i].y * gridSize));
+        }
+
+        if(players == both)
+        {
+            if (sf::Keyboard::isKeyPressed(settings.leftPlayer.speed) && sf::Keyboard::isKeyPressed(settings.rightPlayer.speed))
+                speedUp = settings.fastForwardSpeed;
+            else
+                speedUp = 0;
+        }
+        else if (players == left)
+        {
+            if (sf::Keyboard::isKeyPressed(settings.leftPlayer.speed))
+                speedUp = settings.fastForwardSpeed;
+            else
+                speedUp = 0;
         }
         else
         {
-            prevKeys[i].select = false;
+            if (sf::Keyboard::isKeyPressed(settings.rightPlayer.speed))
+                speedUp = settings.fastForwardSpeed;
+            else
+                speedUp = 0;
         }
 
-        if (selectorCoordinates[i].y < 0)
-            selectorCoordinates[i].y = GRIDY - 1;
-        if (selectorCoordinates[i].y > GRIDY - 1)
-            selectorCoordinates[i].y = 0;
-        if (selectorCoordinates[i].x < 0)
-            selectorCoordinates[i].x = GRIDX * 2 + MIDDLE - 1;
-        if (selectorCoordinates[i].x > GRIDX * 2 + MIDDLE - 1)
-            selectorCoordinates[i].x = 0;
+        for (int a = 0; a <= speedUp; ++a)      //things that can be sped up
+        {
+            for(unsigned int i = 0; i < towers.size(); ++i)
+            {
+                towers[i]->setRotationTarget((sf::Vector2f)mousePos);
+            }
+
+            time += 1.0 / FPS;
+            timer.setString(formatTime(floor(time)));
+            timer.setOrigin(timer.getGlobalBounds().width / 2, timer.getGlobalBounds().height / 2);
+            timer.setPosition(XRES / 2, timer.getPosition().y);
+            timerBar.setSize({(float)(fmod(time + 30.0, 30.0) / 30.0 * 80.0), timerBar.getSize().y});
+
+            if (speedUp == settings.fastForwardSpeed)
+                speedBackground.setFillColor(sf::Color::Red);
+            else
+                speedBackground.setFillColor(sf::Color::Blue);
+
+            speedUpAnimation++;
+            if(speedUpAnimation > speedBackgroundTexture.getSize().x - 80)
+                speedUpAnimation = 0;
+            speedBackground.setTextureRect(sf::IntRect(speedUpAnimation, 0, speedBackground.getSize().x, speedBackground.getSize().y));
+        }
     }
 
-    ////////////////////////////////
 
-    for(int i = 0; i < 2; ++i)
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
     {
-        selector[i].setPosition((float)(gridSize + selectorCoordinates[i].x * gridSize), (float)(1 + selectorCoordinates[i].y * gridSize));
+        if (prevEscape == false)
+        {
+            resume.setVisible(!paused);
+            exit.setVisible(!paused);
+            paused = !paused;
+        }
+        prevEscape = true;
     }
-
-    if (pauseButton.update(mousePos))
+    else
     {
-        //pause
-        return 1;
-    }
-
-    for(unsigned int i = 0; i < towers.size(); ++i)
-    {
-        towers[i]->setRotationTarget((sf::Vector2f)mousePos);
-//        towers[i]->setRotation(mousePos.x);
-    }
-
-    time += 1.0 / FPS;
-    timer.setString(formatTime(floor(time)));
-    timer.setOrigin(timer.getGlobalBounds().width / 2, timer.getGlobalBounds().height / 2);
-    timer.setPosition(XRES / 2, timer.getPosition().y);
-    timerBar.setSize({(float)(fmod(time + 30.0, 30.0) / 30.0 * 80.0), timerBar.getSize().y});
-
-    speedUpAnimation++;
-    if(speedUpAnimation > speedBackgroundTexture.getSize().x - 80)
-        speedUpAnimation = 0;
-    speedBackground.setTextureRect(sf::IntRect(speedUpAnimation, 0, speedBackground.getSize().x, speedBackground.getSize().y));
-
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))       //temp
-    {
-        return 1;
-        //should do same as pressing pause button
+        prevEscape = false;
     }
 
     return 0;
