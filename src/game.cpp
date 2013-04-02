@@ -53,10 +53,9 @@ Game::Game()
     exit.setPosition({XRES / 2 - exit.getSize().x / 2, 300});
     exit.loadTexture("resources/exit.png");
     exit.setVisible(false);
-    pauseBackgroundTexture.loadFromFile("resources/translucent.png");
     pauseBackground.setSize({XRES, YRES});
     pauseBackground.setPosition({0, 0});
-    pauseBackground.setTexture(&pauseBackgroundTexture);
+    pauseBackground.setFillColor(sf::Color(0, 0, 0, 128));
 
     for(int i = 0; i < 2; ++i)
     {
@@ -406,24 +405,24 @@ int Game::update(sf::Vector2i mousePos)
             if (sf::Keyboard::isKeyPressed(settings.leftPlayer.speed) && sf::Keyboard::isKeyPressed(settings.rightPlayer.speed))
                 speedUp = settings.fastForwardSpeed;
             else
-                speedUp = 0;
+                speedUp = 1;
         }
         else if (players == left)
         {
             if (sf::Keyboard::isKeyPressed(settings.leftPlayer.speed))
                 speedUp = settings.fastForwardSpeed;
             else
-                speedUp = 0;
+                speedUp = 1;
         }
         else
         {
             if (sf::Keyboard::isKeyPressed(settings.rightPlayer.speed))
                 speedUp = settings.fastForwardSpeed;
             else
-                speedUp = 0;
+                speedUp = 1;
         }
 
-        for (int a = 0; a <= speedUp; ++a)      //things that can be sped up
+        for (int a = 1; a <= speedUp; ++a)      //things that can be sped up
         {
             for(unsigned int i = 0; i < towers.size(); ++i)
             {

@@ -77,7 +77,6 @@ class Game
         Button resume;
         Button exit;
         sf::RectangleShape pauseBackground;
-        sf::Texture pauseBackgroundTexture;
         bool paused;
         bool prevEscape;
 };
