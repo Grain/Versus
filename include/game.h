@@ -43,6 +43,7 @@ class Game
         void newTower(sf::Vector2i);
         void calculateDistances();
         std::string formatTime(int);
+        bool fastForwardDown(sf::Vector2i);
 
         //vars
         Players players;

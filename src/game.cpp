@@ -396,21 +396,21 @@ int Game::update(sf::Vector2i mousePos)
 
         if(players == both)
         {
-            if (sf::Keyboard::isKeyPressed(settings.leftPlayer.speed) && sf::Keyboard::isKeyPressed(settings.rightPlayer.speed))
+            if ((sf::Keyboard::isKeyPressed(settings.leftPlayer.speed) && sf::Keyboard::isKeyPressed(settings.rightPlayer.speed)) || fastForwardDown(mousePos))
                 speedUp = settings.fastForwardSpeed;
             else
                 speedUp = 1;
         }
         else if (players == left)
         {
-            if (sf::Keyboard::isKeyPressed(settings.leftPlayer.speed))
+            if (sf::Keyboard::isKeyPressed(settings.leftPlayer.speed) || fastForwardDown(mousePos))
                 speedUp = settings.fastForwardSpeed;
             else
                 speedUp = 1;
         }
         else
         {
-            if (sf::Keyboard::isKeyPressed(settings.rightPlayer.speed))
+            if (sf::Keyboard::isKeyPressed(settings.rightPlayer.speed) || fastForwardDown(mousePos))
                 speedUp = settings.fastForwardSpeed;
             else
                 speedUp = 1;
@@ -727,4 +727,17 @@ std::string Game::formatTime(int i)
     time += temp;
 
     return time;
+}
+
+bool Game::fastForwardDown(sf::Vector2i mousePos)
+{
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        if (fastForward.getGlobalBounds().contains((sf::Vector2f)mousePos))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
