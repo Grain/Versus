@@ -12,6 +12,11 @@ Game::Game()
     temp.flipVertically();
     selectorTextures[1].loadFromImage(temp);
 
+    backgroundTexture.loadFromFile("resources/gameBackground.png");
+    background.setSize({XRES, YRES});
+    background.setPosition(0, 0);
+    background.setTexture(&backgroundTexture);
+
     timer.setColor(sf::Color(128, 128, 128));
     timer.setCharacterSize(26);
     timer.setStyle(sf::Text::Bold);
@@ -150,60 +155,49 @@ void Game::draw(sf::RenderWindow * window)
     else
         end = 1;
 
+    sf::RenderTarget * temp;
+
     if (settings.doubleBuffered)
     {
+        temp = &canvas;
         canvas.clear(sf::Color::Transparent);
-
-        initializeGrid(&canvas, sf::Color::Yellow, sf::Color::Green);    //temp colours
-        for(unsigned int i = 0; i < towers.size(); ++i)
-        {
-            towers[i]->draw(&canvas);
-        }
-        for(int i = begin; i < end; ++i)
-        {
-            canvas.draw(selector[i]);
-        }
-        canvas.draw(timerBackground);
-        canvas.draw(timerBar);
-        canvas.draw(timer);
-        canvas.draw(speedBackground);
-        canvas.draw(fastForward);
-
-        pause.draw(&canvas);
-
-        if(paused)
-            canvas.draw(pauseBackground);
-        resume.draw(&canvas);
-        exit.draw(&canvas);
-
-        canvas.display();
-        drawable.setTexture(canvas.getTexture());
-        window->draw(drawable);
     }
     else
     {
-        initializeGrid(window, sf::Color::Yellow, sf::Color::Green);    //temp colours
-        for(unsigned int i = 0; i < towers.size(); ++i)
-        {
-            towers[i]->draw(window);
-        }
+        temp = window;
+    }
 
-        for(int i = begin; i < end; ++i)
-        {
-            window->draw(selector[i]);
-        }
-        window->draw(timerBackground);
-        window->draw(timerBar);
-        window->draw(timer);
-        window->draw(speedBackground);
-        window->draw(fastForward);
+    temp->draw(background);
+    initializeGrid(temp, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128));     //temp colours
+    for(unsigned int i = 0; i < towers.size(); ++i)
+    {
+        towers[i]->draw(temp);
+    }
 
-        pause.draw(window);
+    for(int i = begin; i < end; ++i)
+    {
+        temp->draw(selector[i]);
+    }
+    temp->draw(timerBackground);
+    temp->draw(timerBar);
+    temp->draw(timer);
+    temp->draw(speedBackground);
+    temp->draw(fastForward);
 
-        if(paused)
-            window->draw(pauseBackground);
-        resume.draw(window);
-        exit.draw(window);
+    pause.draw(temp);
+
+    if(paused)
+    {
+        temp->draw(pauseBackground);
+        resume.draw(temp);
+        exit.draw(temp);
+    }
+
+    if (settings.doubleBuffered)
+    {
+        canvas.display();
+        drawable.setTexture(canvas.getTexture());
+        window->draw(drawable);
     }
 }
 

@@ -55,6 +55,9 @@ class Game
         sf::RenderTexture canvas;
         sf::Sprite drawable;
 
+        sf::RectangleShape background;
+        sf::Texture backgroundTexture;
+
         std::vector<Tower*> towers;
         bool map[GRIDX * 2 + MIDDLE][GRIDY];
 

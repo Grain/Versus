@@ -16,15 +16,8 @@ Menu::Menu()
     background.setPosition(0, 0);
     background.setFillColor(sf::Color::White);
 
-    if(!backgroundTexture.create(XRES, YRES))
-        printf("Error creating menu background\n");
-    else
-    {
-        if(backgroundTexture.loadFromFile("resources/background.png"))
-        {
-            background.setTexture(&backgroundTexture);
-        }
-    }
+    backgroundTexture.loadFromFile("resources/menuBackground.png");
+    background.setTexture(&backgroundTexture);
 
     mainMenu.push_back(new Button());   //single player
     mainMenu[0]->initialize(100, 50);
@@ -77,28 +70,30 @@ Menu::~Menu()
 
 void Menu::draw(sf::RenderWindow * window)
 {
+    sf::RenderTarget * temp;
+
     if (settings.doubleBuffered)
     {
+        temp = &canvas;
         canvas.clear(sf::Color::Transparent);
-        canvas.draw(background);
+    }
+    else
+    {
+        temp = window;
+    }
 
-        for(unsigned int i = 0; i < mainMenu.size(); ++i)
-        {
-            mainMenu[i]->draw(&canvas);
-        }
+    temp->draw(background);
+    for(unsigned int i = 0; i < mainMenu.size(); ++i)
+    {
+        mainMenu[i]->draw(temp);
+    }
 
+    if (settings.doubleBuffered)
+    {
         canvas.display();
         drawable.setPosition(0, 0);
         drawable.setTexture(canvas.getTexture());
         window->draw(drawable);
-    }
-    else
-    {
-        window->draw(background);
-        for(unsigned int i = 0; i < mainMenu.size(); ++i)
-        {
-            mainMenu[i]->draw(window);
-        }
     }
 }
 
