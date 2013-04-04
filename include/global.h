@@ -2,6 +2,7 @@
 #define GLOBAL_H_INCLUDED
 
 #include <cstdio>
+#include <cmath>
 #include <SFML/Graphics.hpp>
 
 struct Keys
@@ -26,6 +27,8 @@ struct Settings
 };
 
 sf::Vector2i gridPosition(sf::Vector2i);
+sf::Vector2i coordinatePosition(sf::Vector2i);
+double distance(sf::Vector2f, sf::Vector2f);
 
 extern Settings settings;
 

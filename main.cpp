@@ -43,6 +43,8 @@ int main(int argc, char *argv[])
     bool inGame = false;
     bool focused = true;
 
+    srand(time(NULL));
+
     window.setFramerateLimit(FPS);
 
     // run the program as long as the window is open

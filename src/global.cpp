@@ -14,3 +14,16 @@ sf::Vector2i gridPosition(sf::Vector2i i)
     }
     return {(i.x - gridSize) / gridSize, (i.y - 1) / gridSize};
 }
+
+sf::Vector2i coordinatePosition(sf::Vector2i i)
+{
+    static const int gridSize = BOXDIMENSIONS + 1; //grid box + border
+
+    return {(gridSize + i.x * gridSize), (1 + i.y * gridSize)};
+}
+
+double distance(sf::Vector2f a, sf::Vector2f b)
+{
+    //printf("%f %f %f %f\n", a.x, a.y, b.x, b.y);
+    return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+}

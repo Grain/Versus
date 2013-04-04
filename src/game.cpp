@@ -85,6 +85,14 @@ Game::~Game()
     {
         delete towers[i];
     }
+
+    for (int a = 0; a < 2; ++a)
+    {
+        for (unsigned int b = 0; b < creeps[a].size(); ++b)
+        {
+            delete creeps[a][b];
+        }
+    }
 }
 
 /***************************************************************/
@@ -120,6 +128,15 @@ void Game::newGame(Game::Players a)
         delete towers[i];
     }
     towers.clear();
+
+    for (int a = 0; a < 2; ++a)
+    {
+        for (unsigned int b = 0; b < creeps[a].size(); ++b)
+        {
+            delete creeps[a][b];
+        }
+        creeps[a].clear();
+    }
 
     for(int a = 0; a < GRIDX * 2 + MIDDLE; ++a)
     {
@@ -172,6 +189,14 @@ void Game::draw(sf::RenderWindow * window)
     for(unsigned int i = 0; i < towers.size(); ++i)
     {
         towers[i]->draw(temp);
+    }
+
+    for(int b = 0; b < 2; ++b)
+    {
+        for(unsigned int i = 0; i < creeps[b].size(); ++i)
+        {
+            creeps[b][i]->draw(temp);
+        }
     }
 
     for(int i = begin; i < end; ++i)
@@ -377,6 +402,11 @@ int Game::update(sf::Vector2i mousePos)
                 prevKeys[i].select = false;
             }
 
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+            {
+                creeps[0].push_back(new Creep(distancesRight));
+            }
+
             if (selectorCoordinates[i].y < 0)
                 selectorCoordinates[i].y = GRIDY - 1;
             if (selectorCoordinates[i].y > GRIDY - 1)
@@ -421,6 +451,14 @@ int Game::update(sf::Vector2i mousePos)
             for(unsigned int i = 0; i < towers.size(); ++i)
             {
                 towers[i]->setRotationTarget((sf::Vector2f)mousePos);
+            }
+
+            for(int b = 0; b < 2; ++b)
+            {
+                for(unsigned int i = 0; i < creeps[b].size(); ++i)
+                {
+                    creeps[b][i]->update();
+                }
             }
 
             time += 1.0 / FPS;
@@ -477,6 +515,16 @@ void Game::newTower(sf::Vector2i i)
         }
         else
         {
+            for (int a = 0; a < 2; ++a)
+            {
+                for (unsigned int b = 0; b < creeps[a].size(); ++b)
+                {
+                    if (i == creeps[a][b]->getCoordinates())
+                    {
+                        return;
+                    }
+                }
+            }
             //todo: check for creeps on spot
             if (map[i.x][i.y] == false) //if the spot is empty
             {
@@ -520,7 +568,6 @@ void Game::newTower(sf::Vector2i i)
 
 void Game::calculateDistances()
 {
-
     for(int a = 0; a < GRIDX * 2 + MIDDLE; ++a)
     {
         for(int b = 0; b < GRIDY; ++b)

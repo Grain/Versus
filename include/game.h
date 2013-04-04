@@ -4,6 +4,7 @@
 #include "global.h"
 #include "tower.h"
 #include "button.h"
+#include "creep.h"
 #include <vector>
 #include <queue>
 
@@ -83,6 +84,8 @@ class Game
         sf::RectangleShape pauseBackground;
         bool paused;
         bool prevEscape;
+
+        std::vector<Creep*> creeps[2];
 };
 
 #endif // GAME_H

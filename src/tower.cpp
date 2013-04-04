@@ -65,9 +65,8 @@ void Tower::setRotationTarget(sf::Vector2f i)
 
 void Tower::setCoordinates(sf::Vector2i i)
 {
-    static const int gridSize = BOXDIMENSIONS + 1; //grid box + border
     coordinates = i;
-    position = {(float)(gridSize + i.x * gridSize), (float)(1 + i.y * gridSize)};
+    position = (sf::Vector2f)coordinatePosition(i);
     base.setPosition(position);
     turret.setPosition(position.x + Tower::getSize().x / 2, position.y + Tower::getSize().y / 2);
 }
