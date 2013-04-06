@@ -42,6 +42,9 @@ Creep::Creep(int temp[][GRIDY], int i)
     hp = maxHp;
     dead = false;
     speed = 1;
+
+    bigProgress = 0;
+    smallProgress = 0;
 }
 
 Creep::Creep()
@@ -125,6 +128,7 @@ void Creep::update()    //todo: check if trapped
             if (coordinates == enemy)
             {
                 dead = true;
+                //something happens
                 return;
             }
 
@@ -228,33 +232,9 @@ void Creep::update()    //todo: check if trapped
     body.setTextureRect(sf::IntRect(animation, 0, body.getSize().x, body.getSize().y));
 
     coordinates = gridPosition((sf::Vector2i)body.getPosition());
-
-        //print current distances
-//    printf("\n");
-//    printf("\n");
-//
-//    for(int a = 0; a < GRIDY; ++a)
-//    {
-//        for(int b = 0; b < GRIDX * 2 + MIDDLE; ++b)
-//        {
-//            if(distances[b][a] == FILLED)
-//            {
-//                printf("*  ");
-//                continue;
-//            }
-//            printf("%d ", distances[b][a]);
-//            if (distances[b][a] < 10)
-//                printf(" ");
-//        }
-//        printf("\n");
-//    }
 }
 
 void Creep::damage(int i)
 {
     hp -= i;
-    if (hp <= 0)
-    {
-        dead = true;
-    }
 }

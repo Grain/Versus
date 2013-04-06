@@ -500,6 +500,7 @@ int Game::update(sf::Vector2i mousePos)
                     if (creeps[b][i]->isDead())
                     {
                         delete creeps[b][i];
+                        creeps[b][i] = NULL;
                         creeps[b].erase(creeps[b].begin() + i);
                         --i;
                         continue;

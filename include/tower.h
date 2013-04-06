@@ -5,7 +5,6 @@
 #include <cmath>
 #include <vector>
 
-
 class Tower
 {
     public:

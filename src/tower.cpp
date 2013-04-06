@@ -15,13 +15,13 @@ Tower::Tower(std::vector<Creep*>* temp)
 
     base.setFillColor(sf::Color::Blue); //temp, need pictures
 
-    range = 500;
+    range = 150;
 
     creeps = temp;
     target = NULL;
     rate = 15;
     rateCount = rate;
-    damage = 10;
+    damage = 20;
 }
 
 Tower::Tower()
