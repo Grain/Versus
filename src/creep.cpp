@@ -55,6 +55,13 @@ sf::Vector2i Creep::getCoordinates()
     return coordinates;
 }
 
+//used so towers can tell which creep is closest to base
+//check bigProgress first, only check smallProgress if bigProgress is same
+sf::Vector2i Creep::getProgress()
+{
+    return {bigProgress, (int)smallProgress};
+}
+
 bool Creep::isDead()
 {
     return dead;
@@ -86,7 +93,9 @@ void Creep::update()    //todo: check if trapped
             targetFilled = true;
         }
 
-        if (distance(targetPoint, body.getPosition()) < 5 || targetFilled)  //find next target location
+        smallProgress = distance(targetPoint, body.getPosition());
+
+        if (smallProgress < 5 || targetFilled)  //find next target location
         {
             if (coordinates == enemy)
             {
@@ -156,6 +165,7 @@ void Creep::update()    //todo: check if trapped
             }
 
             int choice = rand() % (possible + 1);
+            bigProgress = lowest;
             targetPoint = (sf::Vector2f)coordinatePosition(next[choice]);
             targetPoint = {targetPoint.x + BOXDIMENSIONS / 2, targetPoint.y + BOXDIMENSIONS / 2};
         }

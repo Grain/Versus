@@ -62,6 +62,8 @@ class Game
 
         std::vector<Tower*> towers;
         bool map[GRIDX * 2 + MIDDLE][GRIDY];
+        sf::CircleShape ranges[2];
+        bool visibleRanges[2];
 
         int distancesLeft[GRIDX * 2 + MIDDLE][GRIDY];   //left = going to left side, right = going to right side
         int distancesRight[GRIDX * 2 + MIDDLE][GRIDY];

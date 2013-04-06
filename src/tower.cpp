@@ -14,7 +14,8 @@ Tower::Tower()
     turret.setTexture(&turretTexture);
 
     base.setFillColor(sf::Color::Blue); //temp, need pictures
-    //turret.setFillColor(sf::Color::Red);
+
+    range = 100;
 }
 
 /***************************************************************/
@@ -43,6 +44,11 @@ sf::Vector2i Tower::getCoordinates()
 sf::Vector2i Tower::getSize()
 {
     return {BOXDIMENSIONS, BOXDIMENSIONS};
+}
+
+int Tower::getRange()
+{
+    return range;
 }
 
 /***************************************************************/

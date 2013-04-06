@@ -6,14 +6,18 @@
 class Creep
 {
     public:
+        //ctor/dtor
         Creep(int [][GRIDY], int);
         Creep();
         virtual ~Creep();
+        //getters
+        sf::Vector2i getCoordinates();
+        sf::Vector2i getProgress();
+        bool isDead();
+
+        //functions
         void draw(sf::RenderTarget*);
         void update();
-        sf::Vector2i getCoordinates();
-
-        bool isDead();
     protected:
     private:
         static const int FILLED = 99999;
@@ -26,6 +30,8 @@ class Creep
         sf::Vector2f targetPoint;
         sf::Vector2i coordinates;
         sf::Vector2i enemy;
+        int bigProgress;   //distance from the pathfinding grid
+        double smallProgress;   //distnace to target
 
         int maxHp;
         int hp;

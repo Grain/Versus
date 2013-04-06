@@ -12,6 +12,7 @@ class Tower
         double getRotation();
         sf::Vector2i getCoordinates();
         static sf::Vector2i getSize();
+        int getRange();
         //setters
         void setRotation(double);
         void setRotationTarget(sf::Vector2f);
@@ -28,6 +29,8 @@ class Tower
         sf::Texture turretTexture;
         sf::Vector2i coordinates;
         sf::Vector2f position;
+
+        int range;
 };
 
 #endif // TOWER_H

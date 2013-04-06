@@ -62,6 +62,15 @@ Game::Game()
     pauseBackground.setPosition({0, 0});
     pauseBackground.setFillColor(sf::Color(0, 0, 0, 128));
 
+    for (int i = 0; i < 2; ++i)
+    {
+        ranges[i].setFillColor(sf::Color::Transparent);
+        ranges[i].setOutlineColor(sf::Color::Black);
+        ranges[i].setOutlineThickness(1);
+        ranges[i].setPointCount(50);
+        visibleRanges[i] = false;
+    }
+
     for(int i = 0; i < 2; ++i)
     {
         selector[i].setSize({BOXDIMENSIONS, BOXDIMENSIONS});
@@ -113,11 +122,16 @@ void Game::newGame(Game::Players a)
 {
     players = a;
 
-    selector[0].setFillColor(sf::Color::Cyan);
+    selector[0].setFillColor(sf::Color::Cyan);  //temp
     selectorCoordinates[0] = {0, GRIDY / 2};
 
-    selector[1].setFillColor(sf::Color::Magenta);
+    selector[1].setFillColor(sf::Color::Magenta);   //temp
     selectorCoordinates[1] = {GRIDX * 2 + MIDDLE - 1, GRIDY / 2};
+
+    ranges[0].setOutlineColor(sf::Color::Cyan); //temp
+    ranges[1].setOutlineColor(sf::Color::Magenta); //temp
+    visibleRanges[0] = false;
+    visibleRanges[1] = false;
 
     prevMouse = {0, 0};
 
@@ -199,6 +213,14 @@ void Game::draw(sf::RenderWindow * window)
         }
     }
 
+    for (int i = 0; i < 2; ++i)
+    {
+        if (visibleRanges[i])
+        {
+            temp->draw(ranges[i]);
+        }
+    }
+
     for(int i = begin; i < end; ++i)
     {
         temp->draw(selector[i]);
@@ -228,8 +250,6 @@ void Game::draw(sf::RenderWindow * window)
 
 int Game::update(sf::Vector2i mousePos)
 {
-    static const int gridSize = BOXDIMENSIONS + 1; //grid box + border
-
     if (paused)
     {
         if (resume.update(mousePos))
@@ -425,7 +445,26 @@ int Game::update(sf::Vector2i mousePos)
 
         for(int i = 0; i < 2; ++i)
         {
-            selector[i].setPosition((float)(gridSize + selectorCoordinates[i].x * gridSize), (float)(1 + selectorCoordinates[i].y * gridSize));
+            selector[i].setPosition((sf::Vector2f)coordinatePosition(selectorCoordinates[i]));
+
+            int showRange = false;
+            for (unsigned int a = 0; a < towers.size(); ++a)
+            {
+                if (selectorCoordinates[i] == towers[a]->getCoordinates())
+                {
+                    showRange = true;
+                    ranges[i].setRadius(towers[a]->getRange());
+                    ranges[i].setPosition(coordinatePosition(selectorCoordinates[i]).x + BOXDIMENSIONS / 2, coordinatePosition(selectorCoordinates[i]).y + BOXDIMENSIONS / 2);
+                    ranges[i].setOrigin(ranges[i].getRadius(), ranges[i].getRadius());
+                    visibleRanges[i] = true;
+                    break;
+                }
+            }
+
+            if (showRange == false)
+            {
+                visibleRanges[i] = false;
+            }
         }
 
         if(players == both)
@@ -437,6 +476,7 @@ int Game::update(sf::Vector2i mousePos)
         }
         else if (players == left)
         {
+            visibleRanges[1] = false;
             if (sf::Keyboard::isKeyPressed(settings.leftPlayer.speed) || fastForwardDown(mousePos))
                 speedUp = settings.fastForwardSpeed;
             else
@@ -444,6 +484,7 @@ int Game::update(sf::Vector2i mousePos)
         }
         else
         {
+            visibleRanges[0] = false;
             if (sf::Keyboard::isKeyPressed(settings.rightPlayer.speed) || fastForwardDown(mousePos))
                 speedUp = settings.fastForwardSpeed;
             else

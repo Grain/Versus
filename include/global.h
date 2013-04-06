@@ -22,7 +22,7 @@ struct Settings
     int effectVolume, musicVolume;
     bool enableMouse;
 
-    bool doubleBuffered;
+    bool doubleBuffered;    //sfml actually has double buffering by default, this turns on drawing to a secondary buffer before drawing on screen
     int fastForwardSpeed;
 };
 
