@@ -4,7 +4,7 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Tower::Tower()
+Tower::Tower(std::vector<Creep*>* temp)
 {
     base.setSize((sf::Vector2f)Tower::getSize());
     turret.setSize((sf::Vector2f)Tower::getSize());
@@ -15,7 +15,18 @@ Tower::Tower()
 
     base.setFillColor(sf::Color::Blue); //temp, need pictures
 
-    range = 100;
+    range = 500;
+
+    creeps = temp;
+    target = NULL;
+    rate = 15;
+    rateCount = rate;
+    damage = 10;
+}
+
+Tower::Tower()
+{
+
 }
 
 /***************************************************************/
@@ -83,7 +94,58 @@ void Tower::setCoordinates(sf::Vector2i i)
 
 void Tower::update()
 {
+    bool hasTarget = false;
 
+    for (unsigned int i = 0; i < creeps->size(); ++i)
+    {
+        if (distance((*creeps)[i]->getPosition(), turret.getPosition()) < range)
+        {
+            hasTarget = true;
+
+            if (target == NULL)
+            {
+                target = (*creeps)[i];
+            }
+            else
+            {
+                if ((*creeps)[i]->getProgress().x < target->getProgress().x)
+                {
+                    target = (*creeps)[i];
+                }
+                else if ((*creeps)[i]->getProgress().x == target->getProgress().x)
+                {
+                    if ((*creeps)[i]->getProgress().y < target->getProgress().y)
+                    {
+                        target = (*creeps)[i];
+                    }
+                }
+            }
+        }
+    }
+
+    if (hasTarget == false)
+    {
+        target = NULL;
+    }
+
+    if (rateCount > 0)
+        rateCount--;
+
+    if (target != NULL)
+    {
+        if (target->isDead())
+        {
+            target = NULL;
+            return;
+        }
+        //how about only change rotation on shot, because right now it spazzes out since there are multiple valid targets
+        setRotationTarget(target->getPosition());
+        if (rateCount == 0)
+        {
+            target->damage(damage); //temp, will add projectile class soon
+            rateCount = rate;
+        }
+    }
 }
 
 void Tower::draw(sf::RenderTarget * target)

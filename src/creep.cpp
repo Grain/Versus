@@ -16,6 +16,15 @@ Creep::Creep(int temp[][GRIDY], int i)
     animation = 0;
     body.setTextureRect(sf::IntRect(animation, 0, body.getSize().x, body.getSize().y));
 
+    health.setFillColor(sf::Color::Red);
+    health.setSize({body.getSize().x, HEALTHHEIGHT});
+    health.setPosition({body.getGlobalBounds().left, body.getGlobalBounds().top - health.getSize().y - HEALTHDISTANCE});
+    healthOutline.setSize({body.getSize().x, HEALTHHEIGHT});
+    healthOutline.setPosition(health.getPosition());
+    healthOutline.setOutlineColor(sf::Color::Black);
+    healthOutline.setOutlineThickness(1);
+    healthOutline.setFillColor(sf::Color::Transparent);
+
     if (side == 0)
     {
         body.setPosition(coordinatePosition({0, GRIDY / 2}).x, coordinatePosition({0, GRIDY / 2}).y + BOXDIMENSIONS / 2);
@@ -28,6 +37,9 @@ Creep::Creep(int temp[][GRIDY], int i)
     }
 
     targetPoint = body.getPosition();
+
+    maxHp = 100;
+    hp = maxHp;
     dead = false;
     speed = 1;
 }
@@ -55,6 +67,11 @@ sf::Vector2i Creep::getCoordinates()
     return coordinates;
 }
 
+sf::Vector2f Creep::getPosition()
+{
+    return body.getPosition();
+}
+
 //used so towers can tell which creep is closest to base
 //check bigProgress first, only check smallProgress if bigProgress is same
 sf::Vector2i Creep::getProgress()
@@ -62,7 +79,7 @@ sf::Vector2i Creep::getProgress()
     return {bigProgress, (int)smallProgress};
 }
 
-bool Creep::isDead()
+bool Creep::isDead()    //make sure creep is not deleted for 1 frame after dying so projectiles know about it
 {
     return dead;
 }
@@ -78,10 +95,18 @@ bool Creep::isDead()
 void Creep::draw(sf::RenderTarget * target)
 {
     target->draw(body);
+    target->draw(healthOutline);
+    target->draw(health);
 }
 
 void Creep::update()    //todo: check if trapped
 {
+    if (hp <= 0)
+    {
+        dead = true;
+        return;
+    }
+
     for (int i = 0; i < 2; ++i) //so creeps can move faster but still have good resolution for checking distances/collisions/stuff
     {
         coordinates = gridPosition((sf::Vector2i)body.getPosition());
@@ -192,6 +217,11 @@ void Creep::update()    //todo: check if trapped
         }
     }
 
+    health.setSize({(((float)hp / (float)maxHp) * (float)healthOutline.getSize().x), HEALTHHEIGHT});
+
+    health.setPosition({body.getGlobalBounds().left, body.getGlobalBounds().top - health.getSize().y - HEALTHDISTANCE});
+    healthOutline.setPosition(health.getPosition());
+
     animation += body.getSize().x;
     if (animation > bodyTexture.getSize().x - body.getSize().x)
         animation = 0;
@@ -218,4 +248,13 @@ void Creep::update()    //todo: check if trapped
 //        }
 //        printf("\n");
 //    }
+}
+
+void Creep::damage(int i)
+{
+    hp -= i;
+    if (hp <= 0)
+    {
+        dead = true;
+    }
 }

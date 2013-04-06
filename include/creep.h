@@ -12,16 +12,20 @@ class Creep
         virtual ~Creep();
         //getters
         sf::Vector2i getCoordinates();
+        sf::Vector2f getPosition();
         sf::Vector2i getProgress();
         bool isDead();
 
         //functions
+        void damage(int);
         void draw(sf::RenderTarget*);
         void update();
     protected:
     private:
         static const int FILLED = 99999;
         static const int EMPTY = 9999;
+        static const int HEALTHHEIGHT = 2;
+        static const int HEALTHDISTANCE = 3;    //distance between health bar and actual creep
 
         int (*distances) [GRIDY];
         int side;
@@ -39,6 +43,9 @@ class Creep
 
         sf::Texture bodyTexture;
         int animation;
+
+        sf::RectangleShape health;
+        sf::RectangleShape healthOutline;
 };
 
 #endif // CREEP_H

@@ -428,7 +428,7 @@ int Game::update(sf::Vector2i mousePos)
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2))
             {
-                creeps[0].push_back(new Creep(distancesLeft, 1));
+                creeps[1].push_back(new Creep(distancesLeft, 1));
             }
 
             if (selectorCoordinates[i].y < 0)
@@ -510,7 +510,8 @@ int Game::update(sf::Vector2i mousePos)
 
             for(unsigned int i = 0; i < towers.size(); ++i)
             {
-                towers[i]->setRotationTarget((sf::Vector2f)mousePos);
+                towers[i]->update();
+                //towers[i]->setRotationTarget((sf::Vector2f)mousePos);
             }
 
             time += 1.0 / FPS;
@@ -590,7 +591,14 @@ void Game::newTower(sf::Vector2i i)
                 }
                 else
                 {
-                    towers.push_back(new Tower());
+                    if (i.x < GRIDX)
+                    {
+                        towers.push_back(new Tower(&creeps[1]));
+                    }
+                    else
+                    {
+                        towers.push_back(new Tower(&creeps[0]));
+                    }
                     towers[towers.size() - 1]->setCoordinates(i);
                 }
             }

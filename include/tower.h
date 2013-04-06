@@ -1,11 +1,16 @@
 #ifndef TOWER_H
 #define TOWER_H
 #include "global.h"
+#include "creep.h"
 #include <cmath>
+#include <vector>
+
 
 class Tower
 {
     public:
+        //ctor/dtor
+        Tower(std::vector<Creep*>*);
         Tower();
         virtual ~Tower();
         //getters
@@ -30,7 +35,12 @@ class Tower
         sf::Vector2i coordinates;
         sf::Vector2f position;
 
+        std::vector<Creep*> * creeps;
+        Creep * target;
         int range;
+        int damage;
+        int rate;   //number of frames per shot
+        int rateCount;
 };
 
 #endif // TOWER_H
