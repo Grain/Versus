@@ -404,7 +404,11 @@ int Game::update(sf::Vector2i mousePos)
 
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
             {
-                creeps[0].push_back(new Creep(distancesRight));
+                creeps[0].push_back(new Creep(distancesRight, 0));
+            }
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2))
+            {
+                creeps[0].push_back(new Creep(distancesLeft, 1));
             }
 
             if (selectorCoordinates[i].y < 0)
@@ -448,17 +452,24 @@ int Game::update(sf::Vector2i mousePos)
 
         for (int a = 1; a <= speedUp; ++a)      //things that can be sped up
         {
-            for(unsigned int i = 0; i < towers.size(); ++i)
-            {
-                towers[i]->setRotationTarget((sf::Vector2f)mousePos);
-            }
-
             for(int b = 0; b < 2; ++b)
             {
                 for(unsigned int i = 0; i < creeps[b].size(); ++i)
                 {
+                    if (creeps[b][i]->isDead())
+                    {
+                        delete creeps[b][i];
+                        creeps[b].erase(creeps[b].begin() + i);
+                        --i;
+                        continue;
+                    }
                     creeps[b][i]->update();
                 }
+            }
+
+            for(unsigned int i = 0; i < towers.size(); ++i)
+            {
+                towers[i]->setRotationTarget((sf::Vector2f)mousePos);
             }
 
             time += 1.0 / FPS;
