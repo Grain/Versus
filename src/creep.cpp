@@ -82,6 +82,11 @@ sf::Vector2i Creep::getProgress()
     return {bigProgress, (int)smallProgress};
 }
 
+sf::FloatRect Creep::getGlobalBounds()
+{
+    return body.getGlobalBounds();
+}
+
 bool Creep::isDead()    //make sure creep is not deleted for 1 frame after dying so projectiles know about it
 {
     return dead;
@@ -102,7 +107,7 @@ void Creep::draw(sf::RenderTarget * target)
     target->draw(health);
 }
 
-void Creep::update()    //todo: check if trapped
+void Creep::update()
 {
     if (hp <= 0)
     {
@@ -116,16 +121,22 @@ void Creep::update()    //todo: check if trapped
 
         sf::Vector2i temp = gridPosition((sf::Vector2i)targetPoint);
         bool targetFilled = false;
-        if (distances[temp.x][temp.y] == FILLED)    //bug: if the timing is perfect creep can go through tower
+        if (distances[temp.x][temp.y] == FILLED)
         {
             targetFilled = true;
+        }
+
+        if (distances[coordinates.x][coordinates.y] == EMPTY)
+        {
+            printf("asdf");
+            //do something
         }
 
         smallProgress = distance(targetPoint, body.getPosition());
 
         if (smallProgress < 5 || targetFilled)  //find next target location
         {
-            if (coordinates == enemy)
+            if (coordinates == enemy)   //reached enemy base
             {
                 dead = true;
                 //something happens

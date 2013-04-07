@@ -102,6 +102,11 @@ Game::~Game()
             delete creeps[a][b];
         }
     }
+
+    for (unsigned int i = 0; i < projectiles.size(); ++i)
+    {
+        delete projectiles[i];
+    }
 }
 
 /***************************************************************/
@@ -152,6 +157,12 @@ void Game::newGame(Game::Players a)
         creeps[a].clear();
     }
 
+    for (unsigned int i = 0; i < projectiles.size(); ++i)
+    {
+        delete projectiles[i];
+    }
+    projectiles.clear();
+
     for(int a = 0; a < GRIDX * 2 + MIDDLE; ++a)
     {
         for(int b = 0; b < GRIDY; ++b)
@@ -200,6 +211,7 @@ void Game::draw(sf::RenderWindow * window)
 
     temp->draw(background);
     initializeGrid(temp, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128));     //temp colours
+
     for(unsigned int i = 0; i < towers.size(); ++i)
     {
         towers[i]->draw(temp);
@@ -211,6 +223,11 @@ void Game::draw(sf::RenderWindow * window)
         {
             creeps[b][i]->draw(temp);
         }
+    }
+
+    for (unsigned int i = 0; i < projectiles.size(); ++i)
+    {
+        projectiles[i]->draw(temp);
     }
 
     for (int i = 0; i < 2; ++i)
@@ -511,8 +528,24 @@ int Game::update(sf::Vector2i mousePos)
 
             for(unsigned int i = 0; i < towers.size(); ++i)
             {
-                towers[i]->update();
-                //towers[i]->setRotationTarget((sf::Vector2f)mousePos);
+                Projectile * temp = towers[i]->update();
+                if (temp != NULL)
+                {
+                    projectiles.push_back(temp);
+                }
+            }
+
+            for (unsigned int i = 0; i < projectiles.size(); ++i)
+            {
+                if (projectiles[i]->isDead())
+                {
+                    delete projectiles[i];
+                    projectiles[i] = NULL;
+                    projectiles.erase(projectiles.begin() + i);
+                    --i;
+                    continue;
+                }
+                projectiles[i]->update();
             }
 
             time += 1.0 / FPS;

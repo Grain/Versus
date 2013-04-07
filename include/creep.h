@@ -14,6 +14,7 @@ class Creep
         sf::Vector2i getCoordinates();
         sf::Vector2f getPosition();
         sf::Vector2i getProgress();
+        sf::FloatRect getGlobalBounds();
         bool isDead();
 
         //functions

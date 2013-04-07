@@ -5,6 +5,7 @@
 #include "tower.h"
 #include "button.h"
 #include "creep.h"
+#include "projectile.h"
 #include <vector>
 #include <queue>
 
@@ -88,6 +89,7 @@ class Game
         bool prevEscape;
 
         std::vector<Creep*> creeps[2];
+        std::vector<Projectile*> projectiles;
 };
 
 #endif // GAME_H

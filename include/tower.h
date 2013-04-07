@@ -2,6 +2,7 @@
 #define TOWER_H
 #include "global.h"
 #include "creep.h"
+#include "projectile.h"
 #include <cmath>
 #include <vector>
 
@@ -22,7 +23,7 @@ class Tower
         void setRotationTarget(sf::Vector2f);
         void setCoordinates(sf::Vector2i);
         //functions
-        void update();
+        Projectile * update();
         void draw(sf::RenderTarget*);
     protected:
     private:

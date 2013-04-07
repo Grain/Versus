@@ -92,7 +92,7 @@ void Tower::setCoordinates(sf::Vector2i i)
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
 
-void Tower::update()
+Projectile * Tower::update()
 {
     bool hasTarget = false;
 
@@ -136,16 +136,18 @@ void Tower::update()
         if (target->isDead())
         {
             target = NULL;
-            return;
+            return NULL;
         }
-        //how about only change rotation on shot, because right now it spazzes out since there are multiple valid targets
+
         setRotationTarget(target->getPosition());
         if (rateCount == 0)
         {
-            target->damage(damage); //temp, will add projectile class soon
             rateCount = rate;
+            return new Projectile(target, turret.getPosition());
         }
     }
+
+    return NULL;
 }
 
 void Tower::draw(sf::RenderTarget * target)
