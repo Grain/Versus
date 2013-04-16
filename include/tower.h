@@ -6,6 +6,8 @@
 #include <cmath>
 #include <vector>
 
+class Projectile;    //forward declaration
+
 class Tower
 {
     public:
@@ -18,6 +20,7 @@ class Tower
         sf::Vector2i getCoordinates();
         static sf::Vector2i getSize();
         int getRange();
+        Creep * getTarget();
         //setters
         void setRotation(double);
         void setRotationTarget(sf::Vector2f);

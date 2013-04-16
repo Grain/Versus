@@ -2,12 +2,15 @@
 #define PROJECTILE_H
 
 #include "creep.h"
+#include "tower.h"
+
+class Tower;    //forward declaration
 
 class Projectile
 {
     public:
         //ctor/dtor
-        Projectile(Creep*, sf::Vector2f);
+        Projectile(Creep*, std::vector<Creep*>*, Tower*, sf::Vector2f);
         Projectile();
         virtual ~Projectile();
         //getters
@@ -18,11 +21,13 @@ class Projectile
     protected:
     private:
         Creep * target;
+        std::vector<Creep*> * creeps;
+        Tower * tower;
         bool dead;
 
         sf::RectangleShape image;
 
-        double speed;
+        double speed;   //actual speed is this * 4
         int damage;
 };
 

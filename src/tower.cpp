@@ -15,13 +15,13 @@ Tower::Tower(std::vector<Creep*>* temp)
 
     base.setFillColor(sf::Color::Blue); //temp, need pictures
 
-    range = 150;
+    range = 200;
 
     creeps = temp;
     target = NULL;
     rate = 15;
     rateCount = rate;
-    damage = 20;
+    damage = 30;
 }
 
 Tower::Tower()
@@ -60,6 +60,11 @@ sf::Vector2i Tower::getSize()
 int Tower::getRange()
 {
     return range;
+}
+
+Creep * Tower::getTarget()
+{
+    return target;
 }
 
 /***************************************************************/
@@ -143,7 +148,7 @@ Projectile * Tower::update()
         if (rateCount == 0)
         {
             rateCount = rate;
-            return new Projectile(target, turret.getPosition());
+            return new Projectile(target, creeps, this, turret.getPosition());
         }
     }
 
