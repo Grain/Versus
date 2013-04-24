@@ -132,6 +132,7 @@ void Game::newGame(Game::Players a)
 
     selector[1].setFillColor(sf::Color::Magenta);   //temp
     selectorCoordinates[1] = {GRIDX * 2 + MIDDLE - 1, GRIDY / 2};
+    selected[0] = selected[1] = false;
 
     ranges[0].setOutlineColor(sf::Color::Cyan); //temp
     ranges[1].setOutlineColor(sf::Color::Magenta); //temp
@@ -424,54 +425,57 @@ int Game::update(sf::Vector2i mousePos)
 
 void Game::mouseSelector(sf::Vector2i mousePos)
 {
-    if (mousePos != prevMouse && settings.enableMouse == true)
+    if (settings.enableMouse == true && players != both)
     {
-        if (players == left)
+        if (mousePos != prevMouse)
         {
-            sf::Vector2i tempCoordinate = gridPosition(mousePos);
-            if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+            if (players == left)
             {
-                selectorCoordinates[0] = tempCoordinate;
+                sf::Vector2i tempCoordinate = gridPosition(mousePos);
+                if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+                {
+                    selectorCoordinates[0] = tempCoordinate;
+                }
+            }
+            else if (players == right)
+            {
+                sf::Vector2i tempCoordinate = gridPosition(mousePos);
+                if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+                {
+                    selectorCoordinates[1] = tempCoordinate;
+                }
             }
         }
-        else if (players == right)
-        {
-            sf::Vector2i tempCoordinate = gridPosition(mousePos);
-            if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
-            {
-                selectorCoordinates[1] = tempCoordinate;
-            }
-        }
-    }
-    prevMouse = mousePos;
+        prevMouse = mousePos;
 
-    if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    {
-        if(players == left)
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            if (selectorCoordinates[0] == gridPosition(mousePos))
+            if(players == left)
             {
-                if (selectorCoordinates[0].x < GRIDX)
+                if (selectorCoordinates[0] == gridPosition(mousePos))
                 {
-                    newTower(selectorCoordinates[0]);
-                }
-                else
-                {
-                    //error message
+                    if (selectorCoordinates[0].x < GRIDX)
+                    {
+                        newTower(selectorCoordinates[0]);
+                    }
+                    else
+                    {
+                        //error message
+                    }
                 }
             }
-        }
-        if(players == right)
-        {
-            if (selectorCoordinates[1] == gridPosition(mousePos))
+            if(players == right)
             {
-                if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
+                if (selectorCoordinates[1] == gridPosition(mousePos))
                 {
-                    newTower(selectorCoordinates[1]);
-                }
-                else
-                {
-                    //error message
+                    if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
+                    {
+                        newTower(selectorCoordinates[1]);
+                    }
+                    else
+                    {
+                        //error message
+                    }
                 }
             }
         }

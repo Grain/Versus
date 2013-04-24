@@ -56,6 +56,7 @@ class Game
         sf::Texture selectorTextures[2];
         sf::RectangleShape selector[2];
         sf::Vector2i selectorCoordinates[2];
+        bool selected[2];
 
         sf::RenderTexture canvas;
         sf::Sprite drawable;
