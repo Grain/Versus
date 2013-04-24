@@ -290,173 +290,8 @@ int Game::update(sf::Vector2i mousePos)
             return 0;
         }
 
-        ///////////////mouse control selector
-        if (mousePos != prevMouse && settings.enableMouse == true)
-        {
-            if (players == left)
-            {
-                sf::Vector2i tempCoordinate = gridPosition(mousePos);
-                if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
-                {
-                    selectorCoordinates[0] = tempCoordinate;
-                }
-            }
-            else if (players == right)
-            {
-                sf::Vector2i tempCoordinate = gridPosition(mousePos);
-                if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
-                {
-                    selectorCoordinates[1] = tempCoordinate;
-                }
-            }
-        }
-        prevMouse = mousePos;
-
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
-            if(players == left)
-            {
-                if (selectorCoordinates[0] == gridPosition(mousePos))
-                {
-                    if (selectorCoordinates[0].x < GRIDX)
-                    {
-                        newTower(selectorCoordinates[0]);
-                    }
-                    else
-                    {
-                        //error message
-                    }
-                }
-            }
-            if(players == right)
-            {
-                if (selectorCoordinates[1] == gridPosition(mousePos))
-                {
-                    if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
-                    {
-                        newTower(selectorCoordinates[1]);
-                    }
-                    else
-                    {
-                        //error message
-                    }
-                }
-            }
-        }
-
-        //////////////////keyboard control selector
-
-        int begin, end;
-
-        if(players == left || players == both)
-            begin = 0;
-        else
-            begin = 1;
-        if(players == right || players == both)
-            end = 2;
-        else
-            end = 1;
-
-        for(int i = begin; i < end; ++i)
-        {
-            Keys temp;
-            if(i == 0)
-                temp = settings.leftPlayer;
-            else
-                temp = settings.rightPlayer;
-
-            if(sf::Keyboard::isKeyPressed(temp.up))
-            {
-                if(prevKeys[i].up == false)
-                    selectorCoordinates[i].y -= 1;
-                prevKeys[i].up = true;
-            }
-            else
-            {
-                prevKeys[i].up = false;
-            }
-            if(sf::Keyboard::isKeyPressed(temp.down))
-            {
-                if(prevKeys[i].down == false)
-                    selectorCoordinates[i].y += 1;
-                prevKeys[i].down = true;
-            }
-            else
-            {
-                prevKeys[i].down = false;
-            }
-            if(sf::Keyboard::isKeyPressed(temp.left))
-            {
-                if(prevKeys[i].left == false)
-                    selectorCoordinates[i].x -= 1;
-                prevKeys[i].left = true;
-            }
-            else
-            {
-                prevKeys[i].left = false;
-            }
-            if(sf::Keyboard::isKeyPressed(temp.right))
-            {
-                if(prevKeys[i].right == false)
-                    selectorCoordinates[i].x += 1;
-                prevKeys[i].right = true;
-            }
-            else
-            {
-                prevKeys[i].right = false;
-            }
-            if(sf::Keyboard::isKeyPressed(temp.select))
-            {
-                if(prevKeys[i].select == false)
-                {
-                    if (i == 0) //left
-                    {
-                        if (selectorCoordinates[0].x < GRIDX)
-                        {
-                            newTower(selectorCoordinates[0]);
-                        }
-                        else
-                        {
-                            //error message
-                        }
-                    }
-                    if (i == 1) //right
-                    {
-                        if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
-                        {
-                            newTower(selectorCoordinates[1]);
-                        }
-                        else
-                        {
-                            //error message
-                        }
-                    }
-                }
-                prevKeys[i].select = true;
-            }
-            else
-            {
-                prevKeys[i].select = false;
-            }
-
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
-            {
-                creeps[0].push_back(new Creep(distancesRight, 0));
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2))
-            {
-                creeps[1].push_back(new Creep(distancesLeft, 1));
-            }
-
-            if (selectorCoordinates[i].y < 0)
-                selectorCoordinates[i].y = GRIDY - 1;
-            if (selectorCoordinates[i].y > GRIDY - 1)
-                selectorCoordinates[i].y = 0;
-            if (selectorCoordinates[i].x < 0)
-                selectorCoordinates[i].x = GRIDX * 2 + MIDDLE - 1;
-            if (selectorCoordinates[i].x > GRIDX * 2 + MIDDLE - 1)
-                selectorCoordinates[i].x = 0;
-        }
+        mouseSelector(mousePos);
+        keyboardSelector(mousePos);
 
         ////////////////////////////////
 
@@ -512,7 +347,7 @@ int Game::update(sf::Vector2i mousePos)
         {
             for(int b = 0; b < 2; ++b)
             {
-                for(unsigned int i = 0; i < creeps[b].size(); ++i)
+                for(unsigned int i = 0; i < creeps[b].size(); ++i)  //update creeps
                 {
                     if (creeps[b][i]->isDead())
                     {
@@ -526,7 +361,7 @@ int Game::update(sf::Vector2i mousePos)
                 }
             }
 
-            for(unsigned int i = 0; i < towers.size(); ++i)
+            for(unsigned int i = 0; i < towers.size(); ++i)     //update towers
             {
                 Projectile * temp = towers[i]->update();
                 if (temp != NULL)
@@ -535,7 +370,7 @@ int Game::update(sf::Vector2i mousePos)
                 }
             }
 
-            for (unsigned int i = 0; i < projectiles.size(); ++i)
+            for (unsigned int i = 0; i < projectiles.size(); ++i)   //update projectiles
             {
                 if (projectiles[i]->isDead())
                 {
@@ -547,6 +382,8 @@ int Game::update(sf::Vector2i mousePos)
                 }
                 projectiles[i]->update();
             }
+
+            //update timer
 
             time += 1.0 / FPS;
             timer.setString(formatTime(floor(time)));
@@ -583,6 +420,177 @@ int Game::update(sf::Vector2i mousePos)
     }
 
     return 0;
+}
+
+void Game::mouseSelector(sf::Vector2i mousePos)
+{
+    if (mousePos != prevMouse && settings.enableMouse == true)
+    {
+        if (players == left)
+        {
+            sf::Vector2i tempCoordinate = gridPosition(mousePos);
+            if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+            {
+                selectorCoordinates[0] = tempCoordinate;
+            }
+        }
+        else if (players == right)
+        {
+            sf::Vector2i tempCoordinate = gridPosition(mousePos);
+            if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+            {
+                selectorCoordinates[1] = tempCoordinate;
+            }
+        }
+    }
+    prevMouse = mousePos;
+
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        if(players == left)
+        {
+            if (selectorCoordinates[0] == gridPosition(mousePos))
+            {
+                if (selectorCoordinates[0].x < GRIDX)
+                {
+                    newTower(selectorCoordinates[0]);
+                }
+                else
+                {
+                    //error message
+                }
+            }
+        }
+        if(players == right)
+        {
+            if (selectorCoordinates[1] == gridPosition(mousePos))
+            {
+                if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
+                {
+                    newTower(selectorCoordinates[1]);
+                }
+                else
+                {
+                    //error message
+                }
+            }
+        }
+    }
+}
+
+void Game::keyboardSelector(sf::Vector2i mousePos)
+{
+    int begin, end;
+
+    if(players == left || players == both)
+        begin = 0;
+    else
+        begin = 1;
+    if(players == right || players == both)
+        end = 2;
+    else
+        end = 1;
+
+    for(int i = begin; i < end; ++i)
+    {
+        Keys temp;
+        if(i == 0)
+            temp = settings.leftPlayer;
+        else
+            temp = settings.rightPlayer;
+
+        if(sf::Keyboard::isKeyPressed(temp.up))
+        {
+            if(prevKeys[i].up == false)
+                selectorCoordinates[i].y -= 1;
+            prevKeys[i].up = true;
+        }
+        else
+        {
+            prevKeys[i].up = false;
+        }
+        if(sf::Keyboard::isKeyPressed(temp.down))
+        {
+            if(prevKeys[i].down == false)
+                selectorCoordinates[i].y += 1;
+            prevKeys[i].down = true;
+        }
+        else
+        {
+            prevKeys[i].down = false;
+        }
+        if(sf::Keyboard::isKeyPressed(temp.left))
+        {
+            if(prevKeys[i].left == false)
+                selectorCoordinates[i].x -= 1;
+            prevKeys[i].left = true;
+        }
+        else
+        {
+            prevKeys[i].left = false;
+        }
+        if(sf::Keyboard::isKeyPressed(temp.right))
+        {
+            if(prevKeys[i].right == false)
+                selectorCoordinates[i].x += 1;
+            prevKeys[i].right = true;
+        }
+        else
+        {
+            prevKeys[i].right = false;
+        }
+        if(sf::Keyboard::isKeyPressed(temp.select))
+        {
+            if(prevKeys[i].select == false)
+            {
+                if (i == 0) //left
+                {
+                    if (selectorCoordinates[0].x < GRIDX)
+                    {
+                        newTower(selectorCoordinates[0]);
+                    }
+                    else
+                    {
+                        //error message
+                    }
+                }
+                if (i == 1) //right
+                {
+                    if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
+                    {
+                        newTower(selectorCoordinates[1]);
+                    }
+                    else
+                    {
+                        //error message
+                    }
+                }
+            }
+            prevKeys[i].select = true;
+        }
+        else
+        {
+            prevKeys[i].select = false;
+        }
+
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+        {
+            creeps[0].push_back(new Creep(distancesRight, 0));
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2))
+        {
+            creeps[1].push_back(new Creep(distancesLeft, 1));
+        }
+
+        if (selectorCoordinates[i].y < 0)
+            selectorCoordinates[i].y = GRIDY - 1;
+        if (selectorCoordinates[i].y > GRIDY - 1)
+            selectorCoordinates[i].y = 0;
+        if (selectorCoordinates[i].x < 0)
+            selectorCoordinates[i].x = GRIDX * 2 + MIDDLE - 1;
+        if (selectorCoordinates[i].x > GRIDX * 2 + MIDDLE - 1)
+            selectorCoordinates[i].x = 0;
+    }
 }
 
 void Game::newTower(sf::Vector2i i)

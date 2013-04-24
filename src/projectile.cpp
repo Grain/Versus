@@ -4,9 +4,9 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Projectile::Projectile(Creep * tempCreep, std::vector<Creep*>* tempCreeps, Tower* tempTower, sf::Vector2f pos)
+Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Tower* tempTower, sf::Vector2f pos)
 {
-    target = tempCreep;
+    target = tempTarget;
     creeps = tempCreeps;
     tower = tempTower;
 
@@ -17,7 +17,7 @@ Projectile::Projectile(Creep * tempCreep, std::vector<Creep*>* tempCreeps, Tower
     dead = false;
 
     speed = 0.25;
-    damage = 50;    //todo: get damage from tower
+    damage = 50;    //todo: get damage from tower and other attributes, maybe have a projectileInfo struct or something
 }
 
 Projectile::Projectile()
