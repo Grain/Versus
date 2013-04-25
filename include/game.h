@@ -56,7 +56,9 @@ class Game
         sf::Texture selectorTextures[2];
         sf::RectangleShape selector[2];
         sf::Vector2i selectorCoordinates[2];
+
         bool selected[2];
+        Button gameButtons[2][12];  //0 - 3: creep queue, 4 - 7: buttons, 8 - 10: creeps;
 
         sf::RenderTexture canvas;
         sf::Sprite drawable;

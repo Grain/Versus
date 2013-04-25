@@ -75,6 +75,50 @@ Game::Game()
     {
         selector[i].setSize({BOXDIMENSIONS, BOXDIMENSIONS});
         selector[i].setTexture(&selectorTextures[i]);
+
+        for(int a = 0; a < 4; ++a)
+        {
+            int offset = 180;
+            int spacing = 5;
+            if (i == 1)
+            {
+                offset = XRES - (offset + 3 * (60 + spacing) + 60);
+            }
+            gameButtons[i][a].initialize(60, 40);
+            gameButtons[i][a].setPosition({(float)(offset + a * (gameButtons[i][a].getSize().x + spacing)) , 390});
+            gameButtons[i][a].loadTexture("resources/something.png");
+            gameButtons[i][a].setVisible(true);
+        }
+
+        for(int a = 0; a < 4; ++a)
+        {
+            int offset = 180;
+            int spacing = 5;
+            if (i == 1)
+            {
+                offset = XRES - (offset + 3 * (60 + spacing) + 60);
+            }
+            gameButtons[i][4 + a].initialize(60, 60);
+            gameButtons[i][4 + a].setPosition({(float)(offset + a * (gameButtons[i][4 + a].getSize().x + spacing)), 440});
+            gameButtons[i][4 + a].loadTexture("resources/something.png");
+            gameButtons[i][4 + a].setVisible(true); //false
+        }
+
+        for(int a = 0; a < 3; ++a)
+        {
+            int offset = 180;
+            int spacing = 25;
+            if (i == 1)
+            {
+                offset = XRES - (offset + 2 * (40 + spacing) + 40);
+            }
+            gameButtons[i][8 + a].initialize(40, 40);
+            gameButtons[i][8 + a].setPosition({(float)(offset + a * (gameButtons[i][8 + a].getSize().x + spacing)), 510});
+            gameButtons[i][8 + a].loadTexture("resources/something.png");
+            gameButtons[i][8 + a].setVisible(true);
+        }
+
+        gameButtons[i][11].setVisible(false);   //may not be used ever
     }
 
     if (settings.doubleBuffered)
@@ -123,9 +167,9 @@ Game::~Game()
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
 
-void Game::newGame(Game::Players a)
+void Game::newGame(Game::Players temp)
 {
-    players = a;
+    players = temp;
 
     selector[0].setFillColor(sf::Color::Cyan);  //temp
     selectorCoordinates[0] = {0, GRIDY / 2};
@@ -242,6 +286,11 @@ void Game::draw(sf::RenderWindow * window)
     for(int i = begin; i < end; ++i)
     {
         temp->draw(selector[i]);
+
+        for(int a = 0; a < 12; ++a)
+        {
+            gameButtons[i][a].draw(temp);
+        }
     }
     temp->draw(timerBackground);
     temp->draw(timerBar);
@@ -293,6 +342,15 @@ int Game::update(sf::Vector2i mousePos)
 
         mouseSelector(mousePos);
         keyboardSelector(mousePos);
+
+        //game buttons
+        for(int i = 0; i < 2; ++i)
+        {
+            for(int a = 0; a < 11; ++a) //number 11 not used
+            {
+                gameButtons[i][a].update(mousePos);
+            }
+        }
 
         ////////////////////////////////
 
