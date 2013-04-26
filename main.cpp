@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
                         break;
                     case 1:
                         inGame = true;      //TODO: have a getter in menu for game options, and access that from here to make new game
-                        game.newGame(Game::left);
+                        game.newGame(Game::right);
                         break;
                     case 2:
                         inGame = true;

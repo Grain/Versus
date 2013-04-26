@@ -58,7 +58,10 @@ class Game
         sf::Vector2i selectorCoordinates[2];
 
         bool selected[2];
-        Button gameButtons[2][12];  //0 - 3: creep queue, 4 - 7: buttons, 8 - 10: creeps;
+        bool inGrid[2];
+        Button gameButtons[2][11];  //0 - 3: creep queue, 4 - 7: buttons, 8 - 10: creeps;
+        sf::RectangleShape buttonSelector[2];   //for the middle row of buttons
+        int middleCoordinates[2];   //for middle row of buttons
 
         sf::RenderTexture canvas;
         sf::Sprite drawable;

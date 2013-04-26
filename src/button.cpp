@@ -9,6 +9,7 @@ Button::Button()
     visible = true;
     downed = false;
     prevState = false;
+    hovered = false;
 }
 
 /***************************************************************/
@@ -37,6 +38,11 @@ sf::Vector2f Button::getPosition()
 bool Button::getVisible()
 {
     return visible;
+}
+
+bool Button::getHovered()
+{
+    return hovered;
 }
 
 /***************************************************************/
@@ -80,9 +86,11 @@ bool Button::update(sf::Vector2i mousePos)
     bool temp = false;
     bool down = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 
+    inButton(mousePos);
+
     if (down)
     {
-        if(inButton(mousePos) && prevState == false)    //mouse button was downed in button
+        if(hovered && prevState == false)    //mouse button was downed in button
         {
             downed = true;
             rect.setTexture(&mouseDown);
@@ -90,7 +98,7 @@ bool Button::update(sf::Vector2i mousePos)
     }
     else    //mouse is up
     {
-        if(inButton(mousePos))
+        if(hovered)
         {
             if(prevState == true && downed == true)
             {
@@ -118,5 +126,6 @@ void Button::draw(sf::RenderTarget* target)
 
 bool Button::inButton(sf::Vector2i i)
 {
-    return rect.getGlobalBounds().contains((sf::Vector2f)i);
+    hovered = rect.getGlobalBounds().contains((sf::Vector2f)i);
+    return hovered;
 }

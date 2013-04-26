@@ -76,6 +76,8 @@ Game::Game()
         selector[i].setSize({BOXDIMENSIONS, BOXDIMENSIONS});
         selector[i].setTexture(&selectorTextures[i]);
 
+        buttonSelector[i].setTexture(&selectorTextures[i]);
+
         for(int a = 0; a < 4; ++a)
         {
             int offset = 180;
@@ -106,8 +108,8 @@ Game::Game()
 
         for(int a = 0; a < 3; ++a)
         {
-            int offset = 180;
-            int spacing = 25;
+            int offset = 200;
+            int spacing = 15;
             if (i == 1)
             {
                 offset = XRES - (offset + 2 * (40 + spacing) + 40);
@@ -117,8 +119,6 @@ Game::Game()
             gameButtons[i][8 + a].loadTexture("resources/something.png");
             gameButtons[i][8 + a].setVisible(true);
         }
-
-        gameButtons[i][11].setVisible(false);   //may not be used ever
     }
 
     if (settings.doubleBuffered)
@@ -172,16 +172,26 @@ void Game::newGame(Game::Players temp)
     players = temp;
 
     selector[0].setFillColor(sf::Color::Cyan);  //temp
+    buttonSelector[0].setFillColor(sf::Color::Cyan);  //temp
     selectorCoordinates[0] = {0, GRIDY / 2};
 
     selector[1].setFillColor(sf::Color::Magenta);   //temp
+    buttonSelector[1].setFillColor(sf::Color::Magenta);   //temp
     selectorCoordinates[1] = {GRIDX * 2 + MIDDLE - 1, GRIDY / 2};
     selected[0] = selected[1] = false;
+    inGrid[0] = inGrid[1] = false;
 
     ranges[0].setOutlineColor(sf::Color::Cyan); //temp
     ranges[1].setOutlineColor(sf::Color::Magenta); //temp
     visibleRanges[0] = false;
     visibleRanges[1] = false;
+
+    buttonSelector[0].setSize(gameButtons[0][4].getSize());
+    buttonSelector[1].setSize(gameButtons[1][4].getSize());
+    buttonSelector[0].setPosition(gameButtons[0][4].getPosition());
+    buttonSelector[1].setPosition(gameButtons[1][4].getPosition());
+
+    middleCoordinates[0] = middleCoordinates[1] = 0;
 
     prevMouse = {0, 0};
 
@@ -287,9 +297,14 @@ void Game::draw(sf::RenderWindow * window)
     {
         temp->draw(selector[i]);
 
-        for(int a = 0; a < 12; ++a)
+        for(int a = 0; a < 11; ++a)
         {
             gameButtons[i][a].draw(temp);
+        }
+
+        if (selected[i])
+        {
+            temp->draw(buttonSelector[i]);
         }
     }
     temp->draw(timerBackground);
@@ -346,9 +361,28 @@ int Game::update(sf::Vector2i mousePos)
         //game buttons
         for(int i = 0; i < 2; ++i)
         {
-            for(int a = 0; a < 11; ++a) //number 11 not used
+            buttonSelector[i].setSize(gameButtons[i][4 + middleCoordinates[i]].getSize());
+            buttonSelector[i].setPosition(gameButtons[i][4 + middleCoordinates[i]].getPosition());
+
+            for(int a = 0; a < 11; ++a)
             {
-                gameButtons[i][a].update(mousePos);
+                if (gameButtons[i][a].update(mousePos))
+                {
+                    if (settings.enableMouse == true && players != both)
+                    {
+                        if (a >= 4 && a <= 7)   //is middle row button
+                        {
+                            if (selected[i])
+                            {
+                                printf("button %d pressed\n", a - 4);
+                            }
+                        }
+                        else
+                        {
+                            printf("button asdf pressed %d\n", a);
+                        }
+                    }
+                }
             }
         }
 
@@ -487,20 +521,22 @@ void Game::mouseSelector(sf::Vector2i mousePos)
     {
         if (mousePos != prevMouse)
         {
-            if (players == left)
+            if (selected[players])
             {
-                sf::Vector2i tempCoordinate = gridPosition(mousePos);
-                if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
+                for (int i = 0; i < 4; ++i)
                 {
-                    selectorCoordinates[0] = tempCoordinate;
+                    if (gameButtons[players][4 + i].getHovered())
+                    {
+                        middleCoordinates[players] = i;
+                    }
                 }
             }
-            else if (players == right)
+            else
             {
                 sf::Vector2i tempCoordinate = gridPosition(mousePos);
                 if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
                 {
-                    selectorCoordinates[1] = tempCoordinate;
+                    selectorCoordinates[players] = tempCoordinate;
                 }
             }
         }
@@ -508,12 +544,20 @@ void Game::mouseSelector(sf::Vector2i mousePos)
 
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
+            if (!(mousePos.x > gameButtons[players][4].getPosition().x && mousePos.x < gameButtons[players][7].getPosition().x + gameButtons[players][7].getSize().x && mousePos.y > gameButtons[players][4].getPosition().y && mousePos.y < gameButtons[players][4].getPosition().y + gameButtons[players][4].getSize().y))
+            {       //click outside the box created by the 4 middle buttons
+                selected[players] = false;
+                middleCoordinates[players] = 0;
+                buttonSelector[players].setPosition(gameButtons[players][4].getPosition());
+            }
+
             if(players == left)
             {
                 if (selectorCoordinates[0] == gridPosition(mousePos))
                 {
                     if (selectorCoordinates[0].x < GRIDX)
                     {
+                        selected[0] = true;
                         newTower(selectorCoordinates[0]);
                     }
                     else
@@ -528,6 +572,7 @@ void Game::mouseSelector(sf::Vector2i mousePos)
                 {
                     if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
                     {
+                        selected[1] = true;
                         newTower(selectorCoordinates[1]);
                     }
                     else
@@ -564,7 +609,13 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
         if(sf::Keyboard::isKeyPressed(temp.up))
         {
             if(prevKeys[i].up == false)
-                selectorCoordinates[i].y -= 1;
+            {
+                if (selected[i] == false)
+                {
+                    selectorCoordinates[i].y -= 1;
+
+                }
+            }
             prevKeys[i].up = true;
         }
         else
@@ -574,7 +625,13 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
         if(sf::Keyboard::isKeyPressed(temp.down))
         {
             if(prevKeys[i].down == false)
-                selectorCoordinates[i].y += 1;
+            {
+                if (selected[i] == false)
+                {
+                    selectorCoordinates[i].y += 1;
+
+                }
+            }
             prevKeys[i].down = true;
         }
         else
@@ -584,7 +641,21 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
         if(sf::Keyboard::isKeyPressed(temp.left))
         {
             if(prevKeys[i].left == false)
-                selectorCoordinates[i].x -= 1;
+            {
+                if (selected[i] == false)
+                {
+                    selectorCoordinates[i].x -= 1;
+                }
+                else
+                {
+                    middleCoordinates[i] -= 1;
+                    if (middleCoordinates[i] < 0)
+                    {
+                        middleCoordinates[i] = 3;
+                    }
+                }
+
+            }
             prevKeys[i].left = true;
         }
         else
@@ -594,7 +665,21 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
         if(sf::Keyboard::isKeyPressed(temp.right))
         {
             if(prevKeys[i].right == false)
-                selectorCoordinates[i].x += 1;
+            {
+                if (selected[i] == false)
+                {
+                    selectorCoordinates[i].x += 1;
+                }
+                else
+                {
+                    middleCoordinates[i] += 1;
+                    if (middleCoordinates[i] > 3)
+                    {
+                        middleCoordinates[i] = 0;
+                    }
+                }
+
+            }
             prevKeys[i].right = true;
         }
         else
@@ -605,26 +690,37 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
         {
             if(prevKeys[i].select == false)
             {
-                if (i == 0) //left
+                if (selected[i])
                 {
-                    if (selectorCoordinates[0].x < GRIDX)
-                    {
-                        newTower(selectorCoordinates[0]);
-                    }
-                    else
-                    {
-                        //error message
-                    }
+                            //BUTTON CLICKED
                 }
-                if (i == 1) //right
+                else
                 {
-                    if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
+                    if (i == 0) //left
                     {
-                        newTower(selectorCoordinates[1]);
+                        if (selectorCoordinates[0].x < GRIDX)
+                        {
+                            newTower(selectorCoordinates[0]);
+                            selected[i] = true;
+                            //BUTTON CLICKED
+                        }
+                        else
+                        {
+                            //error message
+                        }
                     }
-                    else
+                    if (i == 1) //right
                     {
-                        //error message
+                        if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
+                        {
+                            newTower(selectorCoordinates[1]);
+                            selected[i] = true;
+                            //BUTTON CLICKED
+                        }
+                        else
+                        {
+                            //error message
+                        }
                     }
                 }
             }

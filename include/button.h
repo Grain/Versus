@@ -13,6 +13,7 @@ class Button
         sf::Vector2f getSize();
         sf::Vector2f getPosition();
         bool getVisible();
+        bool getHovered();
         //setters
         void setPosition(sf::Vector2f);
         void setVisible(bool);
@@ -31,6 +32,7 @@ class Button
         bool visible;
         bool prevState; //state of mouse button in last update
         bool downed;    //whether the mouse was downed on the button
+        bool hovered;
 };
 
 #endif // BUTTON_H
