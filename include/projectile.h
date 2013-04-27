@@ -24,6 +24,7 @@ class Projectile
         std::vector<Creep*> * creeps;
         Tower * tower;
         bool dead;
+        bool homing;
 
         sf::RectangleShape image;
 

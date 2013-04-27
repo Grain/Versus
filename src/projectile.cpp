@@ -15,9 +15,10 @@ Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Towe
     image.setSize({5, 5});
 
     dead = false;
+    homing = false;
 
-    speed = 0.25;
-    damage = 50;    //todo: get damage from tower and other attributes, maybe have a projectileInfo struct or something
+    speed = 4;
+    damage = 25;    //todo: get damage from tower and other attributes, maybe have a projectileInfo struct or something
 }
 
 Projectile::Projectile()
@@ -55,6 +56,12 @@ void Projectile::update()
 {
     if (target->isDead())
     {
+        if (homing == false)
+        {
+            dead = true;
+            return;
+        }
+
         bool newTarget = true;
 
         if (tower->getTarget() != NULL)     //parent tower has another valid target

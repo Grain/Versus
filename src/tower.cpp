@@ -19,7 +19,7 @@ Tower::Tower(std::vector<Creep*>* temp)
 
     creeps = temp;
     target = NULL;
-    rate = 15;
+    rate = 1;
     rateCount = rate;
     damage = 30;
 }

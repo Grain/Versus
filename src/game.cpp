@@ -613,7 +613,6 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
                 if (selected[i] == false)
                 {
                     selectorCoordinates[i].y -= 1;
-
                 }
             }
             prevKeys[i].up = true;
