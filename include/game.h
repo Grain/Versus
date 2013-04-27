@@ -62,6 +62,9 @@ class Game
         Button gameButtons[2][11];  //0 - 3: creep queue, 4 - 7: buttons, 8 - 10: creeps;
         sf::RectangleShape buttonSelector[2];   //for the middle row of buttons
         int middleCoordinates[2];   //for middle row of buttons
+        bool outOfGrid[2];  //if primary selector is outside of grid
+        sf::RectangleShape otherButtonSelector[2];  //the..other one            //this one is for the top and bottom row of buttons
+        int buttonCoordinates[2];
 
         sf::RenderTexture canvas;
         sf::Sprite drawable;

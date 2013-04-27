@@ -77,6 +77,7 @@ Game::Game()
         selector[i].setTexture(&selectorTextures[i]);
 
         buttonSelector[i].setTexture(&selectorTextures[i]);
+        otherButtonSelector[i].setTexture(&selectorTextures[i]);
 
         for(int a = 0; a < 4; ++a)
         {
@@ -173,10 +174,12 @@ void Game::newGame(Game::Players temp)
 
     selector[0].setFillColor(sf::Color::Cyan);  //temp
     buttonSelector[0].setFillColor(sf::Color::Cyan);  //temp
+    otherButtonSelector[0].setFillColor(sf::Color::Cyan);  //temp
     selectorCoordinates[0] = {0, GRIDY / 2};
 
     selector[1].setFillColor(sf::Color::Magenta);   //temp
     buttonSelector[1].setFillColor(sf::Color::Magenta);   //temp
+    otherButtonSelector[1].setFillColor(sf::Color::Magenta);   //temp
     selectorCoordinates[1] = {GRIDX * 2 + MIDDLE - 1, GRIDY / 2};
     selected[0] = selected[1] = false;
     inGrid[0] = inGrid[1] = false;
@@ -295,8 +298,6 @@ void Game::draw(sf::RenderWindow * window)
 
     for(int i = begin; i < end; ++i)
     {
-        temp->draw(selector[i]);
-
         for(int a = 0; a < 11; ++a)
         {
             gameButtons[i][a].draw(temp);
@@ -305,6 +306,15 @@ void Game::draw(sf::RenderWindow * window)
         if (selected[i])
         {
             temp->draw(buttonSelector[i]);
+        }
+
+        if(outOfGrid[i])
+        {
+            temp->draw(otherButtonSelector[i]);
+        }
+        else
+        {
+            temp->draw(selector[i]);
         }
     }
     temp->draw(timerBackground);
@@ -363,6 +373,9 @@ int Game::update(sf::Vector2i mousePos)
         {
             buttonSelector[i].setSize(gameButtons[i][4 + middleCoordinates[i]].getSize());
             buttonSelector[i].setPosition(gameButtons[i][4 + middleCoordinates[i]].getPosition());
+
+            otherButtonSelector[i].setSize(gameButtons[i][buttonCoordinates[i]].getSize());
+            otherButtonSelector[i].setPosition(gameButtons[i][buttonCoordinates[i]].getPosition());
 
             for(int a = 0; a < 11; ++a)
             {
@@ -537,6 +550,26 @@ void Game::mouseSelector(sf::Vector2i mousePos)
                 if(!(tempCoordinate.x < 0 || tempCoordinate.x >= GRIDX * 2 + MIDDLE || tempCoordinate.y < 0 || tempCoordinate.y >= GRIDY))
                 {
                     selectorCoordinates[players] = tempCoordinate;
+                    outOfGrid[players] = false;
+                }
+                else
+                {
+                    for (int i = 0; i < 4; ++i) //check top row
+                    {
+                        if (gameButtons[players][i].getHovered())
+                        {
+                            outOfGrid[players] = true;
+                            buttonCoordinates[players] = i;
+                        }
+                    }
+                    for (int i = 8; i < 11; ++i) //check bottom row
+                    {
+                        if (gameButtons[players][i].getHovered())
+                        {
+                            outOfGrid[players] = true;
+                            buttonCoordinates[players] = i;
+                        }
+                    }
                 }
             }
         }
@@ -612,7 +645,121 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
             {
                 if (selected[i] == false)
                 {
-                    selectorCoordinates[i].y -= 1;
+                    if (outOfGrid[i])
+                    {
+                        if (buttonCoordinates[i] > 7)
+                        {
+                            if (i == 0)
+                            {
+                                buttonCoordinates[i] -= 8;
+                            }
+                            else
+                            {
+                                buttonCoordinates[i] -= 7;
+                            }
+                        }
+                        else if (buttonCoordinates[i] < 4)
+                        {
+                            int temp = 0;
+                            if (i == 1) //right
+                            {
+                                temp = 10;
+                            }
+
+                            if (buttonCoordinates[i] == 0)
+                            {
+                                outOfGrid[i] = false;
+                                selectorCoordinates[i].y = GRIDY - 1;
+                                selectorCoordinates[i].x = 3 + temp;
+                                if (i == 0) //patched up
+                                {
+                                    selectorCoordinates[i].x = 4;
+                                }
+                            }
+                            else if (buttonCoordinates[i] == 1)
+                            {
+                                outOfGrid[i] = false;
+                                selectorCoordinates[i].y = GRIDY - 1;
+                                selectorCoordinates[i].x = 5 + temp;
+                            }
+                            else if (buttonCoordinates[i] == 2)
+                            {
+                                outOfGrid[i] = false;
+                                selectorCoordinates[i].y = GRIDY - 1;
+                                selectorCoordinates[i].x = 7 + temp;
+                            }
+                            else if (buttonCoordinates[i] == 3)
+                            {
+                                outOfGrid[i] = false;
+                                selectorCoordinates[i].y = GRIDY - 1;
+                                selectorCoordinates[i].x = 8 + temp;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (selectorCoordinates[i].y == 0)
+                        {
+                            if (i == 0) //left
+                            {
+                                if (selectorCoordinates[i].x == 3 || selectorCoordinates[i].x == 4)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 8;
+                                }
+                                else if (selectorCoordinates[i].x == 5)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 9;
+                                }
+                                else if (selectorCoordinates[i].x == 6 || selectorCoordinates[i].x == 7)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 10;
+                                }
+                                else if (selectorCoordinates[i].x == 8 || selectorCoordinates[i].x == 9)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 3;
+                                }
+                                else
+                                {
+                                    selectorCoordinates[i].y -= 1;
+                                }
+                            }
+                            else    //right
+                            {
+                                if (selectorCoordinates[i].x == 13 || selectorCoordinates[i].x == 14)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 0;
+                                }
+                                else if (selectorCoordinates[i].x == 15 || selectorCoordinates[i].x == 16)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 8;
+                                }
+                                else if (selectorCoordinates[i].x == 17)    //the messed up location is mirrored to be 2nd from the outside
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 9;
+                                }
+                                else if (selectorCoordinates[i].x == 18 || selectorCoordinates[i].x == 19)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 10;
+                                }
+                                else
+                                {
+                                    selectorCoordinates[i].y -= 1;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            selectorCoordinates[i].y -= 1;
+                        }
+                    }
                 }
             }
             prevKeys[i].up = true;
@@ -627,8 +774,135 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
             {
                 if (selected[i] == false)
                 {
-                    selectorCoordinates[i].y += 1;
-
+                    if (outOfGrid[i])
+                    {
+                        if (buttonCoordinates[i] < 3 && i == 0)
+                        {
+                            buttonCoordinates[i] += 8;
+                        }
+                        else if (buttonCoordinates[i] > 0 && buttonCoordinates[i] < 4 && i == 1)
+                        {
+                            buttonCoordinates[i] += 7;
+                        }
+                        else
+                        {
+                            if (buttonCoordinates[i] == 8)
+                            {
+                                outOfGrid[i] = false;
+                                selectorCoordinates[i].y = 0;
+                                if (i == 0)
+                                {
+                                    selectorCoordinates[i].x = 4;
+                                }
+                                else
+                                {
+                                    selectorCoordinates[i].x = 15;
+                                }
+                            }
+                            else if (buttonCoordinates[i] == 9)
+                            {
+                                outOfGrid[i] = false;
+                                selectorCoordinates[i].y = 0;
+                                if (i == 0)
+                                {
+                                    selectorCoordinates[i].x = 5;
+                                }
+                                else
+                                {
+                                    selectorCoordinates[i].x = 17;
+                                }
+                            }
+                            else if (buttonCoordinates[i] == 10)
+                            {
+                                outOfGrid[i] = false;
+                                selectorCoordinates[i].y = 0;
+                                if (i == 0)
+                                {
+                                    selectorCoordinates[i].x = 7;
+                                }
+                                else
+                                {
+                                    selectorCoordinates[i].x = 18;
+                                }
+                            }
+                            else if (buttonCoordinates[i] == 3 && i == 0)
+                            {
+                                outOfGrid[i] = false;
+                                selectorCoordinates[i].y = 0;
+                                selectorCoordinates[i].x = 8;
+                            }
+                            else if (buttonCoordinates[i] == 0 && i == 1)
+                            {
+                                outOfGrid[i] = false;
+                                selectorCoordinates[i].y = 0;
+                                selectorCoordinates[i].x = 14;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (selectorCoordinates[i].y == GRIDY - 1)
+                        {
+                            if (i == 0) //left
+                            {
+                                if (selectorCoordinates[i].x == 3 || selectorCoordinates[i].x == 4)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 0;
+                                }
+                                else if (selectorCoordinates[i].x == 5)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 1;
+                                }
+                                else if (selectorCoordinates[i].x == 6 || selectorCoordinates[i].x == 7)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 2;
+                                }
+                                else if (selectorCoordinates[i].x == 8 || selectorCoordinates[i].x == 9)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 3;
+                                }
+                                else
+                                {
+                                    selectorCoordinates[i].y += 1;
+                                }
+                            }
+                            else    //right
+                            {
+                                if (selectorCoordinates[i].x == 13 || selectorCoordinates[i].x == 14)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 0;
+                                }
+                                else if (selectorCoordinates[i].x == 15 || selectorCoordinates[i].x == 16)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 1;
+                                }
+                                else if (selectorCoordinates[i].x == 17)    //the messed up location is mirrored to be 2nd from the outside
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 2;
+                                }
+                                else if (selectorCoordinates[i].x == 18 || selectorCoordinates[i].x == 19)
+                                {
+                                    outOfGrid[i] = true;
+                                    buttonCoordinates[i] = 3;
+                                }
+                                else
+                                {
+                                    selectorCoordinates[i].y += 1;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            selectorCoordinates[i].y += 1;
+                        }
+                    }
                 }
             }
             prevKeys[i].down = true;
@@ -643,7 +917,22 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
             {
                 if (selected[i] == false)
                 {
-                    selectorCoordinates[i].x -= 1;
+                    if (outOfGrid[i])
+                    {
+                        buttonCoordinates[i] -= 1;
+                        if (buttonCoordinates[i] == -1)
+                        {
+                            buttonCoordinates[i] = 3;
+                        }
+                        if (buttonCoordinates[i] == 7)
+                        {
+                            buttonCoordinates[i] = 10;
+                        }
+                    }
+                    else
+                    {
+                        selectorCoordinates[i].x -= 1;
+                    }
                 }
                 else
                 {
@@ -667,7 +956,22 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
             {
                 if (selected[i] == false)
                 {
-                    selectorCoordinates[i].x += 1;
+                    if (outOfGrid[i])
+                    {
+                        buttonCoordinates[i] += 1;
+                        if (buttonCoordinates[i] == 4)
+                        {
+                            buttonCoordinates[i] = 0;
+                        }
+                        if (buttonCoordinates[i] == 11)
+                        {
+                            buttonCoordinates[i] = 8;
+                        }
+                    }
+                    else
+                    {
+                        selectorCoordinates[i].x += 1;
+                    }
                 }
                 else
                 {
@@ -734,19 +1038,27 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
         {
             creeps[0].push_back(new Creep(distancesRight, 0));
         }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2))
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad9))
         {
             creeps[1].push_back(new Creep(distancesLeft, 1));
         }
 
         if (selectorCoordinates[i].y < 0)
+        {
             selectorCoordinates[i].y = GRIDY - 1;
+        }
         if (selectorCoordinates[i].y > GRIDY - 1)
+        {
             selectorCoordinates[i].y = 0;
+        }
         if (selectorCoordinates[i].x < 0)
+        {
             selectorCoordinates[i].x = GRIDX * 2 + MIDDLE - 1;
+        }
         if (selectorCoordinates[i].x > GRIDX * 2 + MIDDLE - 1)
+        {
             selectorCoordinates[i].x = 0;
+        }
     }
 }
 

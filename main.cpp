@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
     settings.leftPlayer.left = sf::Keyboard::A;
     settings.leftPlayer.right = sf::Keyboard::D;
     settings.leftPlayer.select = sf::Keyboard::J;
+    settings.leftPlayer.back = sf::Keyboard::K;
     settings.leftPlayer.speed = sf::Keyboard::Space;
 
     settings.rightPlayer.up = sf::Keyboard::Up;
@@ -26,6 +27,7 @@ int main(int argc, char *argv[])
     settings.rightPlayer.left = sf::Keyboard::Left;
     settings.rightPlayer.right = sf::Keyboard::Right;
     settings.rightPlayer.select = sf::Keyboard::Numpad1;
+    settings.rightPlayer.back = sf::Keyboard::Numpad2;
     settings.rightPlayer.speed = sf::Keyboard::Numpad0;
 
     if (argc > 1)
@@ -101,7 +103,7 @@ int main(int argc, char *argv[])
                         break;
                     case 1:
                         inGame = true;      //TODO: have a getter in menu for game options, and access that from here to make new game
-                        game.newGame(Game::right);
+                        game.newGame(Game::left);
                         break;
                     case 2:
                         inGame = true;
