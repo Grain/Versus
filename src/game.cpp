@@ -182,7 +182,7 @@ void Game::newGame(Game::Players temp)
     otherButtonSelector[1].setFillColor(sf::Color::Magenta);   //temp
     selectorCoordinates[1] = {GRIDX * 2 + MIDDLE - 1, GRIDY / 2};
     selected[0] = selected[1] = false;
-    inGrid[0] = inGrid[1] = false;
+    outOfGrid[0] = outOfGrid[1] = false;
 
     ranges[0].setOutlineColor(sf::Color::Cyan); //temp
     ranges[1].setOutlineColor(sf::Color::Magenta); //temp
@@ -195,10 +195,11 @@ void Game::newGame(Game::Players temp)
     buttonSelector[1].setPosition(gameButtons[1][4].getPosition());
 
     middleCoordinates[0] = middleCoordinates[1] = 0;
+    buttonCoordinates[0] = buttonCoordinates[1] = 0;
 
     prevMouse = {0, 0};
 
-    prevKeys[0] = prevKeys[1] = {false, false, false, false, false, false};
+    prevKeys[0] = prevKeys[1] = {false, false, false, false, false, false, false, false, false, false};
 
     for(unsigned int i = 0; i < towers.size(); ++i)
     {
@@ -387,12 +388,13 @@ int Game::update(sf::Vector2i mousePos)
                         {
                             if (selected[i])
                             {
-                                printf("button %d pressed\n", a - 4);
+                                buttonPressed(i, a - 4);
                             }
                         }
                         else
                         {
-                            printf("button asdf pressed %d\n", a);
+                            selected[i] = true;
+                            middleCoordinates[i] = 0;
                         }
                     }
                 }
@@ -591,7 +593,8 @@ void Game::mouseSelector(sf::Vector2i mousePos)
                     if (selectorCoordinates[0].x < GRIDX)
                     {
                         selected[0] = true;
-                        newTower(selectorCoordinates[0]);
+                        middleCoordinates[0] = 0;
+                        //newTower(selectorCoordinates[0]);
                     }
                     else
                     {
@@ -606,7 +609,8 @@ void Game::mouseSelector(sf::Vector2i mousePos)
                     if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
                     {
                         selected[1] = true;
-                        newTower(selectorCoordinates[1]);
+                        middleCoordinates[1] = 0;
+                        //newTower(selectorCoordinates[1]);
                     }
                     else
                     {
@@ -989,13 +993,14 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
         {
             prevKeys[i].right = false;
         }
+
         if(sf::Keyboard::isKeyPressed(temp.select))
         {
             if(prevKeys[i].select == false)
             {
                 if (selected[i])
                 {
-                            //BUTTON CLICKED
+                    buttonPressed(i, middleCoordinates[i]);
                 }
                 else
                 {
@@ -1003,9 +1008,8 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
                     {
                         if (selectorCoordinates[0].x < GRIDX)
                         {
-                            newTower(selectorCoordinates[0]);
                             selected[i] = true;
-                            //BUTTON CLICKED
+                            middleCoordinates[i] = 0;
                         }
                         else
                         {
@@ -1016,9 +1020,8 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
                     {
                         if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
                         {
-                            newTower(selectorCoordinates[1]);
                             selected[i] = true;
-                            //BUTTON CLICKED
+                            middleCoordinates[i] = 0;
                         }
                         else
                         {
@@ -1032,6 +1035,20 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
         else
         {
             prevKeys[i].select = false;
+        }
+
+        if (sf::Keyboard::isKeyPressed(temp.back))
+        {
+            if(prevKeys[i].back == false)
+            {
+                selected[i] = false;
+            }
+
+            prevKeys[i].back = true;
+        }
+        else
+        {
+            prevKeys[i].back = false;
         }
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
@@ -1064,8 +1081,6 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
 
 void Game::newTower(sf::Vector2i i)
 {
-    //not allowing placing towers in middle should be in the gui
-
     //does not allow creating tower outside of grid
     if (i.x >= 0 && i.x < GRIDX * 2 + MIDDLE && i.y >= 0 && i.y < GRIDY)
     {
@@ -1089,7 +1104,6 @@ void Game::newTower(sf::Vector2i i)
                     }
                 }
             }
-            //todo: check for creeps on spot
             if (map[i.x][i.y] == false) //if the spot is empty
             {
                 map[i.x][i.y] = true;
@@ -1098,7 +1112,7 @@ void Game::newTower(sf::Vector2i i)
                 {
                     //no path available
                     map[i.x][i.y] = false;
-                    calculateDistances();   //should i use distances for pathfinding, or actual paths??
+                    calculateDistances();
                 }
                 else
                 {
@@ -1358,4 +1372,63 @@ bool Game::fastForwardDown(sf::Vector2i mousePos)
     }
 
     return false;
+}
+
+void Game::buttonPressed(int player, int button)
+{
+    if (outOfGrid[player])
+    {
+        if (button == 0)
+        {
+
+        }
+        else if (button == 1)
+        {
+
+        }
+        else if (button == 2)
+        {
+
+        }
+        else if (button == 3)
+        {
+
+        }
+    }
+    else
+    {
+        if (button == 0)
+        {
+            newTower(selectorCoordinates[player]);
+            selected[player] = false;
+        }
+        else if (button == 1)
+        {
+
+        }
+        else if (button == 2)
+        {
+
+        }
+        else if (button == 3)
+        {
+            removeTower(selectorCoordinates[player]);
+            selected[player] = false;
+        }
+    }
+}
+
+void Game::removeTower(sf::Vector2i i)
+{
+    for(unsigned int a = 0; a < towers.size(); ++a)
+    {
+        if (towers[a]->getCoordinates() == i)
+        {
+            delete towers[a];
+            towers[a] = NULL;
+            towers.erase(towers.begin() + a);
+            map[i.x][i.y] = false;
+            return;
+        }
+    }
 }

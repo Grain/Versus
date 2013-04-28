@@ -15,7 +15,7 @@ Tower::Tower(std::vector<Creep*>* temp)
 
     base.setFillColor(sf::Color::Blue); //temp, need pictures
 
-    range = 200;
+    range = 100;
 
     creeps = temp;
     target = NULL;

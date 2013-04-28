@@ -15,10 +15,10 @@ Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Towe
     image.setSize({5, 5});
 
     dead = false;
-    homing = false;
+    homing = true;
 
     speed = 4;
-    damage = 25;    //todo: get damage from tower and other attributes, maybe have a projectileInfo struct or something
+    damage = 8;    //todo: get damage from tower and other attributes, maybe have a projectileInfo struct or something
 }
 
 Projectile::Projectile()

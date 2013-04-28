@@ -14,6 +14,10 @@ struct Keys
     sf::Keyboard::Key select;
     sf::Keyboard::Key back;
     sf::Keyboard::Key speed;
+    sf::Keyboard::Key hotkey1;
+    sf::Keyboard::Key hotkey2;
+    sf::Keyboard::Key hotkey3;
+    sf::Keyboard::Key hotkey4;
 };
 
 struct Settings

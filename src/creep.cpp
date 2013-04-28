@@ -38,10 +38,10 @@ Creep::Creep(int temp[][GRIDY], int i)
 
     targetPoint = body.getPosition();
 
-    maxHp = 100;
+    maxHp = 50;
     hp = maxHp;
     dead = false;
-    speed = 1;
+    speed = 2;
 
     bigProgress = 0;
     smallProgress = 0;

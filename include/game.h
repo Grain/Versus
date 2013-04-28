@@ -38,6 +38,10 @@ class Game
             bool down;
             bool select;
             bool back;
+            bool hotkey1;
+            bool hotkey2;
+            bool hotkey3;
+            bool hotkey4;
         };
 
         //functions
@@ -48,6 +52,8 @@ class Game
         bool fastForwardDown(sf::Vector2i);
         void mouseSelector(sf::Vector2i);
         void keyboardSelector(sf::Vector2i);
+        void buttonPressed(int, int);
+        void removeTower(sf::Vector2i);
 
         //vars
         Players players;
@@ -58,7 +64,6 @@ class Game
         sf::Vector2i selectorCoordinates[2];
 
         bool selected[2];
-        bool inGrid[2];
         Button gameButtons[2][11];  //0 - 3: creep queue, 4 - 7: buttons, 8 - 10: creeps;
         sf::RectangleShape buttonSelector[2];   //for the middle row of buttons
         int middleCoordinates[2];   //for middle row of buttons
