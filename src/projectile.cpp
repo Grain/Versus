@@ -4,7 +4,7 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Tower* tempTower, sf::Vector2f pos)
+Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Tower* tempTower, sf::Vector2f pos, int tempType, int tempDamage, double tempSpeed)
 {
     target = tempTarget;
     creeps = tempCreeps;
@@ -17,8 +17,9 @@ Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Towe
     dead = false;
     homing = true;
 
-    speed = 4;
-    damage = 8;    //todo: get damage from tower and other attributes, maybe have a projectileInfo struct or something
+    speed = tempSpeed;
+    type = tempType;
+    damage = tempDamage;
 }
 
 Projectile::Projectile()

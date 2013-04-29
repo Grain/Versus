@@ -32,6 +32,15 @@ class Tower
         void upgrade(int);
     protected:
     private:
+        struct Stats
+        {
+            int fireRate;       //frames/shot       eg. if FPS = 30, fireRate = 30 would result in 1 shot/sec
+            int range;
+            int damage;
+            int type;       //projectile type
+            double speed;
+        };
+
         //functions
         void updateStats();
 
@@ -46,18 +55,8 @@ class Tower
 
         std::vector<Creep*> * creeps;
         Creep * target;
-        int range;
-        int damage;
-        int rate;   //number of frames per shot
+        Stats stats;
         int rateCount;
-
-        struct Stats
-        {
-            int fireRate;       //frames/shot       eg. if FPS = 30, fireRate = 30 would result in 1 shot/sec
-            int range;
-            int damage;
-            int type;
-        };
 };
 
 #endif // TOWER_H

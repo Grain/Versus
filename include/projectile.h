@@ -10,7 +10,7 @@ class Projectile
 {
     public:
         //ctor/dtor
-        Projectile(Creep*, std::vector<Creep*>*, Tower*, sf::Vector2f);
+        Projectile(Creep*, std::vector<Creep*>*, Tower*, sf::Vector2f, int, int, double);
         Projectile();
         virtual ~Projectile();
         //getters
@@ -30,6 +30,7 @@ class Projectile
 
         double speed;   //actual speed is this * 4
         int damage;
+        int type;
 };
 
 #endif // PROJECTILE_H

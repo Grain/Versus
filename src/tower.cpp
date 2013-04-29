@@ -15,13 +15,15 @@ Tower::Tower(std::vector<Creep*>* temp, int baseType)
 
     base.setFillColor(sf::Color::Blue); //temp, need pictures
 
-    range = 100;
+    stats.range = 100;
 
     creeps = temp;
     target = NULL;
-    rate = 1;
-    rateCount = rate;
-    damage = 30;
+    stats.fireRate = 30;
+    rateCount = stats.fireRate;
+    stats.damage = 5;
+
+    stats.speed = 4;
 
     type = {baseType + 1, 0, 0};
 }
@@ -61,7 +63,7 @@ sf::Vector2i Tower::getSize()
 
 int Tower::getRange()
 {
-    return range;
+    return stats.range;
 }
 
 Creep * Tower::getTarget()
@@ -110,7 +112,7 @@ Projectile * Tower::update()
 
     for (unsigned int i = 0; i < creeps->size(); ++i)
     {
-        if (distance((*creeps)[i]->getPosition(), turret.getPosition()) < range)
+        if (distance((*creeps)[i]->getPosition(), turret.getPosition()) < stats.range)
         {
             hasTarget = true;
 
@@ -154,8 +156,8 @@ Projectile * Tower::update()
         setRotationTarget(target->getPosition());
         if (rateCount == 0)
         {
-            rateCount = rate;
-            return new Projectile(target, creeps, this, turret.getPosition());
+            rateCount = stats.fireRate;
+            return new Projectile(target, creeps, this, turret.getPosition(), stats.type, stats.damage, stats.speed);
         }
     }
 
@@ -178,7 +180,7 @@ void Tower::upgrade(int i)
     {
         if (i == 1) //first button pressed, since there is only 1 upgrade available at this point
         {
-            type.z++;   //TODO: limit for upgrade level
+            type.z++;
         }
     }
 
@@ -188,5 +190,17 @@ void Tower::upgrade(int i)
 void Tower::updateStats()
 {
     //gogogo need 3d array of stats and a struct for stats
-    range = 100 + 30 * type.z;
+
+    if (type.x == 1)
+    {
+        stats.range = 100 + 30 * type.z;
+    }
+    else if (type.x == 2)
+    {
+        stats.fireRate = 30 - 3 * type.z;
+    }
+    else if (type.x == 3)
+    {
+        stats.damage = 5 + 5 * type.z;
+    }
 }
