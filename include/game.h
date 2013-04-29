@@ -51,9 +51,10 @@ class Game
         std::string formatTime(int);
         bool fastForwardDown(sf::Vector2i);
         void mouseSelector(sf::Vector2i);
-        void keyboardSelector(sf::Vector2i);
+        void keyboardSelector(sf::Vector2i);    //updateKeyboard would be a better name...
         void buttonPressed(int, int);
         void removeTower(sf::Vector2i);
+        Tower * towerAt(sf::Vector2i);
 
         //vars
         Players players;

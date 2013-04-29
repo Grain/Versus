@@ -1051,11 +1051,67 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
             prevKeys[i].back = false;
         }
 
+        if (sf::Keyboard::isKeyPressed(temp.hotkey1))
+        {
+            if(prevKeys[i].hotkey1 == false)
+            {
+                buttonPressed(i, 0);
+            }
+
+            prevKeys[i].hotkey1 = true;
+        }
+        else
+        {
+            prevKeys[i].hotkey1 = false;
+        }
+
+        if (sf::Keyboard::isKeyPressed(temp.hotkey2))
+        {
+            if(prevKeys[i].hotkey2 == false)
+            {
+                buttonPressed(i, 1);
+            }
+
+            prevKeys[i].hotkey2 = true;
+        }
+        else
+        {
+            prevKeys[i].hotkey2 = false;
+        }
+
+        if (sf::Keyboard::isKeyPressed(temp.hotkey3))
+        {
+            if(prevKeys[i].hotkey3 == false)
+            {
+                buttonPressed(i, 2);
+            }
+
+            prevKeys[i].hotkey3 = true;
+        }
+        else
+        {
+            prevKeys[i].hotkey3 = false;
+        }
+
+        if (sf::Keyboard::isKeyPressed(temp.hotkey4))
+        {
+            if(prevKeys[i].hotkey4 == false)
+            {
+                buttonPressed(i, 3);
+            }
+
+            prevKeys[i].hotkey4 = true;
+        }
+        else
+        {
+            prevKeys[i].hotkey4 = false;
+        }
+
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
         {
             creeps[0].push_back(new Creep(distancesRight, 0));
         }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad9))
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
         {
             creeps[1].push_back(new Creep(distancesLeft, 1));
         }
@@ -1399,8 +1455,11 @@ void Game::buttonPressed(int player, int button)
     {
         if (button == 0)
         {
-            newTower(selectorCoordinates[player]);
-            selected[player] = false;
+            if (towerAt(selectorCoordinates[player]) == NULL)
+            {
+                newTower(selectorCoordinates[player]);
+                selected[player] = false;
+            }
         }
         else if (button == 1)
         {
@@ -1431,4 +1490,16 @@ void Game::removeTower(sf::Vector2i i)
             return;
         }
     }
+}
+
+Tower * Game::towerAt(sf::Vector2i i)
+{
+    for(unsigned int a = 0; a < towers.size(); ++a)
+    {
+        if (towers[a]->getCoordinates() == i)
+        {
+            return towers[a];
+        }
+    }
+    return NULL;
 }

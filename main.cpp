@@ -21,6 +21,10 @@ int main(int argc, char *argv[])
     settings.leftPlayer.select = sf::Keyboard::J;
     settings.leftPlayer.back = sf::Keyboard::K;
     settings.leftPlayer.speed = sf::Keyboard::Space;
+    settings.leftPlayer.hotkey1 = sf::Keyboard::Num1;
+    settings.leftPlayer.hotkey2 = sf::Keyboard::Num2;
+    settings.leftPlayer.hotkey3 = sf::Keyboard::Num3;
+    settings.leftPlayer.hotkey4 = sf::Keyboard::Num4;
 
     settings.rightPlayer.up = sf::Keyboard::Up;
     settings.rightPlayer.down = sf::Keyboard::Down;
@@ -29,6 +33,10 @@ int main(int argc, char *argv[])
     settings.rightPlayer.select = sf::Keyboard::Numpad1;
     settings.rightPlayer.back = sf::Keyboard::Numpad2;
     settings.rightPlayer.speed = sf::Keyboard::Numpad0;
+    settings.rightPlayer.hotkey1 = sf::Keyboard::Numpad7;
+    settings.rightPlayer.hotkey2 = sf::Keyboard::Numpad8;
+    settings.rightPlayer.hotkey3 = sf::Keyboard::Numpad9;
+    settings.rightPlayer.hotkey4 = sf::Keyboard::Add;
 
     if (argc > 1)
     {
