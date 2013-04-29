@@ -4,7 +4,7 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Tower::Tower(std::vector<Creep*>* temp)
+Tower::Tower(std::vector<Creep*>* temp, int baseType)
 {
     base.setSize((sf::Vector2f)Tower::getSize());
     turret.setSize((sf::Vector2f)Tower::getSize());
@@ -22,6 +22,8 @@ Tower::Tower(std::vector<Creep*>* temp)
     rate = 1;
     rateCount = rate;
     damage = 30;
+
+    type = {baseType + 1, 0, 0};
 }
 
 Tower::Tower()
@@ -65,6 +67,11 @@ int Tower::getRange()
 Creep * Tower::getTarget()
 {
     return target;
+}
+
+sf::Vector3i Tower::getType()
+{
+    return type;
 }
 
 /***************************************************************/
@@ -159,4 +166,27 @@ void Tower::draw(sf::RenderTarget * target)
 {
     target->draw(base);
     target->draw(turret);
+}
+
+void Tower::upgrade(int i)
+{
+    if (type.y == 0)
+    {
+        type.y = i;
+    }
+    else
+    {
+        if (i == 1) //first button pressed, since there is only 1 upgrade available at this point
+        {
+            type.z++;   //TODO: limit for upgrade level
+        }
+    }
+
+    updateStats();
+}
+
+void Tower::updateStats()
+{
+    //gogogo need 3d array of stats and a struct for stats
+    range = 100 + 30 * type.z;
 }

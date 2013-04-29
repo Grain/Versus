@@ -6,13 +6,13 @@
 #include <cmath>
 #include <vector>
 
-class Projectile;    //forward declaration
+class Projectile    ;    //forward declaration
 
 class Tower
 {
     public:
         //ctor/dtor
-        Tower(std::vector<Creep*>*);
+        Tower(std::vector<Creep*>*, int);
         Tower();
         virtual ~Tower();
         //getters
@@ -21,6 +21,7 @@ class Tower
         static sf::Vector2i getSize();
         int getRange();
         Creep * getTarget();
+        sf::Vector3i getType();
         //setters
         void setRotation(double);
         void setRotationTarget(sf::Vector2f);
@@ -28,8 +29,12 @@ class Tower
         //functions
         Projectile * update();
         void draw(sf::RenderTarget*);
+        void upgrade(int);
     protected:
     private:
+        //functions
+        void updateStats();
+
         //vars
         sf::RectangleShape base;    //40x40 base
         sf::RectangleShape turret;  //40x40 turret, can spin around (use transparent image to make smaller visual turret)
@@ -37,6 +42,7 @@ class Tower
         sf::Texture turretTexture;
         sf::Vector2i coordinates;
         sf::Vector2f position;
+        sf::Vector3i type;  //x = primary (1-3), y = secondary(1-3), z = upgrade level(0-9)
 
         std::vector<Creep*> * creeps;
         Creep * target;
@@ -44,6 +50,14 @@ class Tower
         int damage;
         int rate;   //number of frames per shot
         int rateCount;
+
+        struct Stats
+        {
+            int fireRate;       //frames/shot       eg. if FPS = 30, fireRate = 30 would result in 1 shot/sec
+            int range;
+            int damage;
+            int type;
+        };
 };
 
 #endif // TOWER_H

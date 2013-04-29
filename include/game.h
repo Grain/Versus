@@ -46,7 +46,7 @@ class Game
 
         //functions
         void initializeGrid(sf::RenderTarget*, sf::Color, sf::Color);
-        void newTower(sf::Vector2i);
+        void newTower(sf::Vector2i, int);
         void calculateDistances();
         std::string formatTime(int);
         bool fastForwardDown(sf::Vector2i);
@@ -55,6 +55,7 @@ class Game
         void buttonPressed(int, int);
         void removeTower(sf::Vector2i);
         Tower * towerAt(sf::Vector2i);
+        void updateButtons(int);
 
         //vars
         Players players;

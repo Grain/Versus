@@ -231,6 +231,8 @@ void Game::newGame(Game::Players temp)
     }
 
     calculateDistances();
+    updateButtons(0);
+    updateButtons(1);
 
     time = -30;
 
@@ -618,6 +620,7 @@ void Game::mouseSelector(sf::Vector2i mousePos)
                     }
                 }
             }
+            updateButtons(players);
         }
     }
 }
@@ -1029,6 +1032,7 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
                         }
                     }
                 }
+                updateButtons(i);
             }
             prevKeys[i].select = true;
         }
@@ -1042,6 +1046,7 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
             if(prevKeys[i].back == false)
             {
                 selected[i] = false;
+                updateButtons(i);
             }
 
             prevKeys[i].back = true;
@@ -1135,7 +1140,7 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
     }
 }
 
-void Game::newTower(sf::Vector2i i)
+void Game::newTower(sf::Vector2i i, int type)
 {
     //does not allow creating tower outside of grid
     if (i.x >= 0 && i.x < GRIDX * 2 + MIDDLE && i.y >= 0 && i.y < GRIDY)
@@ -1174,11 +1179,11 @@ void Game::newTower(sf::Vector2i i)
                 {
                     if (i.x < GRIDX)
                     {
-                        towers.push_back(new Tower(&creeps[1]));
+                        towers.push_back(new Tower(&creeps[1], type));
                     }
                     else
                     {
-                        towers.push_back(new Tower(&creeps[0]));
+                        towers.push_back(new Tower(&creeps[0], type));
                     }
                     towers[towers.size() - 1]->setCoordinates(i);
                 }
@@ -1453,21 +1458,26 @@ void Game::buttonPressed(int player, int button)
     }
     else
     {
-        if (button == 0)
+        if (button >= 0 && button <= 2)
         {
             if (towerAt(selectorCoordinates[player]) == NULL)
             {
-                newTower(selectorCoordinates[player]);
+                newTower(selectorCoordinates[player], button);
                 selected[player] = false;
             }
-        }
-        else if (button == 1)
-        {
-
-        }
-        else if (button == 2)
-        {
-
+            else
+            {
+                Tower * tempTower = towerAt(selectorCoordinates[player]);
+                if (tempTower->getType().z >= 9)
+                {
+                    //max lvl
+                }
+                else
+                {
+                    tempTower->upgrade(button + 1);
+                }
+                printf("tower type: 1: %d 2: %d 3: %d\n", towerAt(selectorCoordinates[player])->getType().x, towerAt(selectorCoordinates[player])->getType().y, towerAt(selectorCoordinates[player])->getType().z);
+            }
         }
         else if (button == 3)
         {
@@ -1475,6 +1485,7 @@ void Game::buttonPressed(int player, int button)
             selected[player] = false;
         }
     }
+    updateButtons(player);
 }
 
 void Game::removeTower(sf::Vector2i i)
@@ -1502,4 +1513,62 @@ Tower * Game::towerAt(sf::Vector2i i)
         }
     }
     return NULL;
+}
+
+void Game::updateButtons(int player)
+{
+    if (outOfGrid[player])
+    {
+        //thing
+    }
+    else
+    {
+        if (selected[player])
+        {
+            Tower * tempTower = towerAt(selectorCoordinates[player]);
+            if (tempTower == NULL)  //no tower there yet, build new tower options
+            {
+                for (int i = 0; i < 3; ++i)
+                {
+                    char temp[20];
+                    sprintf(temp, "resources/tower%d-0.png", i + 1);
+                    gameButtons[player][4 + i].loadTexture(temp);
+                }
+                gameButtons[player][7].loadTexture("resources/sell.png");
+            }
+            else        //tower already exists
+            {
+                char temp[20];
+                sf::Vector3i tempType = tempTower->getType();
+
+                if (tempType.y == 0)    //show the 3 advanced tower types
+                {
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        sprintf(temp, "resources/tower%d-%d.png", tempType.x, i + 1);
+                        gameButtons[player][4 + i].loadTexture(temp);
+                    }
+                }
+                else        //upgrade!
+                {
+                    sprintf(temp, "resources/tower%d-%d.png", tempType.x, tempType.y);
+                    if (tempType.z >= 9)        //max level
+                        gameButtons[player][4].loadTexture("resources/unselected.png");
+                    else
+                        gameButtons[player][4].loadTexture(temp);
+                    gameButtons[player][5].loadTexture("resources/unselected.png");
+                    gameButtons[player][6].loadTexture("resources/unselected.png");
+                }
+
+                gameButtons[player][7].loadTexture("resources/sell.png");
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 4; ++i)
+            {
+                gameButtons[player][4 + i].loadTexture("resources/unselected.png");
+            }
+        }
+    }
 }
