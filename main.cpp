@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     settings.doubleBuffered = false;
     settings.enableMouse =  true;
     settings.fastForwardSpeed = 4;
+    settings.selectAfterUpgrade = false;
 
     settings.leftPlayer.up = sf::Keyboard::W;
     settings.leftPlayer.down = sf::Keyboard::S;

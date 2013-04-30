@@ -1439,19 +1439,26 @@ void Game::buttonPressed(int player, int button)
 {
     if (outOfGrid[player])
     {
-        if (button == 0)
+        if (buttonCoordinates[player] < 4)      //creep queue
         {
+            if (button == 0)
+            {
 
-        }
-        else if (button == 1)
-        {
+            }
+            else if (button == 1)
+            {
 
-        }
-        else if (button == 2)
-        {
+            }
+            else if (button == 2)
+            {
 
+            }
+            else if (button == 3)
+            {
+
+            }
         }
-        else if (button == 3)
+        else    //creeps
         {
 
         }
@@ -1463,7 +1470,7 @@ void Game::buttonPressed(int player, int button)
             if (towerAt(selectorCoordinates[player]) == NULL)
             {
                 newTower(selectorCoordinates[player], button);
-                selected[player] = false;
+                selected[player] = settings.selectAfterUpgrade;
             }
             else
             {
@@ -1477,12 +1484,15 @@ void Game::buttonPressed(int player, int button)
                     tempTower->upgrade(button + 1);
                 }
                 printf("tower type: 1: %d 2: %d 3: %d\n", towerAt(selectorCoordinates[player])->getType().x, towerAt(selectorCoordinates[player])->getType().y, towerAt(selectorCoordinates[player])->getType().z);
+                selected[player] = settings.selectAfterUpgrade;
             }
         }
         else if (button == 3)
         {
             removeTower(selectorCoordinates[player]);
             selected[player] = false;
+
+//            selected[player] = settings.selectAfterUpgrade;   //should i?
         }
     }
     updateButtons(player);

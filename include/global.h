@@ -28,6 +28,7 @@ struct Settings
 
     bool doubleBuffered;    //sfml actually has double buffering by default, this turns on drawing to a secondary buffer before drawing on screen
     int fastForwardSpeed;
+    bool selectAfterUpgrade;    //whether to keep upgrades focused after buying an upgrade
 };
 
 sf::Vector2i gridPosition(sf::Vector2i);
