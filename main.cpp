@@ -7,9 +7,11 @@
 #include "menu.h"
 
 Settings settings;
+Stats towerStats[3][3][3];
 
 int main(int argc, char *argv[])
 {
+    towerStats[3][3][3].damage = 1;
     settings.doubleBuffered = false;
     settings.enableMouse =  true;
     settings.fastForwardSpeed = 4;

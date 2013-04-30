@@ -1475,7 +1475,7 @@ void Game::buttonPressed(int player, int button)
             else
             {
                 Tower * tempTower = towerAt(selectorCoordinates[player]);
-                if (tempTower->getType().z >= 9)
+                if (tempTower->getType().z >= 3)
                 {
                     //max lvl
                 }
@@ -1562,7 +1562,7 @@ void Game::updateButtons(int player)
                 else        //upgrade!
                 {
                     sprintf(temp, "resources/tower%d-%d.png", tempType.x, tempType.y);
-                    if (tempType.z >= 9)        //max level
+                    if (tempType.z >= 3)        //max level
                         gameButtons[player][4].loadTexture("resources/unselected.png");
                     else
                         gameButtons[player][4].loadTexture(temp);

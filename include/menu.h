@@ -21,6 +21,7 @@ class Menu
         int update(sf::Vector2i);
     protected:
     private:
+        static const char * const keyNames[];
         //functions
         //vars
         sf::RenderTexture canvas;
@@ -30,6 +31,9 @@ class Menu
         sf::Texture backgroundTexture;
 
         std::vector <Button*> mainMenu;
+        std::vector <Button*> settingsMenu;
+
+        bool keyState[sf::Keyboard::KeyCount];
 };
 
 #endif // MENU_H

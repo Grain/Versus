@@ -31,11 +31,22 @@ struct Settings
     bool selectAfterUpgrade;    //whether to keep upgrades focused after buying an upgrade
 };
 
+struct Stats
+{
+    int cost;
+    int fireRate;       //frames/shot       eg. if FPS = 30, fireRate = 30 would result in 1 shot/sec
+    int range;
+    int damage;
+    int type;       //projectile type
+    double speed;
+};
+
 sf::Vector2i gridPosition(sf::Vector2i);
 sf::Vector2i coordinatePosition(sf::Vector2i);
 double distance(sf::Vector2f, sf::Vector2f);
 
 extern Settings settings;
+extern Stats towerStats[3][3][3];
 
 const int XRES = 1024;
 const int YRES = 576;

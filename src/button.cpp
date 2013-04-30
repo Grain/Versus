@@ -81,7 +81,10 @@ void Button::loadTexture(std::string i)
 bool Button::update(sf::Vector2i mousePos)
 {
     if(!visible)
+    {
+        rect.setTexture(&normal);
         return false;
+    }
 
     bool temp = false;
     bool down = sf::Mouse::isButtonPressed(sf::Mouse::Left);

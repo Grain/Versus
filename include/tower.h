@@ -6,7 +6,7 @@
 #include <cmath>
 #include <vector>
 
-class Projectile    ;    //forward declaration
+class Projectile;    //forward declaration
 
 class Tower
 {
@@ -32,15 +32,6 @@ class Tower
         void upgrade(int);
     protected:
     private:
-        struct Stats
-        {
-            int fireRate;       //frames/shot       eg. if FPS = 30, fireRate = 30 would result in 1 shot/sec
-            int range;
-            int damage;
-            int type;       //projectile type
-            double speed;
-        };
-
         //functions
         void updateStats();
 
