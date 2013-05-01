@@ -9,11 +9,20 @@ Tower::Tower(std::vector<Creep*>* temp, int baseType)
     base.setSize((sf::Vector2f)Tower::getSize());
     turret.setSize((sf::Vector2f)Tower::getSize());
     turret.setOrigin(Tower::getSize().x / 2, Tower::getSize().y / 2);
+    level.setSize({5, 19});
+    level.setOrigin(level.getSize());
 
     turretTexture.loadFromFile("resources/turret.png");
     turret.setTexture(&turretTexture);
 
-    base.setFillColor(sf::Color::Blue); //temp, need pictures
+    base.setFillColor(sf::Color::Blue); //temp, need to use baseTexture
+
+    for (unsigned int i = 0; i < 3; ++i)
+    {
+        char tempString[30];
+        sprintf(tempString, "resources/level%d.png", i + 1);
+        levelTexture[i].loadFromFile(tempString);
+    }
 
     stats.range = 100;
 
@@ -100,6 +109,7 @@ void Tower::setCoordinates(sf::Vector2i i)
     position = (sf::Vector2f)coordinatePosition(i);
     base.setPosition(position);
     turret.setPosition(position.x + Tower::getSize().x / 2, position.y + Tower::getSize().y / 2);
+    level.setPosition(position + (sf::Vector2f)Tower::getSize() - (sf::Vector2f){1, 1});
 }
 
 /***************************************************************/
@@ -168,6 +178,11 @@ void Tower::draw(sf::RenderTarget * target)
 {
     target->draw(base);
     target->draw(turret);
+
+    if (type.z > 0)
+    {
+        target->draw(level);
+    }
 }
 
 void Tower::upgrade(int i)
@@ -181,6 +196,7 @@ void Tower::upgrade(int i)
         if (i == 1) //first button pressed, since there is only 1 upgrade available at this point
         {
             type.z++;
+            level.setTexture(&levelTexture[type.z - 1]);
         }
     }
 

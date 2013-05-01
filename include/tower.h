@@ -38,8 +38,10 @@ class Tower
         //vars
         sf::RectangleShape base;    //40x40 base
         sf::RectangleShape turret;  //40x40 turret, can spin around (use transparent image to make smaller visual turret)
+        sf::RectangleShape level;
         sf::Texture baseTexture;
         sf::Texture turretTexture;
+        sf::Texture levelTexture[3];
         sf::Vector2i coordinates;
         sf::Vector2f position;
         sf::Vector3i type;  //x = primary (1-3), y = secondary(1-3), z = upgrade level(0-9)
