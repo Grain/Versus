@@ -14,6 +14,8 @@ Menu::Menu()
             printf("Error creating menu renderTexture\n");
     }
 
+    readSettings();
+
     background.setSize({XRES, YRES});
     background.setPosition(0, 0);
     background.setFillColor(sf::Color::White);
@@ -157,6 +159,7 @@ int Menu::update(sf::Vector2i mousePos)
                     {
                         settingsMenu[a]->setVisible(false);
                     }
+                    writeSettings();
                     break;
                 case 1:
                     break;
@@ -165,4 +168,58 @@ int Menu::update(sf::Vector2i mousePos)
     }
 
     return 0;
+}
+
+void Menu::readSettings()
+{
+    FILE * ifp = fopen("settings", "r");
+    if (ifp != NULL)
+    {       //format: effectvolume, musicvolume, enablemouse, selectafterupgrade, leftkeys, rightkeys
+        fscanf(ifp, "%d\n%d\n%d\n%d", &settings.effectVolume, &settings.musicVolume, (int*)&settings.enableMouse, (int*)&settings.selectAfterUpgrade);
+        fscanf(ifp, "%d\n%d\n%d\n%d\n%d\n%d\n", (int*)&settings.leftPlayer.up, (int*)&settings.leftPlayer.down, (int*)&settings.leftPlayer.left, (int*)&settings.leftPlayer.right, (int*)&settings.leftPlayer.select, (int*)&settings.leftPlayer.back);
+        fscanf(ifp, "%d\n%d\n%d\n%d\n", (int*)&settings.leftPlayer.hotkey1, (int*)&settings.leftPlayer.hotkey2, (int*)&settings.leftPlayer.hotkey3, (int*)&settings.leftPlayer.hotkey4);
+        fscanf(ifp, "%d\n%d\n%d\n%d\n%d\n%d\n", (int*)&settings.rightPlayer.up, (int*)&settings.rightPlayer.down, (int*)&settings.rightPlayer.left, (int*)&settings.rightPlayer.right, (int*)&settings.rightPlayer.select, (int*)&settings.rightPlayer.back);
+        fscanf(ifp, "%d\n%d\n%d\n%d\n", (int*)&settings.rightPlayer.hotkey1, (int*)&settings.rightPlayer.hotkey2, (int*)&settings.rightPlayer.hotkey3, (int*)&settings.rightPlayer.hotkey4);
+    }
+    else
+    {
+        settings.effectVolume = 5;
+        settings.musicVolume = 5;
+        settings.enableMouse = true;
+        settings.selectAfterUpgrade = false;
+
+        settings.leftPlayer.up = sf::Keyboard::W;
+        settings.leftPlayer.down = sf::Keyboard::S;
+        settings.leftPlayer.left = sf::Keyboard::A;
+        settings.leftPlayer.right = sf::Keyboard::D;
+        settings.leftPlayer.select = sf::Keyboard::F;
+        settings.leftPlayer.back = sf::Keyboard::G;
+        settings.leftPlayer.speed = sf::Keyboard::Space;
+        settings.leftPlayer.hotkey1 = sf::Keyboard::R;
+        settings.leftPlayer.hotkey2 = sf::Keyboard::T;
+        settings.leftPlayer.hotkey3 = sf::Keyboard::Y;
+        settings.leftPlayer.hotkey4 = sf::Keyboard::U;
+
+        settings.rightPlayer.up = sf::Keyboard::Up;
+        settings.rightPlayer.down = sf::Keyboard::Down;
+        settings.rightPlayer.left = sf::Keyboard::Left;
+        settings.rightPlayer.right = sf::Keyboard::Right;
+        settings.rightPlayer.select = sf::Keyboard::Numpad1;
+        settings.rightPlayer.back = sf::Keyboard::Numpad2;
+        settings.rightPlayer.speed = sf::Keyboard::Numpad0;
+        settings.rightPlayer.hotkey1 = sf::Keyboard::Numpad4;
+        settings.rightPlayer.hotkey2 = sf::Keyboard::Numpad5;
+        settings.rightPlayer.hotkey3 = sf::Keyboard::Numpad6;
+        settings.rightPlayer.hotkey4 = sf::Keyboard::Add;
+    }
+    fclose(ifp);
+}
+
+void Menu::writeSettings()
+{
+    FILE * ofp = fopen("settings", "w");
+    fprintf(ofp, "%d\n%d\n%d\n%d\n", settings.effectVolume, settings.musicVolume, settings.enableMouse, settings.selectAfterUpgrade);
+    fprintf(ofp, "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", (int)settings.leftPlayer.up, (int)settings.leftPlayer.down, (int)settings.leftPlayer.left, (int)settings.leftPlayer.right, (int)settings.leftPlayer.select, (int)settings.leftPlayer.back, (int)settings.leftPlayer.speed, (int)settings.leftPlayer.hotkey1, (int)settings.leftPlayer.hotkey2, (int)settings.leftPlayer.hotkey3, (int)settings.leftPlayer.hotkey4);
+    fprintf(ofp, "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", (int)settings.rightPlayer.up, (int)settings.rightPlayer.down, (int)settings.rightPlayer.left, (int)settings.rightPlayer.right, (int)settings.rightPlayer.select, (int)settings.rightPlayer.back, (int)settings.rightPlayer.speed, (int)settings.rightPlayer.hotkey1, (int)settings.rightPlayer.hotkey2, (int)settings.rightPlayer.hotkey3, (int)settings.rightPlayer.hotkey4);
+    fclose(ofp);
 }

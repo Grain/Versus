@@ -23,6 +23,8 @@ class Menu
     private:
         static const char * const keyNames[];
         //functions
+        void readSettings();
+        void writeSettings();
         //vars
         sf::RenderTexture canvas;
         sf::Sprite drawable;

@@ -11,35 +11,10 @@ Stats towerStats[3][3][3];
 
 int main(int argc, char *argv[])
 {
-    towerStats[3][3][3].damage = 1;
+    settings.fastForwardSpeed = 4;      //not sure if i'll make these changable..
     settings.doubleBuffered = false;
-    settings.enableMouse =  true;
-    settings.fastForwardSpeed = 4;
-    settings.selectAfterUpgrade = false;
 
-    settings.leftPlayer.up = sf::Keyboard::W;
-    settings.leftPlayer.down = sf::Keyboard::S;
-    settings.leftPlayer.left = sf::Keyboard::A;
-    settings.leftPlayer.right = sf::Keyboard::D;
-    settings.leftPlayer.select = sf::Keyboard::J;
-    settings.leftPlayer.back = sf::Keyboard::K;
-    settings.leftPlayer.speed = sf::Keyboard::Space;
-    settings.leftPlayer.hotkey1 = sf::Keyboard::Num1;
-    settings.leftPlayer.hotkey2 = sf::Keyboard::Num2;
-    settings.leftPlayer.hotkey3 = sf::Keyboard::Num3;
-    settings.leftPlayer.hotkey4 = sf::Keyboard::Num4;
-
-    settings.rightPlayer.up = sf::Keyboard::Up;
-    settings.rightPlayer.down = sf::Keyboard::Down;
-    settings.rightPlayer.left = sf::Keyboard::Left;
-    settings.rightPlayer.right = sf::Keyboard::Right;
-    settings.rightPlayer.select = sf::Keyboard::Numpad1;
-    settings.rightPlayer.back = sf::Keyboard::Numpad2;
-    settings.rightPlayer.speed = sf::Keyboard::Numpad0;
-    settings.rightPlayer.hotkey1 = sf::Keyboard::Numpad7;
-    settings.rightPlayer.hotkey2 = sf::Keyboard::Numpad8;
-    settings.rightPlayer.hotkey3 = sf::Keyboard::Numpad9;
-    settings.rightPlayer.hotkey4 = sf::Keyboard::Add;
+    towerStats[3][3][3].damage = 1;
 
     if (argc > 1)
     {
