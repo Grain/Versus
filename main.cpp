@@ -89,11 +89,11 @@ int main(int argc, char *argv[])
                         break;
                     case 1:
                         inGame = true;      //TODO: have a getter in menu for game options, and access that from here to make new game
-                        game.newGame(Game::left);
+                        game.newGame(Game::right, sf::Color::Cyan, sf::Color::Magenta, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128));
                         break;
                     case 2:
                         inGame = true;
-                        game.newGame(Game::both);
+                        game.newGame(Game::both, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128));
                         break;
                     case 10:
                         window.close();

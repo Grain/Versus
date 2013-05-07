@@ -168,24 +168,24 @@ Game::~Game()
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
 
-void Game::newGame(Game::Players temp)
+void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSelector, sf::Color tempLeft, sf::Color tempRight)
 {
     players = temp;
 
-    selector[0].setFillColor(sf::Color::Cyan);  //temp
-    buttonSelector[0].setFillColor(sf::Color::Cyan);  //temp
-    otherButtonSelector[0].setFillColor(sf::Color::Cyan);  //temp
+    selector[0].setFillColor(leftSelector);
+    buttonSelector[0].setFillColor(leftSelector);
+    otherButtonSelector[0].setFillColor(leftSelector);
     selectorCoordinates[0] = {0, GRIDY / 2};
 
-    selector[1].setFillColor(sf::Color::Magenta);   //temp
-    buttonSelector[1].setFillColor(sf::Color::Magenta);   //temp
-    otherButtonSelector[1].setFillColor(sf::Color::Magenta);   //temp
+    selector[1].setFillColor(rightSelector);
+    buttonSelector[1].setFillColor(rightSelector);
+    otherButtonSelector[1].setFillColor(rightSelector);
     selectorCoordinates[1] = {GRIDX * 2 + MIDDLE - 1, GRIDY / 2};
     selected[0] = selected[1] = false;
     outOfGrid[0] = outOfGrid[1] = false;
 
-    ranges[0].setOutlineColor(sf::Color::Cyan); //temp
-    ranges[1].setOutlineColor(sf::Color::Magenta); //temp
+    ranges[0].setOutlineColor(leftSelector);
+    ranges[1].setOutlineColor(rightSelector);
     visibleRanges[0] = false;
     visibleRanges[1] = false;
 
@@ -198,6 +198,9 @@ void Game::newGame(Game::Players temp)
     buttonCoordinates[0] = buttonCoordinates[1] = 0;
 
     prevMouse = {0, 0};
+
+    leftColor = tempLeft;
+    rightColor = tempRight;
 
     prevKeys[0] = prevKeys[1] = {false, false, false, false, false, false, false, false, false, false};
 
@@ -271,7 +274,7 @@ void Game::draw(sf::RenderWindow * window)
     }
 
     temp->draw(background);
-    initializeGrid(temp, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128));     //temp colours
+    initializeGrid(temp, leftColor, rightColor);     //temp colours
 
     for(unsigned int i = 0; i < towers.size(); ++i)
     {

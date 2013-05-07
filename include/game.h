@@ -24,7 +24,7 @@ class Game
         //functions
         int update(sf::Vector2i);
         void draw(sf::RenderWindow*);
-        void newGame(Players);
+        void newGame(Players, sf::Color, sf::Color, sf::Color, sf::Color);
     protected:
     private:
         static const int FILLED = 99999;
@@ -108,6 +108,8 @@ class Game
 
         std::vector<Creep*> creeps[2];
         std::vector<Projectile*> projectiles;
+
+        sf::Color leftColor, rightColor;
 };
 
 #endif // GAME_H
