@@ -176,10 +176,10 @@ void Menu::readSettings()
     if (ifp != NULL)
     {       //format: effectvolume, musicvolume, enablemouse, selectafterupgrade, leftkeys, rightkeys
         fscanf(ifp, "%d\n%d\n%d\n%d", &settings.effectVolume, &settings.musicVolume, (int*)&settings.enableMouse, (int*)&settings.selectAfterUpgrade);
-        fscanf(ifp, "%d\n%d\n%d\n%d\n%d\n%d\n", (int*)&settings.leftPlayer.up, (int*)&settings.leftPlayer.down, (int*)&settings.leftPlayer.left, (int*)&settings.leftPlayer.right, (int*)&settings.leftPlayer.select, (int*)&settings.leftPlayer.back);
-        fscanf(ifp, "%d\n%d\n%d\n%d\n", (int*)&settings.leftPlayer.hotkey1, (int*)&settings.leftPlayer.hotkey2, (int*)&settings.leftPlayer.hotkey3, (int*)&settings.leftPlayer.hotkey4);
-        fscanf(ifp, "%d\n%d\n%d\n%d\n%d\n%d\n", (int*)&settings.rightPlayer.up, (int*)&settings.rightPlayer.down, (int*)&settings.rightPlayer.left, (int*)&settings.rightPlayer.right, (int*)&settings.rightPlayer.select, (int*)&settings.rightPlayer.back);
-        fscanf(ifp, "%d\n%d\n%d\n%d\n", (int*)&settings.rightPlayer.hotkey1, (int*)&settings.rightPlayer.hotkey2, (int*)&settings.rightPlayer.hotkey3, (int*)&settings.rightPlayer.hotkey4);
+        fscanf(ifp, "%d\n%d\n%d\n%d\n%d\n%d\n%d", (int*)&settings.leftPlayer.up, (int*)&settings.leftPlayer.down, (int*)&settings.leftPlayer.left, (int*)&settings.leftPlayer.right, (int*)&settings.leftPlayer.select, (int*)&settings.leftPlayer.back, (int*)&settings.leftPlayer.speed);
+        fscanf(ifp, "%d\n%d\n%d\n%d", (int*)&settings.leftPlayer.hotkey1, (int*)&settings.leftPlayer.hotkey2, (int*)&settings.leftPlayer.hotkey3, (int*)&settings.leftPlayer.hotkey4);
+        fscanf(ifp, "%d\n%d\n%d\n%d\n%d\n%d\n%d", (int*)&settings.rightPlayer.up, (int*)&settings.rightPlayer.down, (int*)&settings.rightPlayer.left, (int*)&settings.rightPlayer.right, (int*)&settings.rightPlayer.select, (int*)&settings.rightPlayer.back, (int*)&settings.rightPlayer.speed);
+        fscanf(ifp, "%d\n%d\n%d\n%d", (int*)&settings.rightPlayer.hotkey1, (int*)&settings.rightPlayer.hotkey2, (int*)&settings.rightPlayer.hotkey3, (int*)&settings.rightPlayer.hotkey4);
     }
     else
     {

@@ -1469,8 +1469,30 @@ void Game::buttonPressed(int player, int button)
         {
             if (towerAt(selectorCoordinates[player]) == NULL)
             {
-                newTower(selectorCoordinates[player], button);
-                selected[player] = settings.selectAfterUpgrade;
+                if (player == 0)
+                {
+                    if (selectorCoordinates[player].x < GRIDX)
+                    {
+                        newTower(selectorCoordinates[player], button);
+                        selected[player] = settings.selectAfterUpgrade;
+                    }
+                    else
+                    {
+                        //error message
+                    }
+                }
+                else
+                {
+                    if (selectorCoordinates[player].x > GRIDX + MIDDLE - 1)
+                    {
+                        newTower(selectorCoordinates[player], button);
+                        selected[player] = settings.selectAfterUpgrade;
+                    }
+                    else
+                    {
+                        //error message
+                    }
+                }
             }
             else
             {
@@ -1508,6 +1530,7 @@ void Game::removeTower(sf::Vector2i i)
             towers[a] = NULL;
             towers.erase(towers.begin() + a);
             map[i.x][i.y] = false;
+            calculateDistances();
             return;
         }
     }
