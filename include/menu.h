@@ -25,6 +25,7 @@ class Menu
         //functions
         void readSettings();
         void writeSettings();
+        void updateSettings();
         //vars
         sf::RenderTexture canvas;
         sf::Sprite drawable;
@@ -34,6 +35,7 @@ class Menu
 
         std::vector <Button*> mainMenu;
         std::vector <Button*> settingsMenu;
+        std::vector <sf::Text*> settingsText;
 
         bool keyState[sf::Keyboard::KeyCount];
 };
