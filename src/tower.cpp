@@ -15,6 +15,8 @@ Tower::Tower(std::vector<Creep*>* temp, int baseType)
     turretTexture.loadFromFile("resources/turret.png");
     turret.setTexture(&turretTexture);
 
+    turret.setRotation(rand() % 360);
+
     base.setFillColor(sf::Color::Blue); //temp, need to use baseTexture
 
     for (unsigned int i = 0; i < 3; ++i)

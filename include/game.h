@@ -110,6 +110,8 @@ class Game
         std::vector<Projectile*> projectiles;
 
         sf::Color leftColor, rightColor;
+        int money[2];
+        sf::Text moneyText[2];
 };
 
 #endif // GAME_H

@@ -79,7 +79,7 @@ Game::Game()
         buttonSelector[i].setTexture(&selectorTextures[i]);
         otherButtonSelector[i].setTexture(&selectorTextures[i]);
 
-        for(int a = 0; a < 4; ++a)
+        for(int a = 0; a < 4; ++a)  //creep queue
         {
             int offset = 180;
             int spacing = 5;
@@ -93,7 +93,7 @@ Game::Game()
             gameButtons[i][a].setVisible(true);
         }
 
-        for(int a = 0; a < 4; ++a)
+        for(int a = 0; a < 4; ++a)  //buttons
         {
             int offset = 180;
             int spacing = 5;
@@ -104,10 +104,10 @@ Game::Game()
             gameButtons[i][4 + a].initialize(60, 60);
             gameButtons[i][4 + a].setPosition({(float)(offset + a * (gameButtons[i][4 + a].getSize().x + spacing)), 440});
             gameButtons[i][4 + a].loadTexture("resources/something.png");
-            gameButtons[i][4 + a].setVisible(true); //false
+            gameButtons[i][4 + a].setVisible(true);
         }
 
-        for(int a = 0; a < 3; ++a)
+        for(int a = 0; a < 3; ++a)  //creeps
         {
             int offset = 200;
             int spacing = 15;
@@ -119,6 +119,20 @@ Game::Game()
             gameButtons[i][8 + a].setPosition({(float)(offset + a * (gameButtons[i][8 + a].getSize().x + spacing)), 510});
             gameButtons[i][8 + a].loadTexture("resources/something.png");
             gameButtons[i][8 + a].setVisible(true);
+        }
+
+        //money
+        moneyText[i].setCharacterSize(24);
+        moneyText[i].setColor(sf::Color::Black);
+        moneyText[i].setString("$100");
+        int offset = 60;
+        if (i == 0)
+        {
+            moneyText[i].setPosition(gameButtons[0][10].getPosition().x + offset, 520);
+        }
+        else
+        {
+            moneyText[i].setPosition((XRES / 2) + offset, 520);
         }
     }
 
@@ -196,6 +210,8 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
 
     middleCoordinates[0] = middleCoordinates[1] = 0;
     buttonCoordinates[0] = buttonCoordinates[1] = 0;
+
+    money[0] = money[1] = 100;  //temp
 
     prevMouse = {0, 0};
 
@@ -322,6 +338,8 @@ void Game::draw(sf::RenderWindow * window)
         {
             temp->draw(selector[i]);
         }
+
+        temp->draw(moneyText[i]);
     }
     temp->draw(timerBackground);
     temp->draw(timerBar);
@@ -472,6 +490,7 @@ int Game::update(sf::Vector2i mousePos)
                     }
                     creeps[b][i]->update();
                 }
+                money[b]++;
             }
 
             for(unsigned int i = 0; i < towers.size(); ++i)     //update towers
@@ -513,6 +532,13 @@ int Game::update(sf::Vector2i mousePos)
             if(speedUpAnimation > speedBackgroundTexture.getSize().x - 80)
                 speedUpAnimation = 0;
             speedBackground.setTextureRect(sf::IntRect(speedUpAnimation, 0, speedBackground.getSize().x, speedBackground.getSize().y));
+        }
+
+        for (int i = 0; i < 2; ++i) //update money text
+        {
+            char temp[20];
+            sprintf(temp, "$%d", money[i]);
+            moneyText[i].setString(temp);
         }
     }
 
@@ -1468,7 +1494,7 @@ void Game::buttonPressed(int player, int button)
     }
     else
     {
-        if (button >= 0 && button <= 2)
+        if (button >= 0 && button <= 2)     //create or upgrade
         {
             if (towerAt(selectorCoordinates[player]) == NULL)
             {
@@ -1477,7 +1503,6 @@ void Game::buttonPressed(int player, int button)
                     if (selectorCoordinates[player].x < GRIDX)
                     {
                         newTower(selectorCoordinates[player], button);
-                        selected[player] = settings.selectAfterUpgrade;
                     }
                     else
                     {
@@ -1489,12 +1514,15 @@ void Game::buttonPressed(int player, int button)
                     if (selectorCoordinates[player].x > GRIDX + MIDDLE - 1)
                     {
                         newTower(selectorCoordinates[player], button);
-                        selected[player] = settings.selectAfterUpgrade;
                     }
                     else
                     {
                         //error message
                     }
+                }
+                if (settings.selectAfterUpgrade == false)
+                {
+                    selected[player] = false;
                 }
             }
             else
@@ -1506,18 +1534,60 @@ void Game::buttonPressed(int player, int button)
                 }
                 else
                 {
-                    tempTower->upgrade(button + 1);
+                    if (player == 0)
+                    {
+                        if (selectorCoordinates[player].x < GRIDX)
+                        {
+                            tempTower->upgrade(button + 1);
+                        }
+                        else
+                        {
+                            //error message
+                        }
+                    }
+                    else
+                    {
+                        if (selectorCoordinates[player].x > GRIDX + MIDDLE - 1)
+                        {
+                            tempTower->upgrade(button + 1);
+                        }
+                        else
+                        {
+                            //error message
+                        }
+                    }
                 }
-                printf("tower type: 1: %d 2: %d 3: %d\n", towerAt(selectorCoordinates[player])->getType().x, towerAt(selectorCoordinates[player])->getType().y, towerAt(selectorCoordinates[player])->getType().z);
-                selected[player] = settings.selectAfterUpgrade;
+                if (settings.selectAfterUpgrade == false)
+                {
+                    selected[player] = false;
+                }
             }
         }
-        else if (button == 3)
+        else if (button == 3)   //sell
         {
-            removeTower(selectorCoordinates[player]);
+            if (player == 0)
+            {
+                if (selectorCoordinates[player].x < GRIDX)
+                {
+                    removeTower(selectorCoordinates[player]);
+                }
+                else
+                {
+                    //error message
+                }
+            }
+            else
+            {
+                if (selectorCoordinates[player].x > GRIDX + MIDDLE - 1)
+                {
+                    removeTower(selectorCoordinates[player]);
+                }
+                else
+                {
+                    //error message
+                }
+            }
             selected[player] = false;
-
-//            selected[player] = settings.selectAfterUpgrade;   //should i?
         }
     }
     updateButtons(player);
