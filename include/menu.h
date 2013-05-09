@@ -22,22 +22,30 @@ class Menu
     protected:
     private:
         static const char * const keyNames[];
+        static const char * const hotkeyNames[];
         //functions
         void readSettings();
         void writeSettings();
         void updateSettings();
+        void bindKey();
+        bool checkDuplicates();
         //vars
         sf::RenderTexture canvas;
         sf::Sprite drawable;
 
         sf::RectangleShape background;
-        sf::Texture backgroundTexture;
+        sf::Texture mainBackgroundTexture;
+        sf::Texture settingsBackgroundTexture;
+        sf::RectangleShape bindBackground;
+        sf::Text bindText;
+        char bindMessage[256];
 
         std::vector <Button*> mainMenu;
         std::vector <Button*> settingsMenu;
         std::vector <sf::Text*> settingsText;
 
-        bool keyState[sf::Keyboard::KeyCount];
+        int currentKey;
+        bool isBinding;
 };
 
 #endif // MENU_H
