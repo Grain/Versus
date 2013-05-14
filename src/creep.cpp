@@ -41,7 +41,7 @@ Creep::Creep(int temp[][GRIDY], int i)
     maxHp = 50;
     hp = maxHp;
     dead = false;
-    speed = 2;
+    speed = 1;
 
     bigProgress = 0;
     smallProgress = 0;
@@ -87,7 +87,7 @@ sf::FloatRect Creep::getGlobalBounds()
     return body.getGlobalBounds();
 }
 
-bool Creep::isDead()    //make sure creep is not deleted for 1 frame after dying so projectiles know about it
+bool Creep::isDead()
 {
     return dead;
 }

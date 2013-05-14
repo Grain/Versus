@@ -4,7 +4,7 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Tower::Tower(std::vector<Creep*>* temp, int baseType)
+Tower::Tower(std::vector<Creep*>* tempEnemies, std::vector<Creep*>* tempAllies, int baseType)
 {
     base.setSize((sf::Vector2f)Tower::getSize());
     turret.setSize((sf::Vector2f)Tower::getSize());
@@ -12,12 +12,16 @@ Tower::Tower(std::vector<Creep*>* temp, int baseType)
     level.setSize({5, 19});
     level.setOrigin(level.getSize());
 
-    turretTexture.loadFromFile("resources/turret.png");
+    char tempString[30];
+    sprintf(tempString, "resources/turret%d-0.png", baseType + 1);
+    turretTexture.loadFromFile(tempString);
     turret.setTexture(&turretTexture);
 
-    turret.setRotation(rand() % 360);
+    sprintf(tempString, "resources/base%d-0.png", baseType + 1);
+    baseTexture.loadFromFile(tempString);
+    base.setTexture(&baseTexture);
 
-    base.setFillColor(sf::Color::Blue); //temp, need to use baseTexture
+    turret.setRotation(rand() % 360);
 
     for (unsigned int i = 0; i < 3; ++i)
     {
@@ -28,15 +32,19 @@ Tower::Tower(std::vector<Creep*>* temp, int baseType)
 
     stats.range = 100;
 
-    creeps = temp;
+    enemies = tempEnemies;
+    allies = tempAllies;
+
     target = NULL;
     stats.fireRate = 30;
     rateCount = stats.fireRate;
     stats.damage = 5;
 
     stats.speed = 4;
+    stats.homing = true;
 
     type = {baseType + 1, 0, 0};
+    stats.type = baseType * 4;
 }
 
 Tower::Tower()
@@ -120,29 +128,39 @@ void Tower::setCoordinates(sf::Vector2i i)
 
 Projectile * Tower::update()
 {
+    std::vector<Creep*> * temp;
+    if ((type.x == 1 && type.y == 3) || (type.x == 2 && type.y == 3))
+    {
+        temp = allies;
+    }
+    else
+    {
+        temp = enemies;
+    }
+
     bool hasTarget = false;
 
-    for (unsigned int i = 0; i < creeps->size(); ++i)
+    for (unsigned int i = 0; i < temp->size(); ++i)
     {
-        if (distance((*creeps)[i]->getPosition(), turret.getPosition()) < stats.range)
+        if (distance((*temp)[i]->getPosition(), turret.getPosition()) < stats.range)
         {
             hasTarget = true;
 
             if (target == NULL)
             {
-                target = (*creeps)[i];
+                target = (*temp)[i];
             }
             else
             {
-                if ((*creeps)[i]->getProgress().x < target->getProgress().x)
+                if ((*temp)[i]->getProgress().x < target->getProgress().x)
                 {
-                    target = (*creeps)[i];
+                    target = (*temp)[i];
                 }
-                else if ((*creeps)[i]->getProgress().x == target->getProgress().x)
+                else if ((*temp)[i]->getProgress().x == target->getProgress().x)
                 {
-                    if ((*creeps)[i]->getProgress().y < target->getProgress().y)
+                    if ((*temp)[i]->getProgress().y < target->getProgress().y)
                     {
-                        target = (*creeps)[i];
+                        target = (*temp)[i];
                     }
                 }
             }
@@ -169,7 +187,7 @@ Projectile * Tower::update()
         if (rateCount == 0)
         {
             rateCount = stats.fireRate;
-            return new Projectile(target, creeps, this, turret.getPosition(), stats.type, stats.damage, stats.speed);
+            return new Projectile(target, temp, this, turret.getPosition(), stats.type, stats.damage, stats.speed, stats.range, stats.homing);
         }
     }
 
@@ -192,6 +210,15 @@ void Tower::upgrade(int i)
     if (type.y == 0)
     {
         type.y = i;
+        char tempString[30];
+        sprintf(tempString, "resources/turret%d-%d.png", type.x, type.y);
+        turretTexture.loadFromFile(tempString);
+        turret.setTexture(&turretTexture);
+
+        sprintf(tempString, "resources/base%d-%d.png", type.x, type.y);
+        baseTexture.loadFromFile(tempString);
+        base.setTexture(&baseTexture);
+        printf("%d %d\n", type.x, type.y);
     }
     else
     {
@@ -221,4 +248,6 @@ void Tower::updateStats()
     {
         stats.damage = 5 + 5 * type.z;
     }
+
+    stats.type = (type.x - 1) * 4 + type.y;
 }

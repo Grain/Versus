@@ -38,6 +38,7 @@ struct Stats
     int range;
     int damage;
     int type;       //projectile type
+    bool homing;
     double speed;
 };
 

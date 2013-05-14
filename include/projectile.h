@@ -10,7 +10,7 @@ class Projectile
 {
     public:
         //ctor/dtor
-        Projectile(Creep*, std::vector<Creep*>*, Tower*, sf::Vector2f, int, int, double);
+        Projectile(Creep*, std::vector<Creep*>*, Tower*, sf::Vector2f, int, int, double, int, bool);
         Projectile();
         virtual ~Projectile();
         //getters
@@ -24,13 +24,20 @@ class Projectile
         std::vector<Creep*> * creeps;
         Tower * tower;
         bool dead;
-        bool homing;
+        bool animate;
+        int animation;
+
+        sf::Vector2f graphicSize;       //stuff for the picture that appears when the projectile is destroyed (an explosion, particles, etc.)
+        sf::Texture graphicTexture;
 
         sf::RectangleShape image;
+        sf::Texture texture;
 
         double speed;   //actual speed is this * 4
         int damage;
         int type;
+        int range;
+        bool homing;
 };
 
 #endif // PROJECTILE_H

@@ -1208,11 +1208,11 @@ void Game::newTower(sf::Vector2i i, int type)
                 {
                     if (i.x < GRIDX)
                     {
-                        towers.push_back(new Tower(&creeps[1], type));
+                        towers.push_back(new Tower(&creeps[1], &creeps[0], type));
                     }
                     else
                     {
-                        towers.push_back(new Tower(&creeps[0], type));
+                        towers.push_back(new Tower(&creeps[0], &creeps[1], type));
                     }
                     towers[towers.size() - 1]->setCoordinates(i);
                 }

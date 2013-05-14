@@ -4,19 +4,66 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Tower* tempTower, sf::Vector2f pos, int tempType, int tempDamage, double tempSpeed)
+Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Tower* tempTower, sf::Vector2f pos, int tempType, int tempDamage, double tempSpeed, int tempRange, bool tempHoming)
 {
     target = tempTarget;
     creeps = tempCreeps;
     tower = tempTower;
 
-    image.setFillColor(sf::Color::Black);
+    switch(tempType)
+    {
+        case 0: //basic 1
+            image.setSize({5, 5});
+            break;
+        case 1: //1.1
+            image.setSize({2, 5});  //machine gun tower
+            break;
+        case 2: //1.2
+            image.setSize({4, 4});      //need to thnk of something for this tower
+            break;
+        case 3: //1.3
+            image.setSize({10, 10});    //buff tower
+            break;
+        case 4: //basic 2
+            image.setSize({5, 10});     //missile
+            break;
+        case 5: //2.1
+            image.setSize({2, 40});      //snipa
+            break;
+        case 6: //2.2
+            image.setSize({10, 20});      //aoe missile
+            break;
+        case 7: //2.3
+            image.setSize({5, 10});          //heal missile
+            break;
+        case 8: //basic 3       //splash..how to do?
+            image.setSize({4, 4});
+            break;
+        case 9: //2.1
+            image.setSize({4, 4});
+            break;
+        case 10: //2.2
+            image.setSize({4, 4});
+            break;
+        case 11: //2.3
+            image.setSize({4, 4});
+            break;
+    }
+
+    graphicSize = {20, 20}; //so temp it hurts
+    graphicTexture.loadFromFile("resources/explosion.png");
+    texture.loadFromFile("resources/tempbullet.png");
+
+    image.setTexture(&texture);
     image.setPosition(pos);
-    image.setSize({5, 5});
+    image.setOrigin(image.getSize().x / 2, image.getSize().y / 2);
 
     dead = false;
-    homing = true;
+    animate = false;
+    animation = 0;
 
+    range = tempRange;
+    homing = tempHoming;
     speed = tempSpeed;
     type = tempType;
     damage = tempDamage;
@@ -55,66 +102,122 @@ bool Projectile::isDead()
 
 void Projectile::update()
 {
-    if (target->isDead())
+    if (animate == true)
     {
-        if (homing == false)
+        if (animation > graphicTexture.getSize().x - graphicSize.x)
         {
             dead = true;
             return;
         }
-
-        bool newTarget = true;
-
-        if (tower->getTarget() != NULL)     //parent tower has another valid target
+        image.setTextureRect(sf::IntRect(animation, 0, graphicSize.x, graphicSize.y));
+        animation += graphicSize.x;
+    }
+    else
+    {
+        if (type >= 8)  //splash tower
         {
-            if (tower->getTarget()->isDead() == false)
+            for(unsigned int i = 0; i < creeps->size(); ++i)
             {
-                target = tower->getTarget();
-                newTarget = false;
-            }
-        }
-
-        if (newTarget)          //parent tower has no target
-        {
-            if (creeps->size() > 0)     //parent tower has no target, so just target the oldest creep alive
-            {
-                bool hasTarget = false;
-
-                for(unsigned int i = 0; i < creeps->size(); ++i)
+                if ((*creeps)[i]->isDead() == false)
                 {
-                    if ((*creeps)[i]->isDead() == false)    //found an alive creep!
+                    if (distance(image.getPosition(), (*creeps)[i]->getPosition()) < range)
                     {
-                        target = (*creeps)[i];
-                        hasTarget = true;
-                        break;
+                        //hit!
+                        (*creeps)[i]->damage(10);
+                        //TODO: different effects here
+                    }
+                }
+            }
+
+            animate = true;
+            image.setSize(graphicSize);
+            image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
+            image.setTexture(&graphicTexture);
+            return;
+        }
+        else
+        {
+            if (target->isDead())
+            {
+                if (homing == false)
+                {
+                    animate = true;
+                    image.setSize(graphicSize);
+                    image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
+                    image.setTexture(&graphicTexture);
+                    return;
+                }
+
+                bool newTarget = true;
+
+                if (tower->getTarget() != NULL)     //parent tower has another valid target
+                {
+                    if (tower->getTarget()->isDead() == false)
+                    {
+                        target = tower->getTarget();
+                        newTarget = false;
                     }
                 }
 
-                if (hasTarget == false)
+                if (newTarget)          //parent tower has no target
                 {
-                    dead = true;
-                    return;
+                    if (creeps->size() > 0)     //parent tower has no target, so just target the oldest creep alive
+                    {
+                        bool hasTarget = false;
+
+                        for(unsigned int i = 0; i < creeps->size(); ++i)
+                        {
+                            if ((*creeps)[i]->isDead() == false)    //found an alive creep!
+                            {
+                                target = (*creeps)[i];
+                                hasTarget = true;
+                                break;
+                            }
+                        }
+
+                        if (hasTarget == false)
+                        {
+                            animate = true;
+                            image.setSize(graphicSize);
+                            image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
+                            image.setTexture(&graphicTexture);
+                            return;
+                        }
+                    }
+                    else        //parent tower has no target, and there are no creeps alive at all
+                    {
+                        animate = true;
+                        image.setSize(graphicSize);
+                        image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
+                        image.setTexture(&graphicTexture);
+                        return;
+                    }
                 }
             }
-            else        //parent tower has no target, and there are no creeps alive at all
+
+            for (int i = 0; i < 4; ++i)     //for better collision detection resolution
             {
-                dead = true;
-                return;
+                if (image.getGlobalBounds().intersects(target->getGlobalBounds()))      //HIT!
+                {
+                    //TODO: different effects here
+                    target->damage(damage);
+                    animate = true;
+                    image.setSize(graphicSize);
+                    image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
+                    image.setTexture(&graphicTexture);
+                    return;
+                }
+
+                double ratio = speed / distance(image.getPosition(), target->getPosition());
+                image.move((target->getPosition().x - image.getPosition().x) * ratio, (target->getPosition().y - image.getPosition().y) * ratio);
+
+                //rotate
+                double angle = atan((target->getPosition().x - image.getPosition().x)/(image.getPosition().y - target->getPosition().y)) * 180 / 3.14159265;
+                if(image.getPosition().y - target->getPosition().y < 0)
+                    angle += 180;
+                image.setRotation(angle);
             }
         }
-    }
-
-    for (int i = 0; i < 4; ++i)     //for better collision detection resolution
-    {
-        if (image.getGlobalBounds().intersects(target->getGlobalBounds()))      //HIT!
-        {
-            target->damage(damage);
-            dead = true;
-            return;
-        }
-
-        double ratio = speed / distance(image.getPosition(), target->getPosition());
-        image.move((target->getPosition().x - image.getPosition().x) * ratio, (target->getPosition().y - image.getPosition().y) * ratio);
     }
 }
 

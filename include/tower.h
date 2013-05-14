@@ -12,7 +12,7 @@ class Tower
 {
     public:
         //ctor/dtor
-        Tower(std::vector<Creep*>*, int);
+        Tower(std::vector<Creep*>*, std::vector<Creep*>*, int);
         Tower();
         virtual ~Tower();
         //getters
@@ -46,7 +46,8 @@ class Tower
         sf::Vector2f position;
         sf::Vector3i type;  //x = primary (1-3), y = secondary(1-3), z = upgrade level(0-9)
 
-        std::vector<Creep*> * creeps;
+        std::vector<Creep*> * enemies;
+        std::vector<Creep*> * allies;
         Creep * target;
         Stats stats;
         int rateCount;
