@@ -14,45 +14,59 @@ Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Towe
     {
         case 0: //basic 1
             image.setSize({5, 5});
+            graphicSize = {10, 10};
             break;
         case 1: //1.1
             image.setSize({2, 5});  //machine gun tower
+            graphicSize = {5, 5};
             break;
         case 2: //1.2
             image.setSize({4, 4});      //need to thnk of something for this tower
+            graphicSize = {10, 10};
             break;
         case 3: //1.3
             image.setSize({10, 10});    //buff tower
+            graphicSize = {10, 10};
             break;
         case 4: //basic 2
             image.setSize({5, 10});     //missile
+            graphicSize = {10, 10};
             break;
         case 5: //2.1
             image.setSize({2, 40});      //snipa
+            graphicSize = {10, 10};
             break;
         case 6: //2.2
             image.setSize({10, 20});      //aoe missile
+            graphicSize = {50, 50};
             break;
         case 7: //2.3
             image.setSize({5, 10});          //heal missile
+            graphicSize = {50, 50};
             break;
-        case 8: //basic 3       //splash..how to do?
+        case 8: //basic 3
             image.setSize({4, 4});
+            graphicSize = {120, 120};
             break;
         case 9: //2.1
             image.setSize({4, 4});
+            graphicSize = {120, 120};
             break;
         case 10: //2.2
             image.setSize({4, 4});
+            graphicSize = {120, 120};
             break;
         case 11: //2.3
             image.setSize({4, 4});
+            graphicSize = {120, 120};
             break;
     }
 
-    graphicSize = {20, 20}; //so temp it hurts
-    graphicTexture.loadFromFile("resources/explosion.png");
-    texture.loadFromFile("resources/tempbullet.png");
+    char temp[40];
+    sprintf(temp, "resources/explosion%d.png", tempType);
+    graphicTexture.loadFromFile(temp);
+    sprintf(temp, "resources/projectile%d.png", tempType);
+    texture.loadFromFile(temp);
 
     image.setTexture(&texture);
     image.setPosition(pos);
@@ -123,7 +137,7 @@ void Projectile::update()
                     if (distance(image.getPosition(), (*creeps)[i]->getPosition()) < range)
                     {
                         //hit!
-                        (*creeps)[i]->damage(10);
+                        (*creeps)[i]->damage(damage);
                         //TODO: different effects here
                     }
                 }
@@ -195,12 +209,51 @@ void Projectile::update()
                 }
             }
 
+            //hitting creeps
             for (int i = 0; i < 4; ++i)     //for better collision detection resolution
             {
                 if (image.getGlobalBounds().intersects(target->getGlobalBounds()))      //HIT!
                 {
                     //TODO: different effects here
-                    target->damage(damage);
+                    switch(type)
+                    {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 4:
+                        case 5:
+                            target->damage(damage);
+                            break;
+                        case 3:
+                            //buff
+                            break;
+                        case 6:
+                            for(unsigned int i = 0; i < creeps->size(); ++i)
+                            {
+                                if ((*creeps)[i]->isDead() == false)
+                                {
+                                    if (distance(image.getPosition(), (*creeps)[i]->getPosition()) < range)
+                                    {
+                                        //hit!
+                                        (*creeps)[i]->damage(damage);
+                                    }
+                                }
+                            }
+                            break;
+                        case 7:
+                            for(unsigned int i = 0; i < creeps->size(); ++i)
+                            {
+                                if ((*creeps)[i]->isDead() == false)
+                                {
+                                    if (distance(image.getPosition(), (*creeps)[i]->getPosition()) < range)
+                                    {
+                                        //hit!
+                                        (*creeps)[i]->damage(-damage);
+                                    }
+                                }
+                            }
+                            break;
+                    }
                     animate = true;
                     image.setSize(graphicSize);
                     image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);

@@ -248,4 +248,8 @@ void Creep::update()
 void Creep::damage(int i)
 {
     hp -= i;
+    if (hp > maxHp)
+    {
+        hp = maxHp;
+    }
 }

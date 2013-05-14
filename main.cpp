@@ -7,7 +7,7 @@
 #include "menu.h"
 
 Settings settings;
-Stats towerStats[3][3][4];
+Stats towerStats[3][4][4];
 
 int main(int argc, char *argv[])
 {

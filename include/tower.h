@@ -51,6 +51,7 @@ class Tower
         Creep * target;
         Stats stats;
         int rateCount;
+        int aoe;
 };
 
 #endif // TOWER_H

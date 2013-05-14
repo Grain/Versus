@@ -48,7 +48,7 @@ double distance(sf::Vector2f, sf::Vector2f);
 void initializeStats();
 
 extern Settings settings;
-extern Stats towerStats[3][3][4];
+extern Stats towerStats[3][4][4];
 
 const int XRES = 1024;
 const int YRES = 576;

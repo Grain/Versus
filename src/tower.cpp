@@ -39,6 +39,15 @@ Tower::Tower(std::vector<Creep*>* tempEnemies, std::vector<Creep*>* tempAllies, 
     stats = towerStats[type.x - 1][type.y][type.z];
 
     rateCount = stats.fireRate;
+
+    if (stats.type >= 8)
+    {
+        aoe = stats.range;
+    }
+    else
+    {
+        aoe = 40;   //const
+    }
 }
 
 Tower::Tower()
@@ -134,6 +143,17 @@ Projectile * Tower::update()
 
     bool hasTarget = false;
 
+    if (target != NULL)
+    {
+        if (target->isDead() == false)
+        {
+            if (distance(target->getPosition(), turret.getPosition()) > stats.range)
+            {
+                target = NULL;      //target out of range
+            }
+        }
+    }
+
     for (unsigned int i = 0; i < temp->size(); ++i)
     {
         if (distance((*temp)[i]->getPosition(), turret.getPosition()) < stats.range)
@@ -181,7 +201,7 @@ Projectile * Tower::update()
         if (rateCount == 0)
         {
             rateCount = stats.fireRate;
-            return new Projectile(target, temp, this, turret.getPosition(), stats.type, stats.damage, stats.speed, stats.range, stats.homing);
+            return new Projectile(target, temp, this, turret.getPosition(), stats.type, stats.damage, stats.speed, aoe, stats.homing);
         }
     }
 
@@ -229,4 +249,13 @@ void Tower::upgrade(int i)
 void Tower::updateStats()
 {
     stats = towerStats[type.x - 1][type.y][type.z];
+
+    if (stats.type >= 8)
+    {
+        aoe = stats.range;
+    }
+    else
+    {
+        aoe = 40;   //const
+    }
 }
