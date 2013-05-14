@@ -45,9 +45,10 @@ struct Stats
 sf::Vector2i gridPosition(sf::Vector2i);
 sf::Vector2i coordinatePosition(sf::Vector2i);
 double distance(sf::Vector2f, sf::Vector2f);
+void initializeStats();
 
 extern Settings settings;
-extern Stats towerStats[3][3][3];
+extern Stats towerStats[3][3][4];
 
 const int XRES = 1024;
 const int YRES = 576;

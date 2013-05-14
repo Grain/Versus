@@ -7,14 +7,14 @@
 #include "menu.h"
 
 Settings settings;
-Stats towerStats[3][3][3];
+Stats towerStats[3][3][4];
 
 int main(int argc, char *argv[])
 {
     settings.fastForwardSpeed = 4;      //not sure if i'll make these changable..
     settings.doubleBuffered = false;
 
-    towerStats[3][3][3].damage = 1;
+    initializeStats();
 
     if (argc > 1)
     {

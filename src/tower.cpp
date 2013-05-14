@@ -30,21 +30,15 @@ Tower::Tower(std::vector<Creep*>* tempEnemies, std::vector<Creep*>* tempAllies, 
         levelTexture[i].loadFromFile(tempString);
     }
 
-    stats.range = 100;
-
     enemies = tempEnemies;
     allies = tempAllies;
 
     target = NULL;
-    stats.fireRate = 30;
-    rateCount = stats.fireRate;
-    stats.damage = 5;
-
-    stats.speed = 4;
-    stats.homing = true;
 
     type = {baseType + 1, 0, 0};
-    stats.type = baseType * 4;
+    stats = towerStats[type.x - 1][type.y][type.z];
+
+    rateCount = stats.fireRate;
 }
 
 Tower::Tower()
@@ -234,20 +228,5 @@ void Tower::upgrade(int i)
 
 void Tower::updateStats()
 {
-    //gogogo need 3d array of stats and a struct for stats
-
-    if (type.x == 1)
-    {
-        stats.range = 100 + 30 * type.z;
-    }
-    else if (type.x == 2)
-    {
-        stats.fireRate = 30 - 3 * type.z;
-    }
-    else if (type.x == 3)
-    {
-        stats.damage = 5 + 5 * type.z;
-    }
-
-    stats.type = (type.x - 1) * 4 + type.y;
+    stats = towerStats[type.x - 1][type.y][type.z];
 }
