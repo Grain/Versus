@@ -152,7 +152,7 @@ void initializeStats()
     towerStats[1][0][0].damage = 10;
     towerStats[1][0][0].fireRate = 30;
     towerStats[1][0][0].homing = true;
-    towerStats[1][0][0].range = 200;
+    towerStats[1][0][0].range = 125;
     towerStats[1][0][0].speed = 1;
     towerStats[1][0][0].type = 4;
 
@@ -160,8 +160,8 @@ void initializeStats()
     towerStats[1][1][0].cost = 100;
     towerStats[1][1][0].damage = 20;
     towerStats[1][1][0].fireRate = 60;
-    towerStats[1][1][0].homing = false;
-    towerStats[1][1][0].range = 200;
+    towerStats[1][1][0].homing = true;
+    towerStats[1][1][0].range = 150;
     towerStats[1][1][0].speed = 10;
     towerStats[1][1][0].type = 5;
 
@@ -169,8 +169,8 @@ void initializeStats()
     towerStats[1][1][1].cost = 100;
     towerStats[1][1][1].damage = 30;
     towerStats[1][1][1].fireRate = 50;
-    towerStats[1][1][1].homing = false;
-    towerStats[1][1][1].range = 300;
+    towerStats[1][1][1].homing = true;
+    towerStats[1][1][1].range = 200;
     towerStats[1][1][1].speed = 10;
     towerStats[1][1][1].type = 5;
 
@@ -178,8 +178,8 @@ void initializeStats()
     towerStats[1][1][2].cost = 100;
     towerStats[1][1][2].damage = 40;
     towerStats[1][1][2].fireRate = 40;
-    towerStats[1][1][2].homing = false;
-    towerStats[1][1][2].range = 400;
+    towerStats[1][1][2].homing = true;
+    towerStats[1][1][2].range = 250;
     towerStats[1][1][2].speed = 10;
     towerStats[1][1][2].type = 5;
 
@@ -187,8 +187,8 @@ void initializeStats()
     towerStats[1][1][3].cost = 100;
     towerStats[1][1][3].damage = 50;
     towerStats[1][1][3].fireRate = 30;
-    towerStats[1][1][3].homing = false;
-    towerStats[1][1][3].range = 500;
+    towerStats[1][1][3].homing = true;
+    towerStats[1][1][3].range = 300;
     towerStats[1][1][3].speed = 10;
     towerStats[1][1][3].type = 5;
 
@@ -197,7 +197,7 @@ void initializeStats()
     towerStats[1][2][0].damage = 10;
     towerStats[1][2][0].fireRate = 60;
     towerStats[1][2][0].homing = true;
-    towerStats[1][2][0].range = 200;
+    towerStats[1][2][0].range = 150;
     towerStats[1][2][0].speed = 0.5;
     towerStats[1][2][0].type = 6;
 
@@ -206,7 +206,7 @@ void initializeStats()
     towerStats[1][2][1].damage = 20;
     towerStats[1][2][1].fireRate = 60;
     towerStats[1][2][1].homing = true;
-    towerStats[1][2][1].range = 200;
+    towerStats[1][2][1].range = 150;
     towerStats[1][2][1].speed = 0.5;
     towerStats[1][2][1].type = 6;
 
@@ -215,7 +215,7 @@ void initializeStats()
     towerStats[1][2][2].damage = 30;
     towerStats[1][2][2].fireRate = 60;
     towerStats[1][2][2].homing = true;
-    towerStats[1][2][2].range = 200;
+    towerStats[1][2][2].range = 150;
     towerStats[1][2][2].speed = 0.5;
     towerStats[1][2][2].type = 6;
 
@@ -224,7 +224,7 @@ void initializeStats()
     towerStats[1][2][3].damage = 40;
     towerStats[1][2][3].fireRate = 60;
     towerStats[1][2][3].homing = true;
-    towerStats[1][2][3].range = 200;
+    towerStats[1][2][3].range = 150;
     towerStats[1][2][3].speed = 0.5;
     towerStats[1][2][3].type = 6;
 
@@ -233,8 +233,8 @@ void initializeStats()
     towerStats[1][3][0].damage = 10;
     towerStats[1][3][0].fireRate = 30;
     towerStats[1][3][0].homing = true;
-    towerStats[1][3][0].range = 100;
-    towerStats[1][3][0].speed = 4;
+    towerStats[1][3][0].range = 200;
+    towerStats[1][3][0].speed = 1.5;
     towerStats[1][3][0].type = 7;
 
     //2.3 lvl 1
@@ -242,8 +242,8 @@ void initializeStats()
     towerStats[1][3][1].damage = 10;
     towerStats[1][3][1].fireRate = 30;
     towerStats[1][3][1].homing = true;
-    towerStats[1][3][1].range = 100;
-    towerStats[1][3][1].speed = 4;
+    towerStats[1][3][1].range = 200;
+    towerStats[1][3][1].speed = 1.5;
     towerStats[1][3][1].type = 7;
 
     //2.3 lvl 2
@@ -251,8 +251,8 @@ void initializeStats()
     towerStats[1][3][2].damage = 10;
     towerStats[1][3][2].fireRate = 30;
     towerStats[1][3][2].homing = true;
-    towerStats[1][3][2].range = 100;
-    towerStats[1][3][2].speed = 4;
+    towerStats[1][3][2].range = 200;
+    towerStats[1][3][2].speed = 1.5;
     towerStats[1][3][2].type = 7;
 
     //2.3 lvl 3
@@ -260,8 +260,8 @@ void initializeStats()
     towerStats[1][3][3].damage = 10;
     towerStats[1][3][3].fireRate = 30;
     towerStats[1][3][3].homing = true;
-    towerStats[1][3][3].range = 100;
-    towerStats[1][3][3].speed = 4;
+    towerStats[1][3][3].range = 200;
+    towerStats[1][3][3].speed = 1.5;
     towerStats[1][3][3].type = 7;
 
     //basic 3
