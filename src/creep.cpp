@@ -41,7 +41,7 @@ Creep::Creep(int temp[][GRIDY], int i)
     maxHp = 50;
     hp = maxHp;
     dead = false;
-    speed = 1;
+    speed = 4;      //speeds > 6 should fail miserably, needs more testing
 
     bigProgress = 0;
     smallProgress = 0;
@@ -252,4 +252,9 @@ void Creep::damage(int i)
     {
         hp = maxHp;
     }
+}
+
+void Creep::buff(int a, int b)
+{
+
 }

@@ -1,5 +1,7 @@
 #include "game.h"
 
+const char * const Game::baseStats[] = {"Tower 1\n", "Tower 2\n", "Tower 3\n", ""};
+
 /***************************************************************/
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
@@ -133,6 +135,20 @@ Game::Game()
         else
         {
             moneyText[i].setPosition((XRES / 2) + offset, 520);
+        }
+
+        //info text
+        info[i].setCharacterSize(12);
+        info[i].setColor(sf::Color::Black);
+        info[i].setString("");
+        offset = 20;
+        if (i == 0)
+        {
+            info[i].setPosition(offset, 390);
+        }
+        else
+        {
+            info[i].setPosition(gameButtons[i][3].getPosition().x + gameButtons[i][3].getSize().x + offset, 390);
         }
     }
 
@@ -340,6 +356,7 @@ void Game::draw(sf::RenderWindow * window)
         }
 
         temp->draw(moneyText[i]);
+        temp->draw(info[i]);
     }
     temp->draw(timerBackground);
     temp->draw(timerBar);
@@ -447,6 +464,37 @@ int Game::update(sf::Vector2i mousePos)
             if (showRange == false)
             {
                 visibleRanges[i] = false;
+            }
+
+            //info text
+            if (selected[i])
+            {
+                if (outOfGrid[i])   //on creep queue or creep list
+                {
+                    info[i].setString("out of grid");
+                }
+                else    //in grid
+                {
+                    if (towerAt(selectorCoordinates[i]) == NULL)
+                    {
+                        info[i].setString(baseStats[middleCoordinates[i]]);
+                    }
+                    else
+                    {
+                        info[i].setString(towerAt(selectorCoordinates[i])->getUpgradeInfo(middleCoordinates[i]));
+                    }
+                }
+            }
+            else
+            {
+                if (towerAt(selectorCoordinates[i]) == NULL)
+                {
+                    info[i].setString("");
+                }
+                else
+                {
+                    info[i].setString(towerAt(selectorCoordinates[i])->getCurrentInfo());
+                }
             }
         }
 

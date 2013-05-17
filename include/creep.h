@@ -21,6 +21,7 @@ class Creep
         void damage(int);
         void draw(sf::RenderTarget*);
         void update();
+        void buff(int, int);
     protected:
     private:
         static const int FILLED = 99999;

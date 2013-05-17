@@ -22,6 +22,8 @@ class Tower
         int getRange();
         Creep * getTarget();
         sf::Vector3i getType();
+        std::string getCurrentInfo();
+        std::string getUpgradeInfo(int);
         //setters
         void setRotation(double);
         void setRotationTarget(sf::Vector2f);
@@ -52,6 +54,7 @@ class Tower
         Stats stats;
         int rateCount;
         int aoe;
+        int totalCost;
 };
 
 #endif // TOWER_H

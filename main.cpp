@@ -8,6 +8,7 @@
 
 Settings settings;
 Stats towerStats[3][4][4];
+std::string descriptions[12];
 
 int main(int argc, char *argv[])
 {

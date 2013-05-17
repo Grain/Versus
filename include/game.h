@@ -58,6 +58,8 @@ class Game
         void updateButtons(int);
 
         //vars
+        static const char * const baseStats[];
+
         Players players;
         sf::Vector2i prevMouse;
         KeyState prevKeys[2];
@@ -112,6 +114,8 @@ class Game
         sf::Color leftColor, rightColor;
         int money[2];
         sf::Text moneyText[2];
+
+        sf::Text info[2];
 };
 
 #endif // GAME_H

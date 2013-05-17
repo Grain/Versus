@@ -30,6 +30,19 @@ double distance(sf::Vector2f a, sf::Vector2f b)
 
 void initializeStats()
 {
+    descriptions[0] = "Basic tower 0\n\nA crappy tower\n\n";
+    descriptions[1] = "Basic tower 1\n\nA rapid fire tower\n\n";
+    descriptions[2] = "Basic tower 2\n\nA crappy tower\n\n";
+    descriptions[3] = "Basic tower 3\n\nA tower that places random\nbuffs on your creeps\n\n";
+    descriptions[4] = "Basic tower 4\n\nA crappy tower..that\nshoots missiles!\n\n";
+    descriptions[5] = "Basic tower 5\n\nA snipa tower\n\n";
+    descriptions[6] = "Basic tower 6\n\nA missile tower that does\ndamage in an area\n\n";
+    descriptions[7] = "Basic tower 7\n\nA missile tower that\nheals your creeps in an area\n\n";
+    descriptions[8] = "Basic tower 8\n\nA crappy splash tower\n\n";
+    descriptions[9] = "Basic tower 9\n\nA crappy splash slow tower\n\n";
+    descriptions[10] = "Basic tower 10\n\nA crappy splash damage\namplification tower\n\n";
+    descriptions[11] = "Basic tower 11\n\nA crappy splash tower\n\n";
+
     //basic 1
     towerStats[0][0][0].cost = 100;
     towerStats[0][0][0].damage = 10;

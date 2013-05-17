@@ -39,6 +39,7 @@ Tower::Tower(std::vector<Creep*>* tempEnemies, std::vector<Creep*>* tempAllies, 
     stats = towerStats[type.x - 1][type.y][type.z];
 
     rateCount = stats.fireRate;
+    totalCost = stats.cost;
 
     if (stats.type >= 8)
     {
@@ -96,6 +97,139 @@ Creep * Tower::getTarget()
 sf::Vector3i Tower::getType()
 {
     return type;
+}
+
+std::string Tower::getCurrentInfo()
+{
+    std::string temp1("");
+    char temp2[200];
+    sprintf(temp2, "%s", descriptions[stats.type].c_str());
+    temp1 += temp2;
+    if (stats.type == 3)        //buff tower
+    {
+        sprintf(temp2, " "); //no stat here
+    }
+    else if (stats.type == 7)       //aoe heal missile
+    {
+        sprintf(temp2, "Amount healed: %d\n", stats.damage);
+    }
+    else if (stats.type == 9)       //splash slow
+    {
+        sprintf(temp2, "Percentage slow: %d\n", stats.damage);
+    }
+    else if (stats.type == 10)       //splash damage amp
+    {
+        sprintf(temp2, "Percentage damage\namplification: %d\n", stats.damage);
+    }
+    else
+    {
+        sprintf(temp2, "Damage: %d\n", stats.damage);
+    }
+    temp1 += temp2;
+    sprintf(temp2, "Fire rate: %.1f / second\nRange: %d\n", (double)FPS / stats.fireRate, stats.range);
+    temp1 += temp2;
+
+    if (stats.type < 8)    //not splash tower, put speed
+    {
+        sprintf(temp2, "Projectile speed: %.0f", stats.speed);
+        temp1 += temp2;
+    }
+    return temp1;
+}
+
+std::string Tower::getUpgradeInfo(int a)
+{
+    std::string temp1("");
+    char temp2[200];
+    if (a == 3) //sell
+    {
+        sprintf(temp2, "Sell for $%d", totalCost / 2);
+        temp1 += temp2;
+    }
+    else if (a == 0)   //upgrade
+    {
+        Stats tempStats;
+        if (type.y == 0)    //changing to new subtype of tower, don't display the differences in stats
+        {
+            tempStats = towerStats[type.x - 1][a + 1][0];
+            sprintf(temp2, "Cost: $%d\n\n", tempStats.cost);
+            temp1 += temp2;
+            sprintf(temp2, "%s", descriptions[tempStats.type].c_str());
+            temp1 += temp2;
+            if (tempStats.type == 3)        //buff tower
+            {
+                temp2[0] = '\0'; //no stat here
+            }
+            else if (tempStats.type == 7)       //aoe heal missile
+            {
+                sprintf(temp2, "Amount healed: %d\n", tempStats.damage);
+            }
+            else if (tempStats.type == 9)       //splash slow
+            {
+                sprintf(temp2, "Percentage slow: %d\n", tempStats.damage);
+            }
+            else if (tempStats.type == 10)       //splash damage amp
+            {
+                sprintf(temp2, "Percentage damage\namplification: %d\n", tempStats.damage);
+            }
+            else
+            {
+                sprintf(temp2, "Damage: %d\n", tempStats.damage);
+            }
+            temp1 += temp2;
+
+            sprintf(temp2, "Fire rate: %.1f / second\nRange: %d\n", (double)FPS / tempStats.fireRate, tempStats.range);
+            temp1 += temp2;
+
+            if (stats.type < 8)    //not splash tower, put speed
+            {
+                sprintf(temp2, "Projectile speed: %.0f", tempStats.speed);
+                temp1 += temp2;
+            }
+        }
+        else
+        {
+            if (type.z < 3)     //upgrading tower level, display the change in stats
+            {
+                tempStats = towerStats[type.x - 1][type.y][type.z + 1];
+                sprintf(temp2, "Cost: $%d\n\n", tempStats.cost);
+                temp1 += temp2;
+                sprintf(temp2, "%s", descriptions[tempStats.type].c_str());
+                temp1 += temp2;
+                if (tempStats.type == 3)        //buff tower
+                {
+                    temp2[0] = '\0'; //no stat here
+                }
+                else if (tempStats.type == 7)       //aoe heal missile
+                {
+                    sprintf(temp2, "Amount healed: %d (+%d)\n", tempStats.damage, tempStats.damage - stats.damage);
+                }
+                else if (tempStats.type == 9)       //splash slow
+                {
+                    sprintf(temp2, "Percentage slow: %d (+%d)\n", tempStats.damage, tempStats.damage - stats.damage);
+                }
+                else if (tempStats.type == 10)       //splash damage amp
+                {
+                    sprintf(temp2, "Percentage damage\namplification: %d (+%d)\n", tempStats.damage, tempStats.damage - stats.damage);
+                }
+                else
+                {
+                    sprintf(temp2, "Damage: %d (+%d)\n", tempStats.damage, tempStats.damage - stats.damage);
+                }
+                temp1 += temp2;
+
+                sprintf(temp2, "Fire rate: %.1f / second (+%.1f)\nRange: %d (+%d)\n", (double)FPS / tempStats.fireRate, (double)FPS / tempStats.fireRate - (double)FPS / stats.fireRate, tempStats.range, tempStats.range - stats.range);
+                temp1 += temp2;
+
+                if (stats.type < 8)    //not splash tower, put speed
+                {
+                    sprintf(temp2, "Projectile speed: %.0f", tempStats.speed);
+                    temp1 += temp2;
+                }
+            }
+        }
+    }
+    return temp1;
 }
 
 /***************************************************************/
@@ -232,7 +366,6 @@ void Tower::upgrade(int i)
         sprintf(tempString, "resources/base%d-%d.png", type.x, type.y);
         baseTexture.loadFromFile(tempString);
         base.setTexture(&baseTexture);
-        printf("%d %d\n", type.x, type.y);
     }
     else
     {
@@ -257,5 +390,16 @@ void Tower::updateStats()
     else
     {
         aoe = 40;   //const
+    }
+
+    totalCost = 0;
+    totalCost += towerStats[type.x - 1][0][0].cost;
+    if (type.y > 0)
+    {
+        totalCost += towerStats[type.x - 1][type.y][0].cost;
+        for(int i = type.z; i > 0; --i)
+        {
+            totalCost += towerStats[type.x - 1][type.y][i].cost;
+        }
     }
 }

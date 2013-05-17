@@ -49,6 +49,7 @@ void initializeStats();
 
 extern Settings settings;
 extern Stats towerStats[3][4][4];
+extern std::string descriptions[12];
 
 const int XRES = 1024;
 const int YRES = 576;
