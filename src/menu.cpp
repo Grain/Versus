@@ -179,6 +179,50 @@ Menu::Menu()
         settingsMenu[18 + i]->setVisible(false);
     }
 
+    //SINGLE PLAYER
+    singleMenu.push_back(new Button());   //back button
+    singleMenu[0]->initialize(100, 50);
+    singleMenu[0]->setPosition({26, 500});
+    singleMenu[0]->loadTexture("resources/back.png");
+    singleMenu[0]->setVisible(false);
+
+    singleMenu.push_back(new Button());   //mission 1
+    singleMenu[1]->initialize(400, 175);
+    singleMenu[1]->setPosition({75, 50});
+    singleMenu[1]->loadTexture("resources/mission1.png");
+    singleMenu[1]->setVisible(false);
+
+    singleMenu.push_back(new Button());   //mission 2
+    singleMenu[2]->initialize(400, 175);
+    singleMenu[2]->setPosition({549, 50});
+    singleMenu[2]->loadTexture("resources/mission1.png");
+    singleMenu[2]->setVisible(false);
+
+    singleMenu.push_back(new Button());   //mission 3
+    singleMenu[3]->initialize(400, 175);
+    singleMenu[3]->setPosition({75, 275});
+    singleMenu[3]->loadTexture("resources/mission1.png");
+    singleMenu[3]->setVisible(false);
+
+    singleMenu.push_back(new Button());   //mission 4
+    singleMenu[4]->initialize(400, 175);
+    singleMenu[4]->setPosition({549, 275});
+    singleMenu[4]->loadTexture("resources/mission1.png");
+    singleMenu[4]->setVisible(false);
+
+    //MULTIPLAYER
+    multiMenu.push_back(new Button());   //back button
+    multiMenu[0]->initialize(100, 50);
+    multiMenu[0]->setPosition({26, 500});
+    multiMenu[0]->loadTexture("resources/back.png");
+    multiMenu[0]->setVisible(false);
+
+    multiMenu.push_back(new Button());   //temp button
+    multiMenu[1]->initialize(100, 50);
+    multiMenu[1]->setPosition({50, 50});
+    multiMenu[1]->loadTexture("resources/back.png");
+    multiMenu[1]->setVisible(false);
+
     updateSettings();
 }
 
@@ -237,12 +281,27 @@ void Menu::draw(sf::RenderWindow * window)
     {
         settingsMenu[i]->draw(temp);
     }
+    for(unsigned int i = 0; i < singleMenu.size(); ++i)
+    {
+        singleMenu[i]->draw(temp);
+    }
+    for(unsigned int i = 0; i < multiMenu.size(); ++i)
+    {
+        multiMenu[i]->draw(temp);
+    }
 
     if (settingsMenu[0]->getVisible())
     {
         for(unsigned int i = 0; i < settingsText.size(); ++i)
         {
             temp->draw(*settingsText[i]);
+        }
+    }
+    if (multiMenu[0]->getVisible())
+    {
+        for(unsigned int i = 0; i < multiText.size(); ++i)
+        {
+            temp->draw(*multiText[i]);
         }
     }
 
@@ -276,10 +335,26 @@ int Menu::update(sf::Vector2i mousePos)
                 switch(i)
                 {
                     case 0: //single player
-                        return 1;
+                        //return 1;
+                        for (unsigned int a = 0; a < mainMenu.size(); ++a)
+                        {
+                            mainMenu[a]->setVisible(false);
+                        }
+                        for (unsigned int a = 0; a < singleMenu.size(); ++a)
+                        {
+                            singleMenu[a]->setVisible(true);
+                        }
                         break;
                     case 1: //multi player
-                        return 2;
+                        //return 2;
+                        for (unsigned int a = 0; a < mainMenu.size(); ++a)
+                        {
+                            mainMenu[a]->setVisible(false);
+                        }
+                        for (unsigned int a = 0; a < multiMenu.size(); ++a)
+                        {
+                            multiMenu[a]->setVisible(true);
+                        }
                         break;
                     case 2: //go to settings
                         for (unsigned int a = 0; a < mainMenu.size(); ++a)
@@ -368,8 +443,62 @@ int Menu::update(sf::Vector2i mousePos)
                 }
             }
         }
-    }
 
+        for (unsigned int i = 0; i < singleMenu.size(); ++i)
+        {
+            if(singleMenu[i]->update(mousePos))
+            {
+                switch(i)
+                {
+                    case 0: //back button
+                        for (unsigned int a = 0; a < mainMenu.size(); ++a)
+                        {
+                            mainMenu[a]->setVisible(true);
+                        }
+                        for (unsigned int a = 0; a < singleMenu.size(); ++a)
+                        {
+                            singleMenu[a]->setVisible(false);
+                        }
+                        break;
+                    case 1: //mission 1
+                        return 1;
+                        break;
+                    case 2: //mission 2
+                        return 1;
+                        break;
+                    case 3: //mission 3
+                        return 1;
+                        break;
+                    case 4: //mission 4
+                        return 1;
+                        break;
+                }
+            }
+        }
+
+        for (unsigned int i = 0; i < multiMenu.size(); ++i)
+        {
+            if(multiMenu[i]->update(mousePos))
+            {
+                switch(i)
+                {
+                    case 0:
+                        for (unsigned int a = 0; a < mainMenu.size(); ++a)
+                        {
+                            mainMenu[a]->setVisible(true);
+                        }
+                        for (unsigned int a = 0; a < multiMenu.size(); ++a)
+                        {
+                            multiMenu[a]->setVisible(false);
+                        }
+                        break;
+                    case 1:
+                        return 2;
+                        break;
+                }
+            }
+        }
+    }
 
     return 0;
 }

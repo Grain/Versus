@@ -115,11 +115,11 @@ std::string Tower::getCurrentInfo()
     }
     else if (stats.type == 9)       //splash slow
     {
-        sprintf(temp2, "Percentage slow: %d\n", stats.damage);
+        sprintf(temp2, "Slow: %d%%\n", stats.damage);
     }
     else if (stats.type == 10)       //splash damage amp
     {
-        sprintf(temp2, "Percentage damage\namplification: %d\n", stats.damage);
+        sprintf(temp2, "Damage amplification:\n%d%%\n", stats.damage);
     }
     else
     {
@@ -131,7 +131,7 @@ std::string Tower::getCurrentInfo()
 
     if (stats.type < 8)    //not splash tower, put speed
     {
-        sprintf(temp2, "Projectile speed: %.0f", stats.speed);
+        sprintf(temp2, "Projectile speed: %.1f", stats.speed);
         temp1 += temp2;
     }
     return temp1;
@@ -146,7 +146,7 @@ std::string Tower::getUpgradeInfo(int a)
         sprintf(temp2, "Sell for $%d", totalCost / 2);
         temp1 += temp2;
     }
-    else if (a == 0)   //upgrade
+    else   //upgrade
     {
         Stats tempStats;
         if (type.y == 0)    //changing to new subtype of tower, don't display the differences in stats
@@ -166,11 +166,11 @@ std::string Tower::getUpgradeInfo(int a)
             }
             else if (tempStats.type == 9)       //splash slow
             {
-                sprintf(temp2, "Percentage slow: %d\n", tempStats.damage);
+                sprintf(temp2, "Slow: %d%%\n", tempStats.damage);
             }
             else if (tempStats.type == 10)       //splash damage amp
             {
-                sprintf(temp2, "Percentage damage\namplification: %d\n", tempStats.damage);
+                sprintf(temp2, "Damage amplification:\n%d%%\n", tempStats.damage);
             }
             else
             {
@@ -183,48 +183,51 @@ std::string Tower::getUpgradeInfo(int a)
 
             if (stats.type < 8)    //not splash tower, put speed
             {
-                sprintf(temp2, "Projectile speed: %.0f", tempStats.speed);
+                sprintf(temp2, "Projectile speed: %.1f", tempStats.speed);
                 temp1 += temp2;
             }
         }
         else
         {
-            if (type.z < 3)     //upgrading tower level, display the change in stats
+            if (a == 0) //pressed the upgrade button
             {
-                tempStats = towerStats[type.x - 1][type.y][type.z + 1];
-                sprintf(temp2, "Cost: $%d\n\n", tempStats.cost);
-                temp1 += temp2;
-                sprintf(temp2, "%s", descriptions[tempStats.type].c_str());
-                temp1 += temp2;
-                if (tempStats.type == 3)        //buff tower
+                if (type.z < 3)     //upgrading tower level, display the change in stats
                 {
-                    temp2[0] = '\0'; //no stat here
-                }
-                else if (tempStats.type == 7)       //aoe heal missile
-                {
-                    sprintf(temp2, "Amount healed: %d (+%d)\n", tempStats.damage, tempStats.damage - stats.damage);
-                }
-                else if (tempStats.type == 9)       //splash slow
-                {
-                    sprintf(temp2, "Percentage slow: %d (+%d)\n", tempStats.damage, tempStats.damage - stats.damage);
-                }
-                else if (tempStats.type == 10)       //splash damage amp
-                {
-                    sprintf(temp2, "Percentage damage\namplification: %d (+%d)\n", tempStats.damage, tempStats.damage - stats.damage);
-                }
-                else
-                {
-                    sprintf(temp2, "Damage: %d (+%d)\n", tempStats.damage, tempStats.damage - stats.damage);
-                }
-                temp1 += temp2;
-
-                sprintf(temp2, "Fire rate: %.1f / second (+%.1f)\nRange: %d (+%d)\n", (double)FPS / tempStats.fireRate, (double)FPS / tempStats.fireRate - (double)FPS / stats.fireRate, tempStats.range, tempStats.range - stats.range);
-                temp1 += temp2;
-
-                if (stats.type < 8)    //not splash tower, put speed
-                {
-                    sprintf(temp2, "Projectile speed: %.0f", tempStats.speed);
+                    tempStats = towerStats[type.x - 1][type.y][type.z + 1];
+                    sprintf(temp2, "Cost: $%d\n\n", tempStats.cost);
                     temp1 += temp2;
+                    sprintf(temp2, "%s", descriptions[tempStats.type].c_str());
+                    temp1 += temp2;
+                    if (tempStats.type == 3)        //buff tower
+                    {
+                        temp2[0] = '\0'; //no stat here
+                    }
+                    else if (tempStats.type == 7)       //aoe heal missile
+                    {
+                        sprintf(temp2, "Amount healed: %d (+%d)\n", tempStats.damage, tempStats.damage - stats.damage);
+                    }
+                    else if (tempStats.type == 9)       //splash slow
+                    {
+                        sprintf(temp2, "Slow: %d%% (+%d%%)\n", tempStats.damage, tempStats.damage - stats.damage);
+                    }
+                    else if (tempStats.type == 10)       //splash damage amp
+                    {
+                        sprintf(temp2, "Damage amplification:\n%d%% (+%d%%)\n", tempStats.damage, tempStats.damage - stats.damage);
+                    }
+                    else
+                    {
+                        sprintf(temp2, "Damage: %d (+%d)\n", tempStats.damage, tempStats.damage - stats.damage);
+                    }
+                    temp1 += temp2;
+
+                    sprintf(temp2, "Fire rate: %.1f / second (+%.1f)\nRange: %d (+%d)\n", (double)FPS / tempStats.fireRate, (double)FPS / tempStats.fireRate - (double)FPS / stats.fireRate, tempStats.range, tempStats.range - stats.range);
+                    temp1 += temp2;
+
+                    if (stats.type < 8)    //not splash tower, put speed
+                    {
+                        sprintf(temp2, "Projectile speed: %.1f", tempStats.speed);
+                        temp1 += temp2;
+                    }
                 }
             }
         }

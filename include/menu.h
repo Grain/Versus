@@ -42,7 +42,10 @@ class Menu
 
         std::vector <Button*> mainMenu;
         std::vector <Button*> settingsMenu;
+        std::vector <Button*> singleMenu;
+        std::vector <Button*> multiMenu;
         std::vector <sf::Text*> settingsText;
+        std::vector <sf::Text*> multiText;
 
         int currentKey;
         bool isBinding;
