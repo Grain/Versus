@@ -226,29 +226,30 @@ void Projectile::update()
                             break;
                         case 3:
                             //buff
+                            target->buff(rand() % 3 + 2, damage);
                             break;
-                        case 6:
-                            for(unsigned int i = 0; i < creeps->size(); ++i)
+                        case 6:     //aoe missile
+                            for(unsigned int a = 0; a < creeps->size(); ++a)
                             {
-                                if ((*creeps)[i]->isDead() == false)
+                                if ((*creeps)[a]->isDead() == false)
                                 {
-                                    if (distance(image.getPosition(), (*creeps)[i]->getPosition()) < range)
+                                    if (distance(image.getPosition(), (*creeps)[a]->getPosition()) < range)
                                     {
                                         //hit!
-                                        (*creeps)[i]->damage(damage);
+                                        (*creeps)[a]->damage(damage);
                                     }
                                 }
                             }
                             break;
-                        case 7:
-                            for(unsigned int i = 0; i < creeps->size(); ++i)
+                        case 7: //aoe heal missile
+                            for(unsigned int a = 0; a < creeps->size(); ++i)
                             {
-                                if ((*creeps)[i]->isDead() == false)
+                                if ((*creeps)[a]->isDead() == false)
                                 {
-                                    if (distance(image.getPosition(), (*creeps)[i]->getPosition()) < range)
+                                    if (distance(image.getPosition(), (*creeps)[a]->getPosition()) < range)
                                     {
                                         //hit!
-                                        (*creeps)[i]->damage(-damage);
+                                        (*creeps)[a]->heal(damage);
                                     }
                                 }
                             }

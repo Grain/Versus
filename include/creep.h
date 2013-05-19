@@ -19,8 +19,9 @@ class Creep
 
         //functions
         void damage(int);
+        void heal(int);
         void draw(sf::RenderTarget*);
-        void update();
+        int update();
         void buff(int, int);
     protected:
     private:
@@ -38,6 +39,11 @@ class Creep
         sf::Vector2i enemy;
         int bigProgress;   //distance from the pathfinding grid
         double smallProgress;   //distnace to target
+
+        sf::Vector2i buffs[5];   //x = time, y = severity of buff
+        //0 = damage amp, 1 = slow, 2 = damage reduction, 3 = regen, 4 = speed
+        sf::Texture buffTextures[5];
+        sf::RectangleShape buffIcons[5];
 
         int maxHp;
         int hp;

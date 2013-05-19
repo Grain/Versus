@@ -36,12 +36,23 @@ Creep::Creep(int temp[][GRIDY], int i)
         enemy = {0, GRIDY / 2};
     }
 
+    for (int i = 0; i < 5; ++i)
+    {
+        buffs[i].x = 0;
+        buffs[i].y = 0;
+        char temp[50];
+        sprintf(temp, "resources/buff%d.png", i);
+        buffTextures[i].loadFromFile(temp);
+        buffIcons[i].setTexture(&buffTextures[i]);
+        buffIcons[i].setSize({4, 4});
+    }
+
     targetPoint = body.getPosition();
 
     maxHp = 50;
     hp = maxHp;
     dead = false;
-    speed = 4;      //speeds > 6 should fail miserably, needs more testing
+    speed = 1;      //speeds > 6 or so should fail miserably. speed = 7 SEEMS to work, but 6 should be the limit, i think
 
     bigProgress = 0;
     smallProgress = 0;
@@ -105,14 +116,22 @@ void Creep::draw(sf::RenderTarget * target)
     target->draw(body);
     target->draw(healthOutline);
     target->draw(health);
+
+    for (int i = 0; i < 5; ++i)
+    {
+        if (buffs[i].x > 0)
+        {
+            target->draw(buffIcons[i]);
+        }
+    }
 }
 
-void Creep::update()
+int Creep::update()
 {
     if (hp <= 0)
     {
         dead = true;
-        return;
+        return 0;
     }
 
     for (int i = 0; i < 2; ++i) //so creeps can move faster but still have good resolution for checking distances/collisions/stuff
@@ -128,8 +147,7 @@ void Creep::update()
 
         if (distances[coordinates.x][coordinates.y] == EMPTY)
         {
-            printf("asdf");
-            //do something
+            return 1;
         }
 
         smallProgress = distance(targetPoint, body.getPosition());
@@ -139,8 +157,7 @@ void Creep::update()
             if (coordinates == enemy)   //reached enemy base
             {
                 dead = true;
-                //something happens
-                return;
+                return 2;
             }
 
             int lowest = 9999;
@@ -210,25 +227,57 @@ void Creep::update()
             targetPoint = {targetPoint.x + BOXDIMENSIONS / 2, targetPoint.y + BOXDIMENSIONS / 2};
         }
 
+        double multiplier = 1;
+        if (buffs[1].x > 0) //slow
+        {
+            multiplier -= buffs[1].y / 100.0;
+        }
+        if (buffs[4].x > 0) //speed
+        {
+            multiplier += buffs[4].y / 100.0;
+        }
+        double tempSpeed = speed * multiplier;
+
+        if (tempSpeed > 6)
+            tempSpeed = 6;
+
         if (body.getPosition().x - targetPoint.x > 3)   //left
         {
-            body.setPosition(body.getPosition().x - speed, body.getPosition().y);
+            body.setPosition(body.getPosition().x - tempSpeed, body.getPosition().y);
             body.setRotation(270);
         }
         else if (body.getPosition().x - targetPoint.x < -3) //right
         {
-            body.setPosition(body.getPosition().x + speed, body.getPosition().y);
+            body.setPosition(body.getPosition().x + tempSpeed, body.getPosition().y);
             body.setRotation(90);
         }
         else if (body.getPosition().y - targetPoint.y > 3)  //up
         {
-            body.setPosition(body.getPosition().x, body.getPosition().y - speed);
+            body.setPosition(body.getPosition().x, body.getPosition().y - tempSpeed);
             body.setRotation(0);
         }
         else if (body.getPosition().y - targetPoint.y < -3)    //down
         {
-            body.setPosition(body.getPosition().x, body.getPosition().y + speed);
+            body.setPosition(body.getPosition().x, body.getPosition().y + tempSpeed);
             body.setRotation(180);
+        }
+    }
+
+    for (int i = 0; i < 5; ++i)
+    {
+        if (buffs[i].x > 0)
+        {
+            buffs[i].x--;
+            buffIcons[i].setPosition(body.getGlobalBounds().left + i * buffIcons[i].getSize().x, body.getGlobalBounds().top + body.getGlobalBounds().height + 2);
+        }
+    }
+    //printf("%d\n", buffs[0].x);
+
+    if (buffs[3].x > 0) //regen
+    {
+        if ((buffs[3].x % (FPS / 2)) == 0)   //tick twice a second
+        {
+            heal(buffs[3].y / 2);
         }
     }
 
@@ -243,18 +292,56 @@ void Creep::update()
     body.setTextureRect(sf::IntRect(animation, 0, body.getSize().x, body.getSize().y));
 
     coordinates = gridPosition((sf::Vector2i)body.getPosition());
+
+    return 0;
 }
 
 void Creep::damage(int i)
 {
-    hp -= i;
+    double temp = 1;
+    if (buffs[0].x > 0) //damage amp
+    {
+        temp += buffs[0].y / 100.0;
+    }
+    if (buffs[2].x > 0) //damage reduction
+    {
+        temp -= buffs[2].y / 100.0;
+    }
+
+    hp -= (int)((double)i * temp);
+
     if (hp > maxHp)
     {
         hp = maxHp;
     }
 }
 
-void Creep::buff(int a, int b)
+void Creep::heal(int i)
 {
+    hp += i;
 
+    if (hp > maxHp)
+    {
+        hp = maxHp;
+    }
+}
+
+void Creep::buff(int tempType, int tempSeverity)
+{
+    if (tempType > 1)
+    {
+        buffs[tempType].x = 10 * FPS;   //10 secs for buffs
+    }
+    else
+    {
+        buffs[tempType].x = 3 * FPS;   //3 secs for debuffs
+    }
+    if (tempType == 3)  //regen
+    {
+        buffs[tempType].y = (int)(maxHp * (tempSeverity / 100.0));
+    }
+    else
+    {
+        buffs[tempType].y = tempSeverity;
+    }
 }

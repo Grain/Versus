@@ -56,6 +56,7 @@ class Game
         void removeTower(sf::Vector2i);
         Tower * towerAt(sf::Vector2i);
         void updateButtons(int);
+        void explode(sf::Vector2i);
 
         //vars
         static const char * const baseStats[];
@@ -90,6 +91,7 @@ class Game
         int distancesRight[GRIDX * 2 + MIDDLE][GRIDY];
 
         double time;
+        int wave;
         sf::Text timer;
         sf::RectangleShape timerBackground;
         sf::RectangleShape timerBar;

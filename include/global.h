@@ -31,7 +31,7 @@ struct Settings
     bool selectAfterUpgrade;    //whether to keep upgrades focused after buying an upgrade
 };
 
-struct Stats
+struct Stats    //tower/projectile stats
 {
     int cost;
     int fireRate;       //frames/shot       eg. if FPS = 30, fireRate = 30 would result in 1 shot/sec
@@ -40,6 +40,14 @@ struct Stats
     int type;       //projectile type
     bool homing;
     double speed;
+};
+
+struct CreepStats
+{
+    int cooldown;
+    int type;
+    int speed;
+    int hp;
 };
 
 sf::Vector2i gridPosition(sf::Vector2i);

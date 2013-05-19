@@ -228,6 +228,8 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
     buttonCoordinates[0] = buttonCoordinates[1] = 0;
 
     money[0] = money[1] = 100;  //temp
+    moneyText[0].setString("$100");
+    moneyText[1].setString("$100");
 
     prevMouse = {0, 0};
 
@@ -270,6 +272,7 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
     updateButtons(1);
 
     time = -30;
+    wave = 0;
 
     speedUp = false;
     speedUpAnimation = 0;
@@ -524,6 +527,8 @@ int Game::update(sf::Vector2i mousePos)
 
         for (int a = 1; a <= speedUp; ++a)      //things that can be sped up
         {
+            std::vector <sf::Vector2i> temp;
+
             for(int b = 0; b < 2; ++b)
             {
                 for(unsigned int i = 0; i < creeps[b].size(); ++i)  //update creeps
@@ -536,9 +541,22 @@ int Game::update(sf::Vector2i mousePos)
                         --i;
                         continue;
                     }
-                    creeps[b][i]->update();
+                    int status = creeps[b][i]->update();
+                    if (status == 1)     //explode!
+                    {
+                        temp.push_back(gridPosition((sf::Vector2i)creeps[b][i]->getPosition()));
+                    }
+                    else if (status == 2)
+                    {
+                        //reached end
+                        printf("+1\n");
+                    }
                 }
-                money[b]++;
+            }
+
+            for (unsigned int i = 0; i < temp.size(); ++i)
+            {
+                explode(temp[i]);
             }
 
             for(unsigned int i = 0; i < towers.size(); ++i)     //update towers
@@ -570,6 +588,13 @@ int Game::update(sf::Vector2i mousePos)
             timer.setOrigin(timer.getGlobalBounds().width / 2, timer.getGlobalBounds().height / 2);
             timer.setPosition(XRES / 2, timer.getPosition().y);
             timerBar.setSize({(float)(fmod(time + 30.0, 30.0) / 30.0 * 80.0), timerBar.getSize().y});
+
+            if (time > wave * 30)   //new wave
+            {
+                wave++;
+                creeps[0].push_back(new Creep(distancesRight, 0));
+                printf("new wave\n");
+            }
 
             if (speedUp == settings.fastForwardSpeed)
                 speedBackground.setFillColor(sf::Color::Red);
@@ -1197,6 +1222,14 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
         {
             creeps[1].push_back(new Creep(distancesLeft, 1));
         }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::N))
+        {
+            money[0] += 100;
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Multiply))
+        {
+            money[1] += 100;
+        }
 
         if (selectorCoordinates[i].y < 0)
         {
@@ -1226,44 +1259,51 @@ void Game::newTower(sf::Vector2i i, int type)
         {
 
         }
-        else if(i.x >= GRIDX && i.x < GRIDX + MIDDLE)
+        else if(i.x >= GRIDX && i.x < GRIDX + MIDDLE)   //trying to place in middle
         {
 
         }
         else
         {
-            for (int a = 0; a < 2; ++a)
+            int temp = 1;
+            if (i.x < GRIDX)
             {
-                for (unsigned int b = 0; b < creeps[a].size(); ++b)
+                temp = 0;
+            }
+
+            if (money[temp] >= towerStats[type][0][0].cost)
+            {
+                for (int a = 0; a < 2; ++a)
                 {
-                    if (i == creeps[a][b]->getCoordinates())
+                    for (unsigned int b = 0; b < creeps[a].size(); ++b)
                     {
-                        return;
+                        if (i == creeps[a][b]->getCoordinates())
+                        {
+                            return;
+                        }
+                    }
+                }
+                if (map[i.x][i.y] == false) //if the spot is empty
+                {
+                    map[i.x][i.y] = true;
+                    calculateDistances();
+                    if (distancesRight[0][GRIDY / 2] == EMPTY)
+                    {
+                        //no path available
+                        map[i.x][i.y] = false;
+                        calculateDistances();
+                    }
+                    else    //everything OK, build
+                    {
+                        towers.push_back(new Tower(&creeps[abs(temp - 1)], &creeps[temp], type));
+                        towers[towers.size() - 1]->setCoordinates(i);
+                        money[temp] -= towerStats[type][0][0].cost;
                     }
                 }
             }
-            if (map[i.x][i.y] == false) //if the spot is empty
+            else
             {
-                map[i.x][i.y] = true;
-                calculateDistances();
-                if (distancesRight[0][GRIDY / 2] == EMPTY)
-                {
-                    //no path available
-                    map[i.x][i.y] = false;
-                    calculateDistances();
-                }
-                else
-                {
-                    if (i.x < GRIDX)
-                    {
-                        towers.push_back(new Tower(&creeps[1], &creeps[0], type));
-                    }
-                    else
-                    {
-                        towers.push_back(new Tower(&creeps[0], &creeps[1], type));
-                    }
-                    towers[towers.size() - 1]->setCoordinates(i);
-                }
+                //not enough money
             }
         }
     }
@@ -1537,14 +1577,29 @@ void Game::buttonPressed(int player, int button)
         }
         else    //creeps
         {
+            if (button == 0)
+            {
 
+            }
+            else if (button == 1)
+            {
+
+            }
+            else if (button == 2)
+            {
+
+            }
+            else if (button == 3)
+            {
+
+            }
         }
     }
     else
     {
         if (button >= 0 && button <= 2)     //create or upgrade
         {
-            if (towerAt(selectorCoordinates[player]) == NULL)
+            if (towerAt(selectorCoordinates[player]) == NULL)   //create
             {
                 if (player == 0)
                 {
@@ -1573,7 +1628,7 @@ void Game::buttonPressed(int player, int button)
                     selected[player] = false;
                 }
             }
-            else
+            else    //upgrade
             {
                 Tower * tempTower = towerAt(selectorCoordinates[player]);
                 if (tempTower->getType().z >= 3)
@@ -1586,7 +1641,33 @@ void Game::buttonPressed(int player, int button)
                     {
                         if (selectorCoordinates[player].x < GRIDX)
                         {
-                            tempTower->upgrade(button + 1);
+                            if (tempTower->getType().y != 0)
+                            {
+                                if (button == 0)  //upgrade secondary
+                                {
+                                    if (money[player] >= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost)
+                                    {
+                                        money[player] -= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost;
+                                        tempTower->upgrade(button + 1);
+                                    }
+                                    else
+                                    {
+                                        //not enough money
+                                    }
+                                }
+                            }
+                            else    //new tower type
+                            {
+                                if (money[player] >= towerStats[tempTower->getType().x - 1][button + 1][0].cost)
+                                {
+                                    money[player] -= towerStats[tempTower->getType().x - 1][button + 1][0].cost;
+                                    tempTower->upgrade(button + 1);
+                                }
+                                else
+                                {
+                                    //not enough money
+                                }
+                            }
                         }
                         else
                         {
@@ -1597,7 +1678,33 @@ void Game::buttonPressed(int player, int button)
                     {
                         if (selectorCoordinates[player].x > GRIDX + MIDDLE - 1)
                         {
-                            tempTower->upgrade(button + 1);
+                            if (tempTower->getType().y != 0)
+                            {
+                                if (button == 0)  //upgrade secondary
+                                {
+                                    if (money[player] >= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost)
+                                    {
+                                        money[player] -= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost;
+                                        tempTower->upgrade(button + 1);
+                                    }
+                                    else
+                                    {
+                                        //not enough money
+                                    }
+                                }
+                            }
+                            else    //new tower type
+                            {
+                                if (money[player] >= towerStats[tempTower->getType().x - 1][button + 1][0].cost)
+                                {
+                                    money[player] -= towerStats[tempTower->getType().x - 1][button + 1][0].cost;
+                                    tempTower->upgrade(button + 1);
+                                }
+                                else
+                                {
+                                    //not enough money
+                                }
+                            }
                         }
                         else
                         {
@@ -1617,7 +1724,10 @@ void Game::buttonPressed(int player, int button)
             {
                 if (selectorCoordinates[player].x < GRIDX)
                 {
-                    removeTower(selectorCoordinates[player]);
+                    if (towerAt(selectorCoordinates[player]) != NULL)
+                    {
+                        removeTower(selectorCoordinates[player]);
+                    }
                 }
                 else
                 {
@@ -1628,7 +1738,10 @@ void Game::buttonPressed(int player, int button)
             {
                 if (selectorCoordinates[player].x > GRIDX + MIDDLE - 1)
                 {
-                    removeTower(selectorCoordinates[player]);
+                    if (towerAt(selectorCoordinates[player]) != NULL)
+                    {
+                        removeTower(selectorCoordinates[player]);
+                    }
                 }
                 else
                 {
@@ -1673,7 +1786,7 @@ void Game::updateButtons(int player)
 {
     if (outOfGrid[player])
     {
-        //thing
+        //creep stuff
     }
     else
     {
@@ -1724,5 +1837,37 @@ void Game::updateButtons(int player)
                 gameButtons[player][4 + i].loadTexture("resources/unselected.png");
             }
         }
+    }
+}
+
+void Game::explode(sf::Vector2i i)
+{
+    for (int b = 0; b < 2; ++b)
+    {
+        for(unsigned int a = 0; a < creeps[b].size(); ++a)
+        {
+            if (gridPosition((sf::Vector2i)creeps[b][a]->getPosition()) == i)
+            {
+                creeps[b][a]->damage(99999);
+            }
+        }
+    }
+
+    removeTower(i);
+    if (i.x > 0)
+    {
+        removeTower(sf::Vector2i(i.x - 1, i.y));
+    }
+    if (i.x < GRIDX * 2 + MIDDLE - 1)
+    {
+        removeTower(sf::Vector2i(i.x + 1, i.y));
+    }
+    if (i.y > 0)
+    {
+        removeTower(sf::Vector2i(i.x, i.y - 1));
+    }
+    if (i.y < GRIDY)
+    {
+        removeTower(sf::Vector2i(i.x, i.y + 1));
     }
 }
