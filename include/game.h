@@ -109,6 +109,7 @@ class Game
         sf::RectangleShape pauseBackground;
         bool paused;
         bool prevEscape;
+        sf::Text pauseText;
 
         std::vector<Creep*> creeps[2];
         std::vector<Projectile*> projectiles;

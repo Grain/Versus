@@ -63,6 +63,9 @@ Game::Game()
     pauseBackground.setSize({XRES, YRES});
     pauseBackground.setPosition({0, 0});
     pauseBackground.setFillColor(sf::Color(0, 0, 0, 128));
+    pauseText.setCharacterSize(30);
+    pauseText.setColor(sf::Color::White);
+    pauseText.setPosition(XRES / 2, 100);
 
     for (int i = 0; i < 2; ++i)
     {
@@ -237,7 +240,12 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
     moneyText[0].setString("$100");
     moneyText[1].setString("$100");
 
+    pauseText.setString("Paused");
+    pauseText.setOrigin(pauseText.getGlobalBounds().width / 2, pauseText.getGlobalBounds().height / 2);
+
     lives[0] = lives[1] = 10;
+    livesText[0].setString("Lives: 10");
+    livesText[1].setString("Lives: 10");
 
     prevMouse = {0, 0};
 
@@ -383,6 +391,7 @@ void Game::draw(sf::RenderWindow * window)
         temp->draw(pauseBackground);
         resume.draw(temp);
         exit.draw(temp);
+        temp->draw(pauseText);
     }
 
     if (settings.doubleBuffered)
@@ -624,6 +633,27 @@ int Game::update(sf::Vector2i mousePos)
 
             sprintf(temp, "Lives: %d", lives[i]);
             livesText[i].setString(temp);
+
+            if (lives[i] <= 0)
+            {
+                //someone wins
+                paused = true;
+                resume.setVisible(false);
+                exit.setVisible(true);
+
+                char temp[50];
+
+                if (i == 0)
+                {
+                    sprintf(temp, "Right side wins after %d waves!", wave);
+                }
+                else
+                {
+                    sprintf(temp, "Left side wins after %d waves!", wave);
+                }
+                pauseText.setString(temp);
+                pauseText.setOrigin(pauseText.getGlobalBounds().width / 2, pauseText.getGlobalBounds().height / 2);
+            }
         }
     }
 
