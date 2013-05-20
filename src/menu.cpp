@@ -210,19 +210,6 @@ Menu::Menu()
     singleMenu[4]->loadTexture("resources/mission1.png");
     singleMenu[4]->setVisible(false);
 
-    //MULTIPLAYER
-    multiMenu.push_back(new Button());   //back button
-    multiMenu[0]->initialize(100, 50);
-    multiMenu[0]->setPosition({26, 500});
-    multiMenu[0]->loadTexture("resources/back.png");
-    multiMenu[0]->setVisible(false);
-
-    multiMenu.push_back(new Button());   //temp button
-    multiMenu[1]->initialize(100, 50);
-    multiMenu[1]->setPosition({50, 50});
-    multiMenu[1]->loadTexture("resources/back.png");
-    multiMenu[1]->setVisible(false);
-
     updateSettings();
 }
 
@@ -285,23 +272,12 @@ void Menu::draw(sf::RenderWindow * window)
     {
         singleMenu[i]->draw(temp);
     }
-    for(unsigned int i = 0; i < multiMenu.size(); ++i)
-    {
-        multiMenu[i]->draw(temp);
-    }
 
     if (settingsMenu[0]->getVisible())
     {
         for(unsigned int i = 0; i < settingsText.size(); ++i)
         {
             temp->draw(*settingsText[i]);
-        }
-    }
-    if (multiMenu[0]->getVisible())
-    {
-        for(unsigned int i = 0; i < multiText.size(); ++i)
-        {
-            temp->draw(*multiText[i]);
         }
     }
 
@@ -335,7 +311,6 @@ int Menu::update(sf::Vector2i mousePos)
                 switch(i)
                 {
                     case 0: //single player
-                        //return 1;
                         for (unsigned int a = 0; a < mainMenu.size(); ++a)
                         {
                             mainMenu[a]->setVisible(false);
@@ -346,15 +321,7 @@ int Menu::update(sf::Vector2i mousePos)
                         }
                         break;
                     case 1: //multi player
-                        //return 2;
-                        for (unsigned int a = 0; a < mainMenu.size(); ++a)
-                        {
-                            mainMenu[a]->setVisible(false);
-                        }
-                        for (unsigned int a = 0; a < multiMenu.size(); ++a)
-                        {
-                            multiMenu[a]->setVisible(true);
-                        }
+                        return 2;
                         break;
                     case 2: //go to settings
                         for (unsigned int a = 0; a < mainMenu.size(); ++a)
@@ -471,29 +438,6 @@ int Menu::update(sf::Vector2i mousePos)
                         break;
                     case 4: //mission 4
                         return 1;
-                        break;
-                }
-            }
-        }
-
-        for (unsigned int i = 0; i < multiMenu.size(); ++i)
-        {
-            if(multiMenu[i]->update(mousePos))
-            {
-                switch(i)
-                {
-                    case 0:
-                        for (unsigned int a = 0; a < mainMenu.size(); ++a)
-                        {
-                            mainMenu[a]->setVisible(true);
-                        }
-                        for (unsigned int a = 0; a < multiMenu.size(); ++a)
-                        {
-                            multiMenu[a]->setVisible(false);
-                        }
-                        break;
-                    case 1:
-                        return 2;
                         break;
                 }
             }

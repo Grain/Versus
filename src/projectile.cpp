@@ -137,8 +137,22 @@ void Projectile::update()
                     if (distance(image.getPosition(), (*creeps)[i]->getPosition()) < range)
                     {
                         //hit!
-                        (*creeps)[i]->damage(damage);
-                        //TODO: different effects here
+                        if (type == 8)  //base
+                        {
+                            (*creeps)[i]->damage(damage);
+                        }
+                        else if (type == 9) //slow
+                        {
+                            (*creeps)[i]->buff(1, damage);
+                        }
+                        else if (type == 10)    //damage amp
+                        {
+                            (*creeps)[i]->buff(0, damage);
+                        }
+                        else    //damage
+                        {
+                            (*creeps)[i]->damage(damage);
+                        }
                     }
                 }
             }

@@ -117,6 +117,9 @@ class Game
         int money[2];
         sf::Text moneyText[2];
 
+        sf::Text livesText[2];
+        int lives[2];
+
         sf::Text info[2];
 };
 

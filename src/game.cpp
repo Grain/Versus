@@ -130,12 +130,18 @@ Game::Game()
         int offset = 60;
         if (i == 0)
         {
-            moneyText[i].setPosition(gameButtons[0][10].getPosition().x + offset, 520);
+            moneyText[i].setPosition(gameButtons[0][10].getPosition().x + offset, 510);
         }
         else
         {
-            moneyText[i].setPosition((XRES / 2) + offset, 520);
+            moneyText[i].setPosition((XRES / 2) + offset, 510);
         }
+
+        //lives text
+        livesText[i].setCharacterSize(18);
+        livesText[i].setColor(sf::Color::Black);
+        livesText[i].setString("Lives: 10");
+        livesText[i].setPosition(moneyText[i].getPosition().x, 540);
 
         //info text
         info[i].setCharacterSize(12);
@@ -230,6 +236,8 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
     money[0] = money[1] = 100;  //temp
     moneyText[0].setString("$100");
     moneyText[1].setString("$100");
+
+    lives[0] = lives[1] = 10;
 
     prevMouse = {0, 0};
 
@@ -359,6 +367,7 @@ void Game::draw(sf::RenderWindow * window)
         }
 
         temp->draw(moneyText[i]);
+        temp->draw(livesText[i]);
         temp->draw(info[i]);
     }
     temp->draw(timerBackground);
@@ -549,7 +558,7 @@ int Game::update(sf::Vector2i mousePos)
                     else if (status == 2)
                     {
                         //reached end
-                        printf("+1\n");
+                        lives[abs(b - 1)]--;
                     }
                 }
             }
@@ -607,11 +616,14 @@ int Game::update(sf::Vector2i mousePos)
             speedBackground.setTextureRect(sf::IntRect(speedUpAnimation, 0, speedBackground.getSize().x, speedBackground.getSize().y));
         }
 
-        for (int i = 0; i < 2; ++i) //update money text
+        for (int i = 0; i < 2; ++i) //update money text and lives text
         {
             char temp[20];
             sprintf(temp, "$%d", money[i]);
             moneyText[i].setString(temp);
+
+            sprintf(temp, "Lives: %d", lives[i]);
+            livesText[i].setString(temp);
         }
     }
 

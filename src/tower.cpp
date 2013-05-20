@@ -107,7 +107,7 @@ std::string Tower::getCurrentInfo()
     temp1 += temp2;
     if (stats.type == 3)        //buff tower
     {
-        sprintf(temp2, "Buff amount: %d%%\n", stats.damage);
+        sprintf(temp2, "Buff amount: %d\n", stats.damage);
     }
     else if (stats.type == 7)       //aoe heal missile
     {
@@ -158,7 +158,7 @@ std::string Tower::getUpgradeInfo(int a)
             temp1 += temp2;
             if (tempStats.type == 3)        //buff tower
             {
-                sprintf(temp2, "Buff amount: %d%%\n", tempStats.damage);
+                sprintf(temp2, "Buff amount: %d\n", tempStats.damage);
             }
             else if (tempStats.type == 7)       //aoe heal missile
             {
@@ -200,7 +200,7 @@ std::string Tower::getUpgradeInfo(int a)
                     temp1 += temp2;
                     if (tempStats.type == 3)        //buff tower
                     {
-                        sprintf(temp2, "Buff amount: %d%%\n", tempStats.damage);
+                        sprintf(temp2, "Buff amount: %d\n", tempStats.damage);
                     }
                     else if (tempStats.type == 7)       //aoe heal missile
                     {
