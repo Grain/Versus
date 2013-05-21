@@ -45,8 +45,10 @@ struct Stats    //tower/projectile stats
 struct CreepStats
 {
     int cooldown;
+    int timeLeft;
+    int amount;
     int type;
-    int speed;
+    double speed;
     int hp;
 };
 

@@ -146,6 +146,20 @@ Game::Game()
         livesText[i].setString("Lives: 10");
         livesText[i].setPosition(moneyText[i].getPosition().x, 540);
 
+        //notifications text
+        notifications[i].setCharacterSize(24);
+        notifications[i].setColor(sf::Color::Black);
+        notifications[i].setString("test");
+        if (i == 0)
+        {
+            notifications[i].setPosition(100, 335);
+        }
+        else
+        {
+            notifications[i].setOrigin(notifications[i].getGlobalBounds().width, 0);
+            notifications[i].setPosition(XRES - 100, 335);
+        }
+
         //info text
         info[i].setCharacterSize(12);
         info[i].setColor(sf::Color::Black);
@@ -247,6 +261,8 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
     livesText[0].setString("Lives: 10");
     livesText[1].setString("Lives: 10");
 
+    notificationTimer[0] = notificationTimer[1] = 0;
+
     prevMouse = {0, 0};
 
     leftColor = tempLeft;
@@ -283,9 +299,56 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
         }
     }
 
+    for (int i = 0; i < 2; ++i)
+    {
+        creepStats[i][0].amount = 5;
+        creepStats[i][0].cooldown = 0;
+        creepStats[i][0].hp = 100;
+        creepStats[i][0].speed = 2;
+        creepStats[i][0].timeLeft = 0;
+        creepStats[i][0].type = 0;
+
+        creepStats[i][1].amount = 5;
+        creepStats[i][1].cooldown = 0;
+        creepStats[i][1].hp = 50;
+        creepStats[i][1].speed = 4;
+        creepStats[i][1].timeLeft = 0;
+        creepStats[i][1].type = 1;
+
+        creepStats[i][2].amount = 5;
+        creepStats[i][2].cooldown = 0;
+        creepStats[i][2].hp = 200;
+        creepStats[i][2].speed = 1;
+        creepStats[i][2].timeLeft = 0;
+        creepStats[i][2].type = 2;
+
+        creepStats[i][3].amount = 5;
+        creepStats[i][3].cooldown = 0;
+        creepStats[i][3].hp = 50;
+        creepStats[i][3].speed = 2;
+        creepStats[i][3].timeLeft = 0;
+        creepStats[i][3].type = 3;
+
+        creepQueue[i][0] = &creepStats[i][0];
+        creepQueue[i][1] = &creepStats[i][1];   //temp, beginning should all be type 0
+        creepQueue[i][2] = &creepStats[i][2];
+        creepQueue[i][3] = &creepStats[i][3];
+
+        interval[i] = timeLeft[i] = amountLeft[i] = 0;
+    }
+
     calculateDistances();
     updateButtons(0);
     updateButtons(1);
+
+    for (int a = 0; a < GRIDX * 2 + MIDDLE; ++a)
+    {
+        for (int b = 0; b < GRIDY; ++b)
+        {
+            flyingLeft[a][b] = distancesLeft[a][b];
+            flyingRight[a][b] = distancesRight[a][b];
+        }
+    }
 
     time = -30;
     wave = 0;
@@ -350,6 +413,11 @@ void Game::draw(sf::RenderWindow * window)
         if (visibleRanges[i])
         {
             temp->draw(ranges[i]);
+        }
+
+        if (notificationTimer[i] > 0)
+        {
+            temp->draw(notifications[i]);
         }
     }
 
@@ -599,6 +667,54 @@ int Game::update(sf::Vector2i mousePos)
                 projectiles[i]->update();
             }
 
+            //spawn creeps
+
+            for (int i = 0; i < 2; ++i)
+            {
+                for (int a = 0; a < 4; ++a)
+                {
+                    if (creepStats[i][a].timeLeft > 0)
+                    {
+                        creepStats[i][a].timeLeft--;
+                    }
+                }
+
+                if (amountLeft[i] > 0)
+                {
+                    if (timeLeft[i] > 0)
+                    {
+                        timeLeft[i]--;
+                    }
+                    else    //spawn new creep
+                    {
+                        if (i == 0)
+                        {
+                            if (creepQueue[0][0]->type != 3)
+                            {
+                                creeps[0].push_back(new Creep(distancesRight, 0, creepQueue[0][0]->type, creepQueue[0][0]->speed, creepQueue[0][0]->hp));
+                            }
+                            else
+                            {
+                                creeps[0].push_back(new Creep(flyingRight, 0, creepQueue[0][0]->type, creepQueue[0][0]->speed, creepQueue[0][0]->hp));
+                            }
+                        }
+                        else
+                        {
+                            if (creepQueue[1][0]->type != 3)
+                            {
+                                creeps[1].push_back(new Creep(distancesLeft, 1, creepQueue[1][0]->type, creepQueue[1][0]->speed, creepQueue[1][0]->hp));
+                            }
+                            else
+                            {
+                                creeps[1].push_back(new Creep(flyingLeft, 1, creepQueue[1][0]->type, creepQueue[1][0]->speed, creepQueue[1][0]->hp));
+                            }
+                        }
+                        timeLeft[i] = interval[i];
+                        amountLeft[i]--;
+                    }
+                }
+            }
+
             //update timer
 
             time += 1.0 / FPS;
@@ -610,8 +726,21 @@ int Game::update(sf::Vector2i mousePos)
             if (time > wave * 30)   //new wave
             {
                 wave++;
-                creeps[0].push_back(new Creep(distancesRight, 0));
-                printf("new wave\n");
+                for (int i = 0; i < 2; ++i)
+                {
+                    //move up things in the queue
+                    creepQueue[i][0] = creepQueue[i][1];
+                    creepQueue[i][1] = creepQueue[i][2];
+                    creepQueue[i][2] = creepQueue[i][3];
+                    creepQueue[i][3] = &creepStats[i][0];   //latest in queue should be the default creep type
+
+                    amountLeft[i] = creepQueue[i][0]->amount;
+                    interval[i] = (20.0 / creepQueue[i][0]->amount) * FPS;  //spawn creeps over 20 seconds
+                    timeLeft[i] = 0;
+
+                    creepStats[i][0].hp += 50;
+                    creepStats[i][0].amount++;
+                }
             }
 
             if (speedUp == settings.fastForwardSpeed)
@@ -625,7 +754,7 @@ int Game::update(sf::Vector2i mousePos)
             speedBackground.setTextureRect(sf::IntRect(speedUpAnimation, 0, speedBackground.getSize().x, speedBackground.getSize().y));
         }
 
-        for (int i = 0; i < 2; ++i) //update money text and lives text
+        for (int i = 0; i < 2; ++i) //update money text and lives text and notifications
         {
             char temp[20];
             sprintf(temp, "$%d", money[i]);
@@ -651,8 +780,19 @@ int Game::update(sf::Vector2i mousePos)
                 {
                     sprintf(temp, "Left side wins after %d waves!", wave);
                 }
+
+                if (lives[0] <= 0 && lives[1] <= 0)
+                {
+                    sprintf(temp, "It's a tie after %d waves!", wave);
+                }
+
                 pauseText.setString(temp);
                 pauseText.setOrigin(pauseText.getGlobalBounds().width / 2, pauseText.getGlobalBounds().height / 2);
+            }
+
+            if (notificationTimer[i] > 0)
+            {
+                notificationTimer[i]--;
             }
         }
     }
@@ -1160,7 +1300,7 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
                         }
                         else
                         {
-                            //error message
+                            //trying to select enemy tower
                         }
                     }
                     if (i == 1) //right
@@ -1172,7 +1312,7 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
                         }
                         else
                         {
-                            //error message
+                            //trying to select enemy tower
                         }
                     }
                 }
@@ -1258,11 +1398,11 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
         {
-            creeps[0].push_back(new Creep(distancesRight, 0));
+            creeps[0].push_back(new Creep(distancesRight, 0, 0, 1, 50));
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
         {
-            creeps[1].push_back(new Creep(distancesLeft, 1));
+            creeps[1].push_back(new Creep(distancesLeft, 1, 0, 1, 50));
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::N))
         {
@@ -1294,12 +1434,18 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
 
 void Game::newTower(sf::Vector2i i, int type)
 {
+    int temp = 1;
+    if (i.x < GRIDX)
+    {
+        temp = 0;
+    }
+
     //does not allow creating tower outside of grid
     if (i.x >= 0 && i.x < GRIDX * 2 + MIDDLE && i.y >= 0 && i.y < GRIDY)
     {
         if ((i.x == 0 && i.y == GRIDY / 2) || (i.x == GRIDX * 2 + MIDDLE - 1 && i.y == GRIDY / 2))   //trying to place tower on spawn points
         {
-
+            notify(temp, "Cannot block path");
         }
         else if(i.x >= GRIDX && i.x < GRIDX + MIDDLE)   //trying to place in middle
         {
@@ -1307,12 +1453,6 @@ void Game::newTower(sf::Vector2i i, int type)
         }
         else
         {
-            int temp = 1;
-            if (i.x < GRIDX)
-            {
-                temp = 0;
-            }
-
             if (money[temp] >= towerStats[type][0][0].cost)
             {
                 for (int a = 0; a < 2; ++a)
@@ -1331,9 +1471,11 @@ void Game::newTower(sf::Vector2i i, int type)
                     calculateDistances();
                     if (distancesRight[0][GRIDY / 2] == EMPTY)
                     {
-                        //no path available
+                        //no path available, new tower is blocking
                         map[i.x][i.y] = false;
                         calculateDistances();
+
+                        notify(temp, "Cannot block path");
                     }
                     else    //everything OK, build
                     {
@@ -1345,7 +1487,7 @@ void Game::newTower(sf::Vector2i i, int type)
             }
             else
             {
-                //not enough money
+                notify(temp, "Not enough money");
             }
         }
     }
@@ -1651,7 +1793,7 @@ void Game::buttonPressed(int player, int button)
                     }
                     else
                     {
-                        //error message
+                        notify(player, "You can only build on your side");
                     }
                 }
                 else
@@ -1662,7 +1804,7 @@ void Game::buttonPressed(int player, int button)
                     }
                     else
                     {
-                        //error message
+                        notify(player, "You can only build on your side");
                     }
                 }
                 if (settings.selectAfterUpgrade == false)
@@ -1694,7 +1836,7 @@ void Game::buttonPressed(int player, int button)
                                     }
                                     else
                                     {
-                                        //not enough money
+                                        notify(player, "Not enough money");
                                     }
                                 }
                             }
@@ -1707,13 +1849,13 @@ void Game::buttonPressed(int player, int button)
                                 }
                                 else
                                 {
-                                    //not enough money
+                                    notify(player, "Not enough money");
                                 }
                             }
                         }
                         else
                         {
-                            //error message
+                            //trying to upgrade enemy tower
                         }
                     }
                     else
@@ -1731,7 +1873,7 @@ void Game::buttonPressed(int player, int button)
                                     }
                                     else
                                     {
-                                        //not enough money
+                                        notify(player, "Not enough money");
                                     }
                                 }
                             }
@@ -1744,13 +1886,13 @@ void Game::buttonPressed(int player, int button)
                                 }
                                 else
                                 {
-                                    //not enough money
+                                    notify(player, "Not enough money");
                                 }
                             }
                         }
                         else
                         {
-                            //error message
+                            //trying to upgrade enemy tower
                         }
                     }
                 }
@@ -1773,7 +1915,7 @@ void Game::buttonPressed(int player, int button)
                 }
                 else
                 {
-                    //error message
+                    //trying to sell enemy tower
                 }
             }
             else
@@ -1787,7 +1929,7 @@ void Game::buttonPressed(int player, int button)
                 }
                 else
                 {
-                    //error message
+                    //trying to sell enemy tower
                 }
             }
             selected[player] = false;
@@ -1911,5 +2053,15 @@ void Game::explode(sf::Vector2i i)
     if (i.y < GRIDY)
     {
         removeTower(sf::Vector2i(i.x, i.y + 1));
+    }
+}
+
+void Game::notify(int side, std::string text, int seconds)
+{
+    notificationTimer[side] = seconds * FPS;
+    notifications[side].setString(text);
+    if (side == 1)
+    {
+        notifications[side].setOrigin(notifications[side].getGlobalBounds().width, 0);
     }
 }

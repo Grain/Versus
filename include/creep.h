@@ -7,7 +7,7 @@ class Creep
 {
     public:
         //ctor/dtor
-        Creep(int [][GRIDY], int);
+        Creep(int [][GRIDY], int, int, int, int);
         Creep();
         virtual ~Creep();
         //getters
@@ -48,6 +48,7 @@ class Creep
         int maxHp;
         int hp;
         double speed;   //actual speed is 2*speed pixels/sec
+        int type;   //0 normal, 1 speed, 2 tank, 3 flying
 
         sf::Texture bodyTexture;
         int animation;

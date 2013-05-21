@@ -57,6 +57,7 @@ class Game
         Tower * towerAt(sf::Vector2i);
         void updateButtons(int);
         void explode(sf::Vector2i);
+        void notify(int, std::string, int seconds = 3);
 
         //vars
         static const char * const baseStats[];
@@ -89,6 +90,8 @@ class Game
 
         int distancesLeft[GRIDX * 2 + MIDDLE][GRIDY];   //left = going to left side, right = going to right side
         int distancesRight[GRIDX * 2 + MIDDLE][GRIDY];
+        int flyingLeft[GRIDX * 2 + MIDDLE][GRIDY];
+        int flyingRight[GRIDX * 2 + MIDDLE][GRIDY];
 
         double time;
         int wave;
@@ -122,6 +125,15 @@ class Game
         int lives[2];
 
         sf::Text info[2];
+
+        sf::Text notifications[2];
+        int notificationTimer[2];
+
+        CreepStats * creepQueue[2][4];
+        CreepStats creepStats[2][4];
+        int interval[2];
+        int timeLeft[2];
+        int amountLeft[2];
 };
 
 #endif // GAME_H

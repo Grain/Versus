@@ -4,14 +4,18 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Creep::Creep(int temp[][GRIDY], int i)
+Creep::Creep(int temp[][GRIDY], int i, int tempType, int tempSpeed, int tempHp)
 {
     side = i;
     distances = temp;
     body.setSize({20, 20});
-    body.setFillColor(sf::Color::Black);
+    //body.setFillColor(sf::Color::Black);
     body.setOrigin(body.getSize().x / 2, body.getSize().y / 2);
-    bodyTexture.loadFromFile("resources/creep.png");
+
+    char tempString[30];
+    sprintf(tempString, "resources/creep%d.png", tempType);
+    bodyTexture.loadFromFile(tempString);
+
     body.setTexture(&bodyTexture, true);
     animation = 0;
     body.setTextureRect(sf::IntRect(animation, 0, body.getSize().x, body.getSize().y));
@@ -49,10 +53,11 @@ Creep::Creep(int temp[][GRIDY], int i)
 
     targetPoint = body.getPosition();
 
-    maxHp = 50;
+    maxHp = tempHp;
     hp = maxHp;
     dead = false;
-    speed = 1;      //speeds > 6 or so should fail miserably. speed = 7 SEEMS to work, but 6 should be the limit, i think
+    speed = tempSpeed;      //speeds > 6 or so should fail miserably. speed = 7 SEEMS to work, but 6 should be the limit, i think
+    type = tempType;
 
     bigProgress = 0;
     smallProgress = 0;
