@@ -256,7 +256,7 @@ void Projectile::update()
                             }
                             break;
                         case 7: //aoe heal missile
-                            for(unsigned int a = 0; a < creeps->size(); ++i)
+                            for(unsigned int a = 0; a < creeps->size(); ++a)
                             {
                                 if ((*creeps)[a]->isDead() == false)
                                 {

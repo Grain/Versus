@@ -195,19 +195,19 @@ Menu::Menu()
     singleMenu.push_back(new Button());   //mission 2
     singleMenu[2]->initialize(400, 175);
     singleMenu[2]->setPosition({549, 50});
-    singleMenu[2]->loadTexture("resources/mission1.png");
+    singleMenu[2]->loadTexture("resources/mission2.png");
     singleMenu[2]->setVisible(false);
 
     singleMenu.push_back(new Button());   //mission 3
     singleMenu[3]->initialize(400, 175);
     singleMenu[3]->setPosition({75, 275});
-    singleMenu[3]->loadTexture("resources/mission1.png");
+    singleMenu[3]->loadTexture("resources/mission3.png");
     singleMenu[3]->setVisible(false);
 
     singleMenu.push_back(new Button());   //mission 4
     singleMenu[4]->initialize(400, 175);
     singleMenu[4]->setPosition({549, 275});
-    singleMenu[4]->loadTexture("resources/mission1.png");
+    singleMenu[4]->loadTexture("resources/mission4.png");
     singleMenu[4]->setVisible(false);
 
     updateSettings();
