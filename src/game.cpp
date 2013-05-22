@@ -94,7 +94,6 @@ Game::Game()
             }
             gameButtons[i][a].initialize(60, 40);
             gameButtons[i][a].setPosition({(float)(offset + a * (gameButtons[i][a].getSize().x + spacing)) , 390});
-            gameButtons[i][a].loadTexture("resources/something.png");
             gameButtons[i][a].setVisible(true);
         }
 
@@ -108,7 +107,6 @@ Game::Game()
             }
             gameButtons[i][4 + a].initialize(60, 60);
             gameButtons[i][4 + a].setPosition({(float)(offset + a * (gameButtons[i][4 + a].getSize().x + spacing)), 440});
-            gameButtons[i][4 + a].loadTexture("resources/something.png");
             gameButtons[i][4 + a].setVisible(true);
         }
 
@@ -122,7 +120,6 @@ Game::Game()
             }
             gameButtons[i][8 + a].initialize(40, 40);
             gameButtons[i][8 + a].setPosition({(float)(offset + a * (gameButtons[i][8 + a].getSize().x + spacing)), 510});
-            gameButtons[i][8 + a].loadTexture("resources/something.png");
             gameButtons[i][8 + a].setVisible(true);
         }
 
@@ -174,6 +171,45 @@ Game::Game()
             info[i].setPosition(gameButtons[i][3].getPosition().x + gameButtons[i][3].getSize().x + offset, 390);
         }
     }
+
+    //cached textures
+    for (int a = 1; a < 4; ++a) //tower icons
+    {
+        for (int b = 0; b < 4; ++b)
+        {
+            char temp[40];
+            sprintf(temp, "resources/tower%d-%d.png", a, b);
+            towerIcons[a - 1][b].loadFromFile(temp);
+        }
+    }
+
+    sell.loadFromFile("resources/sell.png");
+    unselected.loadFromFile("resources/unselected.png");
+
+    for (int a = 0; a < 4; ++a)
+    {
+        char temp[40];
+        sprintf(temp, "resources/creepQueue%d.png", a);
+        creepQueueTextures[a].loadFromFile(temp);
+    }
+
+    for (int a = 0; a < 4; ++a)
+    {
+        char temp[40];
+        sprintf(temp, "resources/creepList%d.png", a);
+        creepList[a].loadFromFile(temp);
+    }
+
+    for (int a = 0; a < 4; ++a)
+    {
+        char temp[40];
+        sprintf(temp, "resources/creepIcon%d.png", a);
+        creepIcons[a].loadFromFile(temp);
+    }
+
+    transparent.loadFromFile("resources/transparent.png");
+
+    ////////////////
 
     if (settings.doubleBuffered)
     {
@@ -337,6 +373,9 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
         interval[i] = timeLeft[i] = amountLeft[i] = 0;
     }
 
+    time = -30;
+    wave = 0;
+
     calculateDistances();
     updateButtons(0);
     updateButtons(1);
@@ -349,9 +388,6 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
             flyingRight[a][b] = distancesRight[a][b];
         }
     }
-
-    time = -30;
-    wave = 0;
 
     speedUp = false;
     speedUpAnimation = 0;
@@ -410,24 +446,14 @@ void Game::draw(sf::RenderWindow * window)
 
     for (int i = 0; i < 2; ++i)
     {
-        if (visibleRanges[i])
+        for(int a = 0; a < 4; ++a)
         {
-            temp->draw(ranges[i]);
-        }
-
-        if (notificationTimer[i] > 0)
-        {
-            temp->draw(notifications[i]);
+            gameButtons[i][a].draw(temp);
         }
     }
 
     for(int i = begin; i < end; ++i)
     {
-        for(int a = 0; a < 11; ++a)
-        {
-            gameButtons[i][a].draw(temp);
-        }
-
         if (selected[i])
         {
             temp->draw(buttonSelector[i]);
@@ -440,6 +466,21 @@ void Game::draw(sf::RenderWindow * window)
         else
         {
             temp->draw(selector[i]);
+        }
+
+        for(int a = 4; a < 11; ++a)
+        {
+            gameButtons[i][a].draw(temp);
+        }
+
+        if (notificationTimer[i] > 0)
+        {
+            temp->draw(notifications[i]);
+        }
+
+        if (visibleRanges[i])
+        {
+            temp->draw(ranges[i]);
         }
 
         temp->draw(moneyText[i]);
@@ -507,6 +548,8 @@ int Game::update(sf::Vector2i mousePos)
             otherButtonSelector[i].setSize(gameButtons[i][buttonCoordinates[i]].getSize());
             otherButtonSelector[i].setPosition(gameButtons[i][buttonCoordinates[i]].getPosition());
 
+            bool somethingClicked = false;
+
             for(int a = 0; a < 11; ++a)
             {
                 if (gameButtons[i][a].update(mousePos))
@@ -520,13 +563,22 @@ int Game::update(sf::Vector2i mousePos)
                                 buttonPressed(i, a - 4);
                             }
                         }
+                        else if (a == 0) //current creep type in queue, cannot do anything with taht
+                        {
+
+                        }
                         else
                         {
                             selected[i] = true;
                             middleCoordinates[i] = 0;
                         }
                     }
+                    somethingClicked = true;
                 }
+            }
+            if (somethingClicked)
+            {
+                updateButtons(i);
             }
         }
 
@@ -560,7 +612,14 @@ int Game::update(sf::Vector2i mousePos)
             {
                 if (outOfGrid[i])   //on creep queue or creep list
                 {
-                    info[i].setString("out of grid");
+                    if (buttonCoordinates[i] < 4)      //creep queue
+                    {
+                        info[i].setString(creepData(i, middleCoordinates[i]));
+                    }
+                    else        //creep list
+                    {
+                        info[i].setString(creepUpgrade(i, buttonCoordinates[i] - 7));
+                    }
                 }
                 else    //in grid
                 {
@@ -574,15 +633,29 @@ int Game::update(sf::Vector2i mousePos)
                     }
                 }
             }
-            else
+            else    //nothing is selected
             {
-                if (towerAt(selectorCoordinates[i]) == NULL)
+                if (outOfGrid[i])
                 {
-                    info[i].setString("");
+                    if (buttonCoordinates[i] < 4)      //creep queue
+                    {
+                        info[i].setString(creepData(i, creepQueue[i][buttonCoordinates[i]]->type));     //show stats of creep in that spot in queue
+                    }
+                    else        //creep list
+                    {
+                        info[i].setString(creepData(i, buttonCoordinates[i] - 7));
+                    }
                 }
-                else
+                else        //in grid
                 {
-                    info[i].setString(towerAt(selectorCoordinates[i])->getCurrentInfo());
+                    if (towerAt(selectorCoordinates[i]) == NULL)
+                    {
+                        info[i].setString("");
+                    }
+                    else
+                    {
+                        info[i].setString(towerAt(selectorCoordinates[i])->getCurrentInfo());
+                    }
                 }
             }
         }
@@ -740,6 +813,8 @@ int Game::update(sf::Vector2i mousePos)
 
                     creepStats[i][0].hp += 50;
                     creepStats[i][0].amount++;
+
+                    updateButtons(i);
                 }
             }
 
@@ -880,7 +955,6 @@ void Game::mouseSelector(sf::Vector2i mousePos)
                     {
                         selected[0] = true;
                         middleCoordinates[0] = 0;
-                        //newTower(selectorCoordinates[0]);
                     }
                     else
                     {
@@ -896,7 +970,6 @@ void Game::mouseSelector(sf::Vector2i mousePos)
                     {
                         selected[1] = true;
                         middleCoordinates[1] = 0;
-                        //newTower(selectorCoordinates[1]);
                     }
                     else
                     {
@@ -1291,28 +1364,39 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
                 }
                 else
                 {
-                    if (i == 0) //left
+                    if (outOfGrid[i])
                     {
-                        if (selectorCoordinates[0].x < GRIDX)
+                        if (buttonCoordinates[i] != 0)  //0 is selected current creep type in queue, cannot do anything with that
                         {
                             selected[i] = true;
                             middleCoordinates[i] = 0;
-                        }
-                        else
-                        {
-                            //trying to select enemy tower
                         }
                     }
-                    if (i == 1) //right
+                    else
                     {
-                        if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
+                        if (i == 0) //left
                         {
-                            selected[i] = true;
-                            middleCoordinates[i] = 0;
+                            if (selectorCoordinates[0].x < GRIDX)
+                            {
+                                selected[i] = true;
+                                middleCoordinates[i] = 0;
+                            }
+                            else
+                            {
+                                //trying to select enemy tower
+                            }
                         }
-                        else
+                        if (i == 1) //right
                         {
-                            //trying to select enemy tower
+                            if (selectorCoordinates[1].x > GRIDX + MIDDLE - 1)
+                            {
+                                selected[i] = true;
+                                middleCoordinates[i] = 0;
+                            }
+                            else
+                            {
+                                //trying to select enemy tower
+                            }
                         }
                     }
                 }
@@ -1740,42 +1824,16 @@ void Game::buttonPressed(int player, int button)
 {
     if (outOfGrid[player])
     {
-        if (buttonCoordinates[player] < 4)      //creep queue
+        if (buttonCoordinates[player] < 4 && buttonCoordinates[player] > 0)      //creep queue, but cannot change first one (since it is current one)
         {
-            if (button == 0)
-            {
-
-            }
-            else if (button == 1)
-            {
-
-            }
-            else if (button == 2)
-            {
-
-            }
-            else if (button == 3)
-            {
-
-            }
+            creepQueue[player][buttonCoordinates[player]] = &creepStats[player][button];
+            selected[player] = false;
         }
-        else    //creeps
+        else    //creep list
         {
-            if (button == 0)
+            if (button == 0)    //only 1 upgrade available per creep
             {
-
-            }
-            else if (button == 1)
-            {
-
-            }
-            else if (button == 2)
-            {
-
-            }
-            else if (button == 3)
-            {
-
+                //upgrade
             }
         }
     }
@@ -1970,7 +2028,27 @@ void Game::updateButtons(int player)
 {
     if (outOfGrid[player])
     {
-        //creep stuff
+        if (selected[player])
+        {
+            if (buttonCoordinates[player] > 0 && buttonCoordinates[player] < 4)     //queue
+            {
+                for (int i = 0; i < 4; ++i)
+                {
+                     gameButtons[player][4 + i].setTexture(&creepIcons[i]);
+                }
+            }
+            else        //creep list
+            {
+                //i guess show the upgrade avilable?
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 4; ++i)
+            {
+                gameButtons[player][4 + i].setTexture(&unselected);
+            }
+        }
     }
     else
     {
@@ -1981,46 +2059,56 @@ void Game::updateButtons(int player)
             {
                 for (int i = 0; i < 3; ++i)
                 {
-                    char temp[20];
-                    sprintf(temp, "resources/tower%d-0.png", i + 1);
-                    gameButtons[player][4 + i].loadTexture(temp);
+                    gameButtons[player][4 + i].setTexture(&towerIcons[i][0]);
                 }
-                gameButtons[player][7].loadTexture("resources/sell.png");
+                gameButtons[player][7].setTexture(&sell);
             }
             else        //tower already exists
             {
-                char temp[20];
                 sf::Vector3i tempType = tempTower->getType();
 
                 if (tempType.y == 0)    //show the 3 advanced tower types
                 {
                     for (int i = 0; i < 3; ++i)
                     {
-                        sprintf(temp, "resources/tower%d-%d.png", tempType.x, i + 1);
-                        gameButtons[player][4 + i].loadTexture(temp);
+                         gameButtons[player][4 + i].setTexture(&towerIcons[tempType.x - 1][i + 1]);
                     }
                 }
                 else        //upgrade!
                 {
-                    sprintf(temp, "resources/tower%d-%d.png", tempType.x, tempType.y);
                     if (tempType.z >= 3)        //max level
-                        gameButtons[player][4].loadTexture("resources/unselected.png");
+                        gameButtons[player][4].setTexture(&unselected);
                     else
-                        gameButtons[player][4].loadTexture(temp);
-                    gameButtons[player][5].loadTexture("resources/unselected.png");
-                    gameButtons[player][6].loadTexture("resources/unselected.png");
+                        gameButtons[player][4].setTexture(&towerIcons[tempType.x - 1][tempType.y]);
+                    gameButtons[player][5].setTexture(&unselected);
+                    gameButtons[player][6].setTexture(&unselected);
                 }
 
-                gameButtons[player][7].loadTexture("resources/sell.png");
+                gameButtons[player][7].setTexture(&sell);
             }
         }
         else
         {
             for (int i = 0; i < 4; ++i)
             {
-                gameButtons[player][4 + i].loadTexture("resources/unselected.png");
+                gameButtons[player][4 + i].setTexture(&unselected);
             }
         }
+    }
+
+    for (int i = 0; i < 4; ++i)
+    {
+        gameButtons[player][i].setTexture(&creepQueueTextures[creepQueue[player][i]->type]);
+    }
+    for (int i = 8; i < 11; ++i)
+    {
+        gameButtons[player][i].setTexture(&creepList[i - 7]);
+    }
+
+    if (wave == 0)
+    {
+        gameButtons[0][0].setTexture(&transparent);
+        gameButtons[1][0].setTexture(&transparent);
     }
 }
 
@@ -2064,4 +2152,22 @@ void Game::notify(int side, std::string text, int seconds)
     {
         notifications[side].setOrigin(notifications[side].getGlobalBounds().width, 0);
     }
+}
+
+std::string Game::creepData(int side, int type)
+{
+    std::string temp1("");
+    char temp2[200];
+    sprintf(temp2, "Creep type %d", type);
+    temp1 += temp2;
+    return temp1;
+}
+
+std::string Game::creepUpgrade(int side, int type)
+{
+    std::string temp1("");
+    char temp2[200];
+    sprintf(temp2, "Creep type %d upgrade", type);
+    temp1 += temp2;
+    return temp1;
 }

@@ -10,6 +10,7 @@ Button::Button()
     downed = false;
     prevState = false;
     hovered = false;
+    usingCache = false;
 }
 
 /***************************************************************/
@@ -59,6 +60,12 @@ void Button::setVisible(bool i)
     visible = i;
 }
 
+void Button::setTexture(sf::Texture * i)
+{
+    usingCache = true;
+    texturePointer = i; //only one because whenever i'm using cache, i never have mouseover/mousedown textures, it's always just one picture
+}
+
 /***************************************************************/
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
@@ -73,6 +80,7 @@ void Button::initialize(int a, int b)
 
 void Button::loadTexture(std::string i)
 {
+    usingCache = false;
     normal.loadFromFile(i, sf::IntRect(0, 0, rect.getSize().x, rect.getSize().y));
     mouseOver.loadFromFile(i, sf::IntRect(rect.getSize().x * 1, 0, rect.getSize().x, rect.getSize().y));
     mouseDown.loadFromFile(i, sf::IntRect(rect.getSize().x * 2, 0, rect.getSize().x, rect.getSize().y));
@@ -82,7 +90,10 @@ bool Button::update(sf::Vector2i mousePos)
 {
     if(!visible)
     {
-        rect.setTexture(&normal);
+        if (usingCache)
+            rect.setTexture(texturePointer);
+        else
+            rect.setTexture(&normal);
         return false;
     }
 
@@ -108,7 +119,9 @@ bool Button::update(sf::Vector2i mousePos)
                 temp = true;    //mouse was downed in button and now raised in button
             }
             else
+            {
                 rect.setTexture(&mouseOver);
+            }
         }
         else
         {
@@ -118,6 +131,11 @@ bool Button::update(sf::Vector2i mousePos)
     }
 
     prevState = down;
+
+    if (usingCache)
+    {
+        rect.setTexture(texturePointer);
+    }
     return temp;
 }
 

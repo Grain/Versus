@@ -58,6 +58,8 @@ class Game
         void updateButtons(int);
         void explode(sf::Vector2i);
         void notify(int, std::string, int seconds = 3);
+        std::string creepData(int, int);
+        std::string creepUpgrade(int, int);
 
         //vars
         static const char * const baseStats[];
@@ -134,6 +136,15 @@ class Game
         int interval[2];
         int timeLeft[2];
         int amountLeft[2];
+
+        //some cached textures for gameButtons[][]
+        sf::Texture towerIcons[3][4];
+        sf::Texture sell;
+        sf::Texture unselected;
+        sf::Texture creepQueueTextures[4];
+        sf::Texture creepList[4];
+        sf::Texture creepIcons[4];
+        sf::Texture transparent;
 };
 
 #endif // GAME_H

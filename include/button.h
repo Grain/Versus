@@ -17,6 +17,7 @@ class Button
         //setters
         void setPosition(sf::Vector2f);
         void setVisible(bool);
+        void setTexture(sf::Texture*);
         //functions
         void initialize(int, int);
         void loadTexture(std::string);
@@ -33,6 +34,9 @@ class Button
         bool prevState; //state of mouse button in last update
         bool downed;    //whether the mouse was downed on the button
         bool hovered;
+        bool usingCache;    //whether this object is using textures cached outside the class
+
+        sf::Texture *texturePointer;
 };
 
 #endif // BUTTON_H
