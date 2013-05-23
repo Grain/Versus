@@ -145,6 +145,8 @@ class Game
         sf::Texture creepList[4];
         sf::Texture creepIcons[4];
         sf::Texture transparent;
+        sf::Texture buffs[5];
+        sf::Texture creepBody[4];
 };
 
 #endif // GAME_H

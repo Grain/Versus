@@ -209,6 +209,20 @@ Game::Game()
 
     transparent.loadFromFile("resources/transparent.png");
 
+    for (int a = 0; a < 5; ++a)
+    {
+        char temp[40];
+        sprintf(temp, "resources/buff%d.png", a);
+        buffs[a].loadFromFile(temp);
+    }
+
+    for (int a = 0; a < 4; ++a)
+    {
+        char temp[40];
+        sprintf(temp, "resources/creep%d.png", a);
+        creepBody[a].loadFromFile(temp);
+    }
+
     ////////////////
 
     if (settings.doubleBuffered)
@@ -764,22 +778,22 @@ int Game::update(sf::Vector2i mousePos)
                         {
                             if (creepQueue[0][0]->type != 3)
                             {
-                                creeps[0].push_back(new Creep(distancesRight, 0, creepQueue[0][0]->type, creepQueue[0][0]->speed, creepQueue[0][0]->hp));
+                                creeps[0].push_back(new Creep(distancesRight, 0, creepQueue[0][0]->type, creepQueue[0][0]->speed, creepQueue[0][0]->hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[0][0]->type]));
                             }
                             else
                             {
-                                creeps[0].push_back(new Creep(flyingRight, 0, creepQueue[0][0]->type, creepQueue[0][0]->speed, creepQueue[0][0]->hp));
+                                creeps[0].push_back(new Creep(flyingRight, 0, creepQueue[0][0]->type, creepQueue[0][0]->speed, creepQueue[0][0]->hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[0][0]->type]));
                             }
                         }
                         else
                         {
                             if (creepQueue[1][0]->type != 3)
                             {
-                                creeps[1].push_back(new Creep(distancesLeft, 1, creepQueue[1][0]->type, creepQueue[1][0]->speed, creepQueue[1][0]->hp));
+                                creeps[1].push_back(new Creep(distancesLeft, 1, creepQueue[1][0]->type, creepQueue[1][0]->speed, creepQueue[1][0]->hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[1][0]->type]));
                             }
                             else
                             {
-                                creeps[1].push_back(new Creep(flyingLeft, 1, creepQueue[1][0]->type, creepQueue[1][0]->speed, creepQueue[1][0]->hp));
+                                creeps[1].push_back(new Creep(flyingLeft, 1, creepQueue[1][0]->type, creepQueue[1][0]->speed, creepQueue[1][0]->hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[1][0]->type]));
                             }
                         }
                         timeLeft[i] = interval[i];
@@ -1482,11 +1496,11 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
         {
-            creeps[0].push_back(new Creep(distancesRight, 0, 0, 1, 50));
+            creeps[0].push_back(new Creep(distancesRight, 0, 0, 1, 50, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[0][0]->type]));
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
         {
-            creeps[1].push_back(new Creep(distancesLeft, 1, 0, 1, 50));
+            creeps[1].push_back(new Creep(distancesLeft, 1, 0, 1, 50, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[1][0]->type]));
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::N))
         {
@@ -1968,6 +1982,7 @@ void Game::buttonPressed(int player, int button)
                 {
                     if (towerAt(selectorCoordinates[player]) != NULL)
                     {
+                        //sell
                         removeTower(selectorCoordinates[player]);
                     }
                 }
@@ -1982,6 +1997,7 @@ void Game::buttonPressed(int player, int button)
                 {
                     if (towerAt(selectorCoordinates[player]) != NULL)
                     {
+                        //sell
                         removeTower(selectorCoordinates[player]);
                     }
                 }

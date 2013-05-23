@@ -4,19 +4,16 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Creep::Creep(int temp[][GRIDY], int i, int tempType, int tempSpeed, int tempHp)
+Creep::Creep(int temp[][GRIDY], int i, int tempType, int tempSpeed, int tempHp, sf::Texture * buff0, sf::Texture * buff1, sf::Texture * buff2, sf::Texture * buff3, sf::Texture * buff4, sf::Texture * tempBody)
 {
     side = i;
     distances = temp;
     body.setSize({20, 20});
-    //body.setFillColor(sf::Color::Black);
     body.setOrigin(body.getSize().x / 2, body.getSize().y / 2);
 
-    char tempString[30];
-    sprintf(tempString, "resources/creep%d.png", tempType);
-    bodyTexture.loadFromFile(tempString);
+    bodyTexture = tempBody;
 
-    body.setTexture(&bodyTexture, true);
+    body.setTexture(bodyTexture, true);
     animation = 0;
     body.setTextureRect(sf::IntRect(animation, 0, body.getSize().x, body.getSize().y));
 
@@ -40,14 +37,17 @@ Creep::Creep(int temp[][GRIDY], int i, int tempType, int tempSpeed, int tempHp)
         enemy = {0, GRIDY / 2};
     }
 
+    buffTextures[0] = buff0;
+    buffTextures[1] = buff1;
+    buffTextures[2] = buff2;
+    buffTextures[3] = buff3;
+    buffTextures[4] = buff4;
+
     for (int i = 0; i < 5; ++i)
     {
         buffs[i].x = 0;
         buffs[i].y = 0;
-        char temp[50];
-        sprintf(temp, "resources/buff%d.png", i);
-        buffTextures[i].loadFromFile(temp);
-        buffIcons[i].setTexture(&buffTextures[i]);
+        buffIcons[i].setTexture(buffTextures[i]);
         buffIcons[i].setSize({4, 4});
     }
 
@@ -276,7 +276,6 @@ int Creep::update()
             buffIcons[i].setPosition(body.getGlobalBounds().left + i * buffIcons[i].getSize().x, body.getGlobalBounds().top + body.getGlobalBounds().height + 2);
         }
     }
-    //printf("%d\n", buffs[0].x);
 
     if (buffs[3].x > 0) //regen
     {
@@ -292,7 +291,7 @@ int Creep::update()
     healthOutline.setPosition(health.getPosition());
 
     animation += body.getSize().x;
-    if (animation > bodyTexture.getSize().x - body.getSize().x)
+    if (animation > bodyTexture->getSize().x - body.getSize().x)
         animation = 0;
     body.setTextureRect(sf::IntRect(animation, 0, body.getSize().x, body.getSize().y));
 

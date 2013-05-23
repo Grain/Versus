@@ -7,7 +7,7 @@ class Creep
 {
     public:
         //ctor/dtor
-        Creep(int [][GRIDY], int, int, int, int);
+        Creep(int [][GRIDY], int, int, int, int, sf::Texture*, sf::Texture*, sf::Texture*, sf::Texture*, sf::Texture*, sf::Texture*);
         Creep();
         virtual ~Creep();
         //getters
@@ -42,7 +42,7 @@ class Creep
 
         sf::Vector2i buffs[5];   //x = time, y = severity of buff
         //0 = damage amp, 1 = slow, 2 = damage reduction, 3 = regen, 4 = speed
-        sf::Texture buffTextures[5];
+        sf::Texture * buffTextures[5];
         sf::RectangleShape buffIcons[5];
 
         int maxHp;
@@ -50,7 +50,7 @@ class Creep
         double speed;   //actual speed is 2*speed pixels/sec
         int type;   //0 normal, 1 speed, 2 tank, 3 flying
 
-        sf::Texture bodyTexture;
+        sf::Texture * bodyTexture;
         int animation;
 
         sf::RectangleShape health;
