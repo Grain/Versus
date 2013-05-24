@@ -855,6 +855,14 @@ int Game::update(sf::Vector2i mousePos)
             if (time > wave * 30)   //new wave
             {
                 wave++;
+
+                //remove sold towers
+                for (unsigned int i = 0; i < towersSold.size(); ++i)
+                {
+                    removeTower(towersSold[i]);
+                }
+                towersSold.clear();
+
                 for (int i = 0; i < 2; ++i)
                 {
                     //move up things in the queue
@@ -2028,8 +2036,11 @@ void Game::buttonPressed(int player, int button)
                 {
                     if (towerAt(selectorCoordinates[player]) != NULL)
                     {
-                        //sell
-                        removeTower(selectorCoordinates[player]);
+                        if (towerAt(selectorCoordinates[player])->isSold() == false)
+                        {
+                            towersSold.push_back(selectorCoordinates[player]);
+                            money[player] += towerAt(selectorCoordinates[player])->sell();
+                        }
                     }
                 }
                 else
@@ -2043,8 +2054,11 @@ void Game::buttonPressed(int player, int button)
                 {
                     if (towerAt(selectorCoordinates[player]) != NULL)
                     {
-                        //sell
-                        removeTower(selectorCoordinates[player]);
+                        if (towerAt(selectorCoordinates[player])->isSold() == false)
+                        {
+                            towersSold.push_back(selectorCoordinates[player]);
+                            money[player] += towerAt(selectorCoordinates[player])->sell();
+                        }
                     }
                 }
                 else

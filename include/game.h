@@ -137,6 +137,8 @@ class Game
         int timeLeft[2];
         int amountLeft[2];
 
+        std::vector<sf::Vector2i> towersSold;
+
         //some cached textures for gameButtons[][]
         sf::Texture towerIcons[3][4];
         sf::Texture sell;

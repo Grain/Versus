@@ -24,6 +24,7 @@ class Tower
         sf::Vector3i getType();
         std::string getCurrentInfo();
         std::string getUpgradeInfo(int);
+        bool isSold();
         //setters
         void setRotation(double);
         void setRotationTarget(sf::Vector2f);

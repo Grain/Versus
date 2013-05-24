@@ -8,6 +8,7 @@ Tower::Tower(std::vector<Creep*>* tempEnemies, std::vector<Creep*>* tempAllies, 
 {
     base.setSize((sf::Vector2f)Tower::getSize());
     turret.setSize((sf::Vector2f)Tower::getSize());
+    soldOverlay.setSize((sf::Vector2f)Tower::getSize());
     turret.setOrigin(Tower::getSize().x / 2, Tower::getSize().y / 2);
     level.setSize({5, 19});
     level.setOrigin(level.getSize());
@@ -15,6 +16,8 @@ Tower::Tower(std::vector<Creep*>* tempEnemies, std::vector<Creep*>* tempAllies, 
     base.setTexture(baseTexture);
     turretTexture = tempTurret;
     turret.setTexture(turretTexture);
+
+    soldOverlay.setFillColor(sf::Color(0, 0, 0, 128));
 
     turret.setRotation(rand() % 360);
 
@@ -229,6 +232,11 @@ std::string Tower::getUpgradeInfo(int a)
     return temp1;
 }
 
+bool Tower::isSold()
+{
+    return sold;
+}
+
 /***************************************************************/
 /*******************SETTERS*************************************/
 /***************************************************************/
@@ -254,6 +262,7 @@ void Tower::setCoordinates(sf::Vector2i i)
     base.setPosition(position);
     turret.setPosition(position.x + Tower::getSize().x / 2, position.y + Tower::getSize().y / 2);
     level.setPosition(position + (sf::Vector2f)Tower::getSize() - (sf::Vector2f){1, 1});
+    soldOverlay.setPosition(base.getPosition());
 }
 
 void Tower::setTextures(sf::Texture * tempBase, sf::Texture * tempTurret)
@@ -361,6 +370,11 @@ void Tower::draw(sf::RenderTarget * target)
     if (type.z > 0)
     {
         target->draw(level);
+    }
+
+    if (sold)
+    {
+        target->draw(soldOverlay);
     }
 }
 
