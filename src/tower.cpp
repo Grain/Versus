@@ -4,31 +4,23 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Tower::Tower(std::vector<Creep*>* tempEnemies, std::vector<Creep*>* tempAllies, int baseType)
+Tower::Tower(std::vector<Creep*>* tempEnemies, std::vector<Creep*>* tempAllies, int baseType, sf::Texture * tempBase, sf::Texture * tempTurret, sf::Texture * temp1, sf::Texture * temp2, sf::Texture * temp3)
 {
     base.setSize((sf::Vector2f)Tower::getSize());
     turret.setSize((sf::Vector2f)Tower::getSize());
     turret.setOrigin(Tower::getSize().x / 2, Tower::getSize().y / 2);
     level.setSize({5, 19});
     level.setOrigin(level.getSize());
-
-    char tempString[30];
-    sprintf(tempString, "resources/turret%d-0.png", baseType + 1);
-    turretTexture.loadFromFile(tempString);
-    turret.setTexture(&turretTexture);
-
-    sprintf(tempString, "resources/base%d-0.png", baseType + 1);
-    baseTexture.loadFromFile(tempString);
-    base.setTexture(&baseTexture);
+    baseTexture = tempBase;
+    base.setTexture(baseTexture);
+    turretTexture = tempTurret;
+    turret.setTexture(turretTexture);
 
     turret.setRotation(rand() % 360);
 
-    for (unsigned int i = 0; i < 3; ++i)
-    {
-        char tempString[30];
-        sprintf(tempString, "resources/level%d.png", i + 1);
-        levelTexture[i].loadFromFile(tempString);
-    }
+    levelTexture[0] = temp1;
+    levelTexture[1] = temp2;
+    levelTexture[2] = temp3;
 
     enemies = tempEnemies;
     allies = tempAllies;
@@ -40,6 +32,8 @@ Tower::Tower(std::vector<Creep*>* tempEnemies, std::vector<Creep*>* tempAllies, 
 
     rateCount = stats.fireRate;
     totalCost = stats.cost;
+
+    sold = false;
 
     if (stats.type >= 8)
     {
@@ -235,11 +229,6 @@ std::string Tower::getUpgradeInfo(int a)
     return temp1;
 }
 
-int Tower::getSell()
-{
-    return totalCost / 2;
-}
-
 /***************************************************************/
 /*******************SETTERS*************************************/
 /***************************************************************/
@@ -267,12 +256,26 @@ void Tower::setCoordinates(sf::Vector2i i)
     level.setPosition(position + (sf::Vector2f)Tower::getSize() - (sf::Vector2f){1, 1});
 }
 
+void Tower::setTextures(sf::Texture * tempBase, sf::Texture * tempTurret)
+{
+    baseTexture = tempBase;
+    turretTexture = tempTurret;
+
+    base.setTexture(baseTexture);
+    turret.setTexture(turretTexture);
+}
+
 /***************************************************************/
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
 
 Projectile * Tower::update()
 {
+    if (sold)
+    {
+        return NULL;
+    }
+
     std::vector<Creep*> * temp;
     if ((type.x == 1 && type.y == 3) || (type.x == 2 && type.y == 3))
     {
@@ -366,21 +369,13 @@ void Tower::upgrade(int i)
     if (type.y == 0)
     {
         type.y = i;
-        char tempString[30];
-        sprintf(tempString, "resources/turret%d-%d.png", type.x, type.y);
-        turretTexture.loadFromFile(tempString);
-        turret.setTexture(&turretTexture);
-
-        sprintf(tempString, "resources/base%d-%d.png", type.x, type.y);
-        baseTexture.loadFromFile(tempString);
-        base.setTexture(&baseTexture);
     }
     else
     {
         if (i == 1) //first button pressed, since there is only 1 upgrade available at this point
         {
             type.z++;
-            level.setTexture(&levelTexture[type.z - 1]);
+            level.setTexture(levelTexture[type.z - 1]);
         }
     }
 
@@ -410,4 +405,10 @@ void Tower::updateStats()
             totalCost += towerStats[type.x - 1][type.y][i].cost;
         }
     }
+}
+
+int Tower::sell()
+{
+    sold = true;
+    return totalCost / 2;
 }

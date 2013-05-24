@@ -147,6 +147,11 @@ class Game
         sf::Texture transparent;
         sf::Texture buffs[5];
         sf::Texture creepBody[4];
+        sf::Texture towerBases[3][4];
+        sf::Texture towerTurrets[3][4];
+        sf::Texture levels[3];
+        sf::Texture projectileTextures[12];
+        sf::Texture explosionTextures[12];
 };
 
 #endif // GAME_H

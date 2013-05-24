@@ -62,13 +62,10 @@ Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Towe
             break;
     }
 
-    char temp[40];
-    sprintf(temp, "resources/explosion%d.png", tempType);
-    graphicTexture.loadFromFile(temp);
-    sprintf(temp, "resources/projectile%d.png", tempType);
-    texture.loadFromFile(temp);
+    texture = NULL;
+    graphicTexture = NULL;
 
-    image.setTexture(&texture);
+    image.setTexture(texture);
     image.setPosition(pos);
     image.setOrigin(image.getSize().x / 2, image.getSize().y / 2);
 
@@ -101,6 +98,11 @@ Projectile::~Projectile()
 /*******************GETTERS*************************************/
 /***************************************************************/
 
+int Projectile::getType()
+{
+    return type;
+}
+
 bool Projectile::isDead()
 {
     return dead;
@@ -110,6 +112,13 @@ bool Projectile::isDead()
 /*******************SETTERS*************************************/
 /***************************************************************/
 
+void Projectile::setTextures(sf::Texture * tempBody, sf::Texture * tempExplosion)
+{
+    texture = tempBody;
+    graphicTexture = tempExplosion;
+    image.setTexture(texture);
+}
+
 /***************************************************************/
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
@@ -118,7 +127,7 @@ void Projectile::update()
 {
     if (animate == true)
     {
-        if (animation > graphicTexture.getSize().x - graphicSize.x)
+        if (animation > graphicTexture->getSize().x - graphicSize.x)
         {
             dead = true;
             return;
@@ -160,7 +169,7 @@ void Projectile::update()
             animate = true;
             image.setSize(graphicSize);
             image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
-            image.setTexture(&graphicTexture);
+            image.setTexture(graphicTexture);
             return;
         }
         else
@@ -172,7 +181,7 @@ void Projectile::update()
                     animate = true;
                     image.setSize(graphicSize);
                     image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
-                    image.setTexture(&graphicTexture);
+                    image.setTexture(graphicTexture);
                     return;
                 }
 
@@ -208,7 +217,7 @@ void Projectile::update()
                             animate = true;
                             image.setSize(graphicSize);
                             image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
-                            image.setTexture(&graphicTexture);
+                            image.setTexture(graphicTexture);
                             return;
                         }
                     }
@@ -217,7 +226,7 @@ void Projectile::update()
                         animate = true;
                         image.setSize(graphicSize);
                         image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
-                        image.setTexture(&graphicTexture);
+                        image.setTexture(graphicTexture);
                         return;
                     }
                 }
@@ -272,7 +281,7 @@ void Projectile::update()
                     animate = true;
                     image.setSize(graphicSize);
                     image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
-                    image.setTexture(&graphicTexture);
+                    image.setTexture(graphicTexture);
                     return;
                 }
 

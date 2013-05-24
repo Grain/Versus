@@ -14,7 +14,10 @@ class Projectile
         Projectile();
         virtual ~Projectile();
         //getters
+        int getType();
         bool isDead();
+        //setters
+        void setTextures(sf::Texture*, sf::Texture*);
         //functions
         void update();
         void draw(sf::RenderTarget*);
@@ -28,10 +31,10 @@ class Projectile
         int animation;
 
         sf::Vector2f graphicSize;       //stuff for the picture that appears when the projectile is destroyed (an explosion, particles, etc.)
-        sf::Texture graphicTexture;
+        sf::Texture * graphicTexture;
 
         sf::RectangleShape image;
-        sf::Texture texture;
+        sf::Texture * texture;
 
         double speed;   //actual speed is this * 4
         int damage;

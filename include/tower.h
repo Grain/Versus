@@ -12,7 +12,7 @@ class Tower
 {
     public:
         //ctor/dtor
-        Tower(std::vector<Creep*>*, std::vector<Creep*>*, int);
+        Tower(std::vector<Creep*>*, std::vector<Creep*>*, int, sf::Texture*, sf::Texture*, sf::Texture*, sf::Texture*, sf::Texture*);
         Tower();
         virtual ~Tower();
         //getters
@@ -24,15 +24,16 @@ class Tower
         sf::Vector3i getType();
         std::string getCurrentInfo();
         std::string getUpgradeInfo(int);
-        int getSell();
         //setters
         void setRotation(double);
         void setRotationTarget(sf::Vector2f);
         void setCoordinates(sf::Vector2i);
+        void setTextures(sf::Texture*, sf::Texture*);
         //functions
         Projectile * update();
         void draw(sf::RenderTarget*);
         void upgrade(int);
+        int sell();
     protected:
     private:
         //functions
@@ -42,9 +43,10 @@ class Tower
         sf::RectangleShape base;    //40x40 base
         sf::RectangleShape turret;  //40x40 turret, can spin around (use transparent image to make smaller visual turret)
         sf::RectangleShape level;
-        sf::Texture baseTexture;
-        sf::Texture turretTexture;
-        sf::Texture levelTexture[3];
+        sf::RectangleShape soldOverlay;
+        sf::Texture * baseTexture;
+        sf::Texture * turretTexture;
+        sf::Texture * levelTexture[3];
         sf::Vector2i coordinates;
         sf::Vector2f position;
         sf::Vector3i type;  //x = primary (1-3), y = secondary(1-3), z = upgrade level(0-9)
@@ -56,6 +58,8 @@ class Tower
         int rateCount;
         int aoe;
         int totalCost;
+
+        bool sold;
 };
 
 #endif // TOWER_H

@@ -223,6 +223,47 @@ Game::Game()
         creepBody[a].loadFromFile(temp);
     }
 
+    for (int a = 1; a < 4; ++a) //tower bases
+    {
+        for (int b = 0; b < 4; ++b)
+        {
+            char temp[40];
+            sprintf(temp, "resources/base%d-%d.png", a, b);
+            towerBases[a - 1][b].loadFromFile(temp);
+        }
+    }
+
+    for (int a = 1; a < 4; ++a) //tower turrets
+    {
+        for (int b = 0; b < 4; ++b)
+        {
+            char temp[40];
+            sprintf(temp, "resources/turret%d-%d.png", a, b);
+            towerTurrets[a - 1][b].loadFromFile(temp);
+        }
+    }
+
+    for (int a = 1; a < 4; ++a)
+    {
+        char temp[40];
+        sprintf(temp, "resources/level%d.png", a);
+        levels[a - 1].loadFromFile(temp);
+    }
+
+    for (int a = 0; a < 12; ++a)
+    {
+        char temp[40];
+        sprintf(temp, "resources/projectile%d.png", a);
+        projectileTextures[a].loadFromFile(temp);
+    }
+
+    for (int a = 0; a < 12; ++a)
+    {
+        char temp[40];
+        sprintf(temp, "resources/explosion%d.png", a);
+        explosionTextures[a].loadFromFile(temp);
+    }
+
     ////////////////
 
     if (settings.doubleBuffered)
@@ -737,6 +778,7 @@ int Game::update(sf::Vector2i mousePos)
                 Projectile * temp = towers[i]->update();
                 if (temp != NULL)
                 {
+                    temp->setTextures(&projectileTextures[temp->getType()], &explosionTextures[temp->getType()]);
                     projectiles.push_back(temp);
                 }
             }
@@ -1577,7 +1619,7 @@ void Game::newTower(sf::Vector2i i, int type)
                     }
                     else    //everything OK, build
                     {
-                        towers.push_back(new Tower(&creeps[abs(temp - 1)], &creeps[temp], type));
+                        towers.push_back(new Tower(&creeps[abs(temp - 1)], &creeps[temp], type, &towerBases[type][0], &towerTurrets[type][0], &levels[0], &levels[1], &levels[2]));
                         towers[towers.size() - 1]->setCoordinates(i);
                         money[temp] -= towerStats[type][0][0].cost;
                     }
@@ -1905,6 +1947,7 @@ void Game::buttonPressed(int player, int button)
                                     {
                                         money[player] -= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost;
                                         tempTower->upgrade(button + 1);
+                                        tempTower->setTextures(&towerBases[tempTower->getType().x - 1][tempTower->getType().y], &towerTurrets[tempTower->getType().x - 1][tempTower->getType().y]);
                                     }
                                     else
                                     {
@@ -1918,6 +1961,7 @@ void Game::buttonPressed(int player, int button)
                                 {
                                     money[player] -= towerStats[tempTower->getType().x - 1][button + 1][0].cost;
                                     tempTower->upgrade(button + 1);
+                                    tempTower->setTextures(&towerBases[tempTower->getType().x - 1][tempTower->getType().y], &towerTurrets[tempTower->getType().x - 1][tempTower->getType().y]);
                                 }
                                 else
                                 {
@@ -1942,6 +1986,7 @@ void Game::buttonPressed(int player, int button)
                                     {
                                         money[player] -= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost;
                                         tempTower->upgrade(button + 1);
+                                        tempTower->setTextures(&towerBases[tempTower->getType().x - 1][tempTower->getType().y], &towerTurrets[tempTower->getType().x - 1][tempTower->getType().y]);
                                     }
                                     else
                                     {
@@ -1955,6 +2000,7 @@ void Game::buttonPressed(int player, int button)
                                 {
                                     money[player] -= towerStats[tempTower->getType().x - 1][button + 1][0].cost;
                                     tempTower->upgrade(button + 1);
+                                    tempTower->setTextures(&towerBases[tempTower->getType().x - 1][tempTower->getType().y], &towerTurrets[tempTower->getType().x - 1][tempTower->getType().y]);
                                 }
                                 else
                                 {
