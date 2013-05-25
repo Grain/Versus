@@ -136,6 +136,8 @@ class Game
         int interval[2];
         int timeLeft[2];
         int amountLeft[2];
+        int upgradeAmount[3];
+        int upgradeCost[3];
 
         std::vector<sf::Vector2i> towersSold;
 
@@ -154,6 +156,7 @@ class Game
         sf::Texture levels[3];
         sf::Texture projectileTextures[12];
         sf::Texture explosionTextures[12];
+        sf::Texture creepUpgradeTexture;
 };
 
 #endif // GAME_H

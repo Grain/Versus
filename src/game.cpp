@@ -67,6 +67,14 @@ Game::Game()
     pauseText.setColor(sf::Color::White);
     pauseText.setPosition(XRES / 2, 100);
 
+    upgradeAmount[0] = 50;  //speed
+    upgradeAmount[1] = 100; //tank
+    upgradeAmount[2] = 25; //flying
+
+    upgradeCost[0] = 200;  //speed
+    upgradeCost[1] = 200; //tank
+    upgradeCost[2] = 200; //flying
+
     for (int i = 0; i < 2; ++i)
     {
         ranges[i].setFillColor(sf::Color::Transparent);
@@ -264,6 +272,8 @@ Game::Game()
         explosionTextures[a].loadFromFile(temp);
     }
 
+    creepUpgradeTexture.loadFromFile("resources/creepUpgrade.png");
+
     ////////////////
 
     if (settings.doubleBuffered)
@@ -341,9 +351,7 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
     middleCoordinates[0] = middleCoordinates[1] = 0;
     buttonCoordinates[0] = buttonCoordinates[1] = 0;
 
-    money[0] = money[1] = 100;  //temp
-    moneyText[0].setString("$100");
-    moneyText[1].setString("$100");
+    money[0] = money[1] = 500;  //temp
 
     pauseText.setString("Paused");
     pauseText.setOrigin(pauseText.getGlobalBounds().width / 2, pauseText.getGlobalBounds().height / 2);
@@ -509,6 +517,11 @@ void Game::draw(sf::RenderWindow * window)
 
     for(int i = begin; i < end; ++i)
     {
+        for(int a = 4; a < 11; ++a)
+        {
+            gameButtons[i][a].draw(temp);
+        }
+
         if (selected[i])
         {
             temp->draw(buttonSelector[i]);
@@ -521,11 +534,6 @@ void Game::draw(sf::RenderWindow * window)
         else
         {
             temp->draw(selector[i]);
-        }
-
-        for(int a = 4; a < 11; ++a)
-        {
-            gameButtons[i][a].draw(temp);
         }
 
         if (notificationTimer[i] > 0)
@@ -749,13 +757,28 @@ int Game::update(sf::Vector2i mousePos)
                 {
                     if (creeps[b][i]->isDead())
                     {
+                        //+money
+                        money[abs(b - 1)] += 50;    //const?
+                        int tempAmount = 50 - creeps[b][i]->getProgress().x;
+                        if (tempAmount < 0)
+                        {
+                            tempAmount = 0;
+                        }
+                        if (tempAmount > 50)
+                        {
+                            tempAmount = 50;
+                        }
+                        money[b] += tempAmount;
+
                         delete creeps[b][i];
                         creeps[b][i] = NULL;
                         creeps[b].erase(creeps[b].begin() + i);
                         --i;
                         continue;
                     }
+
                     int status = creeps[b][i]->update();
+
                     if (status == 1)     //explode!
                     {
                         temp.push_back(gridPosition((sf::Vector2i)creeps[b][i]->getPosition()));
@@ -875,8 +898,8 @@ int Game::update(sf::Vector2i mousePos)
                     interval[i] = (20.0 / creepQueue[i][0]->amount) * FPS;  //spawn creeps over 20 seconds
                     timeLeft[i] = 0;
 
-                    creepStats[i][0].hp += 50;
-                    creepStats[i][0].amount++;
+                    creepStats[i][0].hp += 25;
+                    creepStats[i][0].amount += 2;
 
                     updateButtons(i);
                 }
@@ -1897,7 +1920,15 @@ void Game::buttonPressed(int player, int button)
         {
             if (button == 0)    //only 1 upgrade available per creep
             {
-                //upgrade
+                if (money[player] >= upgradeCost[buttonCoordinates[player] - 8])
+                {
+                    creepStats[player][buttonCoordinates[player] - 7].hp += upgradeAmount[buttonCoordinates[player] - 8];
+                    money[player] -= upgradeCost[buttonCoordinates[player] - 8];
+                }
+                else
+                {
+                    notify(player, "Not enough money");
+                }
             }
         }
     }
@@ -1937,62 +1968,43 @@ void Game::buttonPressed(int player, int button)
             else    //upgrade
             {
                 Tower * tempTower = towerAt(selectorCoordinates[player]);
-                if (tempTower->getType().z >= 3)
+                if (tempTower->isSold())
                 {
-                    //max lvl
+                    notify(player, "This tower has been sold");
                 }
                 else
                 {
-                    if (player == 0)
+                    if (tempTower->getType().z >= 3)
                     {
-                        if (selectorCoordinates[player].x < GRIDX)
-                        {
-                            if (tempTower->getType().y != 0)
-                            {
-                                if (button == 0)  //upgrade secondary
-                                {
-                                    if (money[player] >= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost)
-                                    {
-                                        money[player] -= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost;
-                                        tempTower->upgrade(button + 1);
-                                        tempTower->setTextures(&towerBases[tempTower->getType().x - 1][tempTower->getType().y], &towerTurrets[tempTower->getType().x - 1][tempTower->getType().y]);
-                                    }
-                                    else
-                                    {
-                                        notify(player, "Not enough money");
-                                    }
-                                }
-                            }
-                            else    //new tower type
-                            {
-                                if (money[player] >= towerStats[tempTower->getType().x - 1][button + 1][0].cost)
-                                {
-                                    money[player] -= towerStats[tempTower->getType().x - 1][button + 1][0].cost;
-                                    tempTower->upgrade(button + 1);
-                                    tempTower->setTextures(&towerBases[tempTower->getType().x - 1][tempTower->getType().y], &towerTurrets[tempTower->getType().x - 1][tempTower->getType().y]);
-                                }
-                                else
-                                {
-                                    notify(player, "Not enough money");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            //trying to upgrade enemy tower
-                        }
+                        //max lvl
                     }
                     else
                     {
-                        if (selectorCoordinates[player].x > GRIDX + MIDDLE - 1)
+                        if (player == 0)
                         {
-                            if (tempTower->getType().y != 0)
+                            if (selectorCoordinates[player].x < GRIDX)
                             {
-                                if (button == 0)  //upgrade secondary
+                                if (tempTower->getType().y != 0)
                                 {
-                                    if (money[player] >= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost)
+                                    if (button == 0)  //upgrade secondary
                                     {
-                                        money[player] -= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost;
+                                        if (money[player] >= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost)
+                                        {
+                                            money[player] -= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost;
+                                            tempTower->upgrade(button + 1);
+                                            tempTower->setTextures(&towerBases[tempTower->getType().x - 1][tempTower->getType().y], &towerTurrets[tempTower->getType().x - 1][tempTower->getType().y]);
+                                        }
+                                        else
+                                        {
+                                            notify(player, "Not enough money");
+                                        }
+                                    }
+                                }
+                                else    //new tower type
+                                {
+                                    if (money[player] >= towerStats[tempTower->getType().x - 1][button + 1][0].cost)
+                                    {
+                                        money[player] -= towerStats[tempTower->getType().x - 1][button + 1][0].cost;
                                         tempTower->upgrade(button + 1);
                                         tempTower->setTextures(&towerBases[tempTower->getType().x - 1][tempTower->getType().y], &towerTurrets[tempTower->getType().x - 1][tempTower->getType().y]);
                                     }
@@ -2002,26 +2014,53 @@ void Game::buttonPressed(int player, int button)
                                     }
                                 }
                             }
-                            else    //new tower type
+                            else
                             {
-                                if (money[player] >= towerStats[tempTower->getType().x - 1][button + 1][0].cost)
-                                {
-                                    money[player] -= towerStats[tempTower->getType().x - 1][button + 1][0].cost;
-                                    tempTower->upgrade(button + 1);
-                                    tempTower->setTextures(&towerBases[tempTower->getType().x - 1][tempTower->getType().y], &towerTurrets[tempTower->getType().x - 1][tempTower->getType().y]);
-                                }
-                                else
-                                {
-                                    notify(player, "Not enough money");
-                                }
+                                //trying to upgrade enemy tower
                             }
                         }
                         else
                         {
-                            //trying to upgrade enemy tower
+                            if (selectorCoordinates[player].x > GRIDX + MIDDLE - 1)
+                            {
+                                if (tempTower->getType().y != 0)
+                                {
+                                    if (button == 0)  //upgrade secondary
+                                    {
+                                        if (money[player] >= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost)
+                                        {
+                                            money[player] -= towerStats[tempTower->getType().x - 1][tempTower->getType().y][tempTower->getType().z + 1].cost;
+                                            tempTower->upgrade(button + 1);
+                                            tempTower->setTextures(&towerBases[tempTower->getType().x - 1][tempTower->getType().y], &towerTurrets[tempTower->getType().x - 1][tempTower->getType().y]);
+                                        }
+                                        else
+                                        {
+                                            notify(player, "Not enough money");
+                                        }
+                                    }
+                                }
+                                else    //new tower type
+                                {
+                                    if (money[player] >= towerStats[tempTower->getType().x - 1][button + 1][0].cost)
+                                    {
+                                        money[player] -= towerStats[tempTower->getType().x - 1][button + 1][0].cost;
+                                        tempTower->upgrade(button + 1);
+                                        tempTower->setTextures(&towerBases[tempTower->getType().x - 1][tempTower->getType().y], &towerTurrets[tempTower->getType().x - 1][tempTower->getType().y]);
+                                    }
+                                    else
+                                    {
+                                        notify(player, "Not enough money");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //trying to upgrade enemy tower
+                            }
                         }
                     }
                 }
+
                 if (settings.selectAfterUpgrade == false)
                 {
                     selected[player] = false;
@@ -2115,7 +2154,7 @@ void Game::updateButtons(int player)
             }
             else        //creep list
             {
-                //i guess show the upgrade avilable?
+                gameButtons[player][4].setTexture(&creepUpgradeTexture);
             }
         }
         else
@@ -2234,7 +2273,7 @@ std::string Game::creepData(int side, int type)
 {
     std::string temp1("");
     char temp2[200];
-    sprintf(temp2, "Creep type %d", type);
+    sprintf(temp2, "Creep type %d\namount: %d\nhp: %d\nspeed: %.1f", type, creepStats[side][type].amount, creepStats[side][type].hp, creepStats[side][type].speed);
     temp1 += temp2;
     return temp1;
 }
