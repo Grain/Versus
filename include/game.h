@@ -138,6 +138,8 @@ class Game
         int amountLeft[2];
         int upgradeAmount[3];
         int upgradeCost[3];
+        sf::Text creepTime[2][3];
+        sf::RectangleShape creepOverlay[2][3];
 
         std::vector<sf::Vector2i> towersSold;
 

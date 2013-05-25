@@ -129,6 +129,17 @@ Game::Game()
             gameButtons[i][8 + a].initialize(40, 40);
             gameButtons[i][8 + a].setPosition({(float)(offset + a * (gameButtons[i][8 + a].getSize().x + spacing)), 510});
             gameButtons[i][8 + a].setVisible(true);
+
+            //creep cooldown text and overlay
+
+            creepOverlay[i][a].setSize(gameButtons[i][8 + a].getSize());
+            creepOverlay[i][a].setFillColor(sf::Color(0, 0, 0, 128));
+            creepOverlay[i][a].setPosition(gameButtons[i][8 + a].getPosition());
+
+            creepTime[i][a].setCharacterSize(14);
+            creepTime[i][a].setColor(sf::Color::Black);
+            creepTime[i][a].setString("");
+            creepTime[i][a].setPosition(gameButtons[i][8 + a].getPosition().x + 5, gameButtons[i][8 + a].getPosition().y + 5);
         }
 
         //money
@@ -408,21 +419,21 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
         creepStats[i][0].type = 0;
 
         creepStats[i][1].amount = 5;
-        creepStats[i][1].cooldown = 0;
+        creepStats[i][1].cooldown = 170 * FPS;  //2:50 cooldown, 5 waves
         creepStats[i][1].hp = 50;
         creepStats[i][1].speed = 4;
         creepStats[i][1].timeLeft = 0;
         creepStats[i][1].type = 1;
 
         creepStats[i][2].amount = 5;
-        creepStats[i][2].cooldown = 0;
+        creepStats[i][2].cooldown = 170 * FPS;
         creepStats[i][2].hp = 200;
         creepStats[i][2].speed = 1;
         creepStats[i][2].timeLeft = 0;
         creepStats[i][2].type = 2;
 
         creepStats[i][3].amount = 5;
-        creepStats[i][3].cooldown = 0;
+        creepStats[i][3].cooldown = 170 * FPS;
         creepStats[i][3].hp = 50;
         creepStats[i][3].speed = 2;
         creepStats[i][3].timeLeft = 0;
@@ -520,6 +531,15 @@ void Game::draw(sf::RenderWindow * window)
         for(int a = 4; a < 11; ++a)
         {
             gameButtons[i][a].draw(temp);
+        }
+
+        for (int a = 0; a < 3; ++a)
+        {
+            if (creepTime[i][a].getString() != "")
+            {
+                temp->draw(creepOverlay[i][a]);
+                temp->draw(creepTime[i][a]);
+            }
         }
 
         if (selected[i])
@@ -879,6 +899,7 @@ int Game::update(sf::Vector2i mousePos)
             {
                 wave++;
 
+
                 //remove sold towers
                 for (unsigned int i = 0; i < towersSold.size(); ++i)
                 {
@@ -890,6 +911,15 @@ int Game::update(sf::Vector2i mousePos)
                 {
                     //move up things in the queue
                     creepQueue[i][0] = creepQueue[i][1];
+                    if (creepQueue[i][0]->timeLeft > 0) //creep has not cooled down
+                    {
+                        creepQueue[i][0] = &creepStats[i][0];
+                        notify(i, "You cannot use this creep yet!");
+                    }
+                    else    //creep is usable, so set the cooldown timer
+                    {
+                        creepQueue[i][0]->timeLeft = creepQueue[i][0]->cooldown;
+                    }
                     creepQueue[i][1] = creepQueue[i][2];
                     creepQueue[i][2] = creepQueue[i][3];
                     creepQueue[i][3] = &creepStats[i][0];   //latest in queue should be the default creep type
@@ -916,7 +946,7 @@ int Game::update(sf::Vector2i mousePos)
             speedBackground.setTextureRect(sf::IntRect(speedUpAnimation, 0, speedBackground.getSize().x, speedBackground.getSize().y));
         }
 
-        for (int i = 0; i < 2; ++i) //update money text and lives text and notifications
+        for (int i = 0; i < 2; ++i) //update money text and lives text and notifications and creep timers text
         {
             char temp[20];
             sprintf(temp, "$%d", money[i]);
@@ -924,6 +954,19 @@ int Game::update(sf::Vector2i mousePos)
 
             sprintf(temp, "Lives: %d", lives[i]);
             livesText[i].setString(temp);
+
+            for (int a = 0; a < 3; ++a)
+            {
+                if (creepStats[i][a + 1].timeLeft > 0)
+                {
+                    sprintf(temp, "%d", creepStats[i][a + 1].timeLeft / FPS + 1);
+                    creepTime[i][a].setString(temp);
+                }
+                else
+                {
+                    creepTime[i][a].setString("");
+                }
+            }
 
             if (lives[i] <= 0)
             {
