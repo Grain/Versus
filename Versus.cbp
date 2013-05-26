@@ -40,6 +40,7 @@
 		</Compiler>
 		<Linker>
 			<Add option="-lsfml-graphics-s" />
+			<Add option="-lsfml-audio-s" />
 			<Add option="-lsfml-window-s" />
 			<Add option="-lsfml-system-s" />
 			<Add option="-static" />
@@ -48,6 +49,7 @@
 		<Unit filename="include\button.h" />
 		<Unit filename="include\creep.h" />
 		<Unit filename="include\game.h" />
+		<Unit filename="include\gameaudio.h" />
 		<Unit filename="include\global.h" />
 		<Unit filename="include\menu.h" />
 		<Unit filename="include\projectile.h" />
@@ -56,6 +58,7 @@
 		<Unit filename="src\button.cpp" />
 		<Unit filename="src\creep.cpp" />
 		<Unit filename="src\game.cpp" />
+		<Unit filename="src\gameaudio.cpp" />
 		<Unit filename="src\global.cpp" />
 		<Unit filename="src\menu.cpp" />
 		<Unit filename="src\projectile.cpp" />

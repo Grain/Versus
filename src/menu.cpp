@@ -578,6 +578,9 @@ void Menu::updateSettings()
     settingsText[28]->setString(temp);
     sprintf(temp, "Hotkey 4: %s", keyNames[settings.rightPlayer.hotkey4]);
     settingsText[29]->setString(temp);
+
+    //update audio volume
+    gameAudio.update();
 }
 
 void Menu::bindKey()

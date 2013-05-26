@@ -2,11 +2,13 @@
 #include <SFML/Window.hpp>
 
 #include <cstring>
-#include "game.h"
 #include "global.h"
+#include "game.h"
 #include "menu.h"
+#include "gameaudio.h"
 
 Settings settings;
+GameAudio gameAudio;
 Stats towerStats[3][4][4];
 std::string descriptions[12];
 
@@ -31,6 +33,8 @@ int main(int argc, char *argv[])
     Menu menu;
     bool inGame = false;
     bool focused = true;
+
+    gameAudio.update();
 
     srand(time(NULL));
 

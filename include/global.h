@@ -4,6 +4,10 @@
 #include <cstdio>
 #include <cmath>
 #include <SFML/Graphics.hpp>
+#include "gameaudio.h"
+
+//forward declaration
+class GameAudio;
 
 struct Keys
 {
@@ -58,6 +62,7 @@ double distance(sf::Vector2f, sf::Vector2f);
 void initializeStats();
 
 extern Settings settings;
+extern GameAudio gameAudio;
 extern Stats towerStats[3][4][4];
 extern std::string descriptions[12];
 
