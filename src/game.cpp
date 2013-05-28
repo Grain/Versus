@@ -685,7 +685,7 @@ int Game::update(sf::Vector2i mousePos)
                 }
             }
 
-            if (showRange == false)
+            if (showRange == false || outOfGrid[i])
             {
                 visibleRanges[i] = false;
             }

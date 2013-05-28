@@ -34,8 +34,6 @@ int main(int argc, char *argv[])
     bool inGame = false;
     bool focused = true;
 
-    gameAudio.update();
-
     srand(time(NULL));
 
     window.setFramerateLimit(FPS);

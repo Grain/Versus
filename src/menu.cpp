@@ -16,6 +16,7 @@ Menu::Menu()
     }
 
     readSettings();
+    gameAudio.update();
 
     background.setSize({XRES, YRES});
     background.setPosition(0, 0);

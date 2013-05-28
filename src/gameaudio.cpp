@@ -8,6 +8,7 @@ GameAudio::GameAudio()
 {
     music.openFromFile("resources/test.wav");
     music.setLoop(true);
+    music.setVolume(settings.musicVolume * 10);
     music.play();
 
     buffer[0].loadFromFile("resources/test1.wav");
