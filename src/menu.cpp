@@ -322,7 +322,7 @@ int Menu::update(sf::Vector2i mousePos)
                         }
                         break;
                     case 1: //multi player
-                        return 2;
+                        return 5;
                         break;
                     case 2: //go to settings
                         for (unsigned int a = 0; a < mainMenu.size(); ++a)
@@ -432,13 +432,13 @@ int Menu::update(sf::Vector2i mousePos)
                         return 1;
                         break;
                     case 2: //mission 2
-                        return 1;
+                        return 2;
                         break;
                     case 3: //mission 3
-                        return 1;
+                        return 3;
                         break;
                     case 4: //mission 4
-                        return 1;
+                        return 4;
                         break;
                 }
             }

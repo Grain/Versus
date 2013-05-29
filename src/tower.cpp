@@ -197,7 +197,7 @@ std::string Tower::getUpgradeInfo(int a)
                     temp1 += temp2;
                     if (tempStats.type == 3)        //buff tower
                     {
-                        sprintf(temp2, "Buff amount: %d\n", tempStats.damage);
+                        sprintf(temp2, "Buff amount: %d (+%d)\n", tempStats.damage, tempStats.damage - stats.damage);
                     }
                     else if (tempStats.type == 7)       //aoe heal missile
                     {

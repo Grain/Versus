@@ -14,7 +14,7 @@ std::string descriptions[12];
 
 int main(int argc, char *argv[])
 {
-    settings.fastForwardSpeed = 8;      //not sure if i'll make these changable..
+    settings.fastForwardSpeed = 4;      //not sure if i'll make these changable..
     settings.doubleBuffered = false;
 
     initializeStats();
@@ -52,9 +52,11 @@ int main(int argc, char *argv[])
                     break;
                 case sf::Event::GainedFocus:
                     focused = true;
+                    gameAudio.resume();
                     break;
                 case sf::Event::LostFocus:
                     focused = false;
+                    gameAudio.pause();
                     break;
                 default:
                     break;
@@ -91,12 +93,24 @@ int main(int argc, char *argv[])
                     case 0:
                         break;
                     case 1:
-                        inGame = true;      //TODO: have a getter in menu for game options, and access that from here to make new game
-                        game.newGame(Game::left, sf::Color::Cyan, sf::Color::Magenta, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128));
+                        game.newGame(Game::left, sf::Color::Cyan, sf::Color::Magenta, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128), 1);
+                        inGame = true;
                         break;
                     case 2:
+                        game.newGame(Game::left, sf::Color::Cyan, sf::Color::Magenta, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128), 2);
                         inGame = true;
-                        game.newGame(Game::both, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128));
+                        break;
+                    case 3:
+                        game.newGame(Game::left, sf::Color::Cyan, sf::Color::Magenta, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128), 3);
+                        inGame = true;
+                        break;
+                    case 4:
+                        game.newGame(Game::left, sf::Color::Cyan, sf::Color::Magenta, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128), 4);
+                        inGame = true;
+                        break;
+                    case 5:
+                        inGame = true;
+                        game.newGame(Game::both, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128), 0);
                         break;
                     case 10:
                         window.close();

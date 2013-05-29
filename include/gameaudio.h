@@ -15,6 +15,8 @@ class GameAudio
         //functions
         void update();
         void play(GameAudio::sound);
+        void pause();
+        void resume();
     protected:
     private:
         sf::Music music;

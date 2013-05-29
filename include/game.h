@@ -24,7 +24,7 @@ class Game
         //functions
         int update(sf::Vector2i);
         void draw(sf::RenderWindow*);
-        void newGame(Players, sf::Color, sf::Color, sf::Color, sf::Color);
+        void newGame(Players, sf::Color, sf::Color, sf::Color, sf::Color, int);
     protected:
     private:
         static const int FILLED = 99999;
@@ -131,6 +131,7 @@ class Game
         sf::Text notifications[2];
         int notificationTimer[2];
 
+        CreepStats currentCreeps[2];
         CreepStats * creepQueue[2][4];
         CreepStats creepStats[2][4];
         int interval[2];
@@ -143,7 +144,13 @@ class Game
 
         std::vector<sf::Vector2i> towersSold;
 
-        //some cached textures for gameButtons[][]
+        //tutorial stuff
+        sf::RectangleShape tutorialBackground;
+        sf::Text tutorial;
+
+        int mission;    //0 = multiplayer, 1 - 4 = single player
+
+        //some cached textures
         sf::Texture towerIcons[3][4];
         sf::Texture sell;
         sf::Texture unselected;

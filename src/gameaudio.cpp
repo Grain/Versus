@@ -6,7 +6,7 @@
 
 GameAudio::GameAudio()
 {
-    music.openFromFile("resources/test.wav");
+    music.openFromFile("resources/music.wav");  //from http://freesound.org/people/djgriffin/sounds/172561/
     music.setLoop(true);
     music.setVolume(settings.musicVolume * 10);
     music.play();
@@ -57,4 +57,14 @@ void GameAudio::play(GameAudio::sound a)
             break;
         }
     }
+}
+
+void GameAudio::pause()
+{
+    music.pause();
+}
+
+void GameAudio::resume()
+{
+    music.play();
 }

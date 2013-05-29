@@ -68,12 +68,12 @@ Game::Game()
     pauseText.setPosition(XRES / 2, 100);
 
     upgradeAmount[0] = 50;  //speed
-    upgradeAmount[1] = 100; //tank
+    upgradeAmount[1] = 200; //tank
     upgradeAmount[2] = 25; //flying
 
-    upgradeCost[0] = 200;  //speed
-    upgradeCost[1] = 200; //tank
-    upgradeCost[2] = 200; //flying
+    upgradeCost[0] = 500;  //speed
+    upgradeCost[1] = 500; //tank
+    upgradeCost[2] = 500; //flying
 
     for (int i = 0; i < 2; ++i)
     {
@@ -166,6 +166,7 @@ Game::Game()
         notifications[i].setCharacterSize(24);
         notifications[i].setColor(sf::Color::Black);
         notifications[i].setString("test");
+
         if (i == 0)
         {
             notifications[i].setPosition(100, 335);
@@ -190,6 +191,16 @@ Game::Game()
             info[i].setPosition(gameButtons[i][3].getPosition().x + gameButtons[i][3].getSize().x + offset, 390);
         }
     }
+
+    //tutorial text
+    tutorial.setCharacterSize(16);
+    tutorial.setColor(sf::Color::Black);
+    tutorial.setPosition(XRES / 2 + 80, 440);
+    tutorial.setString("test");
+
+    tutorialBackground.setFillColor(sf::Color(0, 0, 0, 100));
+    tutorialBackground.setSize({tutorial.getGlobalBounds().width + 20, tutorial.getGlobalBounds().height + 20});
+    tutorialBackground.setPosition(tutorial.getGlobalBounds().left - 10, tutorial.getGlobalBounds().top - 10);
 
     //cached textures
     for (int a = 1; a < 4; ++a) //tower icons
@@ -333,9 +344,10 @@ Game::~Game()
 /*******************FUNCTIONS***********************************/
 /***************************************************************/
 
-void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSelector, sf::Color tempLeft, sf::Color tempRight)
+void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSelector, sf::Color tempLeft, sf::Color tempRight, int tempMission)
 {
     players = temp;
+    mission = tempMission;
 
     selector[0].setFillColor(leftSelector);
     buttonSelector[0].setFillColor(leftSelector);
@@ -413,21 +425,21 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
     {
         creepStats[i][0].amount = 5;
         creepStats[i][0].cooldown = 0;
-        creepStats[i][0].hp = 100;
+        creepStats[i][0].hp = 50;
         creepStats[i][0].speed = 2;
         creepStats[i][0].timeLeft = 0;
         creepStats[i][0].type = 0;
 
         creepStats[i][1].amount = 5;
         creepStats[i][1].cooldown = 170 * FPS;  //2:50 cooldown, 5 waves
-        creepStats[i][1].hp = 50;
+        creepStats[i][1].hp = 40;
         creepStats[i][1].speed = 4;
         creepStats[i][1].timeLeft = 0;
         creepStats[i][1].type = 1;
 
         creepStats[i][2].amount = 5;
         creepStats[i][2].cooldown = 170 * FPS;
-        creepStats[i][2].hp = 200;
+        creepStats[i][2].hp = 100;
         creepStats[i][2].speed = 1;
         creepStats[i][2].timeLeft = 0;
         creepStats[i][2].type = 2;
@@ -576,6 +588,13 @@ void Game::draw(sf::RenderWindow * window)
     temp->draw(speedBackground);
     temp->draw(fastForward);
 
+    //tutorial text
+    if (mission == 1)
+    {
+        temp->draw(tutorialBackground);
+        temp->draw(tutorial);
+    }
+
     pause.draw(temp);
 
     if(paused)
@@ -722,7 +741,21 @@ int Game::update(sf::Vector2i mousePos)
                 {
                     if (buttonCoordinates[i] < 4)      //creep queue
                     {
-                        info[i].setString(creepData(i, creepQueue[i][buttonCoordinates[i]]->type));     //show stats of creep in that spot in queue
+                        if (buttonCoordinates[i] == 0)  //show stats at time of new wave being spawned
+                        {
+                            if (wave != 0)
+                            {
+                                info[i].setString(creepData(i, currentCreeps[i].type));
+                            }
+                            else    //wave = 0; there is NO current wave
+                            {
+                                info[i].setString("");
+                            }
+                        }
+                        else
+                        {
+                            info[i].setString(creepData(i, creepQueue[i][buttonCoordinates[i]]->type));     //show stats of creep in that spot in queue
+                        }
                     }
                     else        //creep list
                     {
@@ -861,24 +894,24 @@ int Game::update(sf::Vector2i mousePos)
                     {
                         if (i == 0)
                         {
-                            if (creepQueue[0][0]->type != 3)
+                            if (currentCreeps[i].type != 3)
                             {
-                                creeps[0].push_back(new Creep(distancesRight, 0, creepQueue[0][0]->type, creepQueue[0][0]->speed, creepQueue[0][0]->hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[0][0]->type]));
+                                creeps[0].push_back(new Creep(distancesRight, 0, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type]));
                             }
                             else
                             {
-                                creeps[0].push_back(new Creep(flyingRight, 0, creepQueue[0][0]->type, creepQueue[0][0]->speed, creepQueue[0][0]->hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[0][0]->type]));
+                                creeps[0].push_back(new Creep(flyingRight, 0, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type]));
                             }
                         }
                         else
                         {
-                            if (creepQueue[1][0]->type != 3)
+                            if (currentCreeps[i].type != 3)
                             {
-                                creeps[1].push_back(new Creep(distancesLeft, 1, creepQueue[1][0]->type, creepQueue[1][0]->speed, creepQueue[1][0]->hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[1][0]->type]));
+                                creeps[1].push_back(new Creep(distancesLeft, 1, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type]));
                             }
                             else
                             {
-                                creeps[1].push_back(new Creep(flyingLeft, 1, creepQueue[1][0]->type, creepQueue[1][0]->speed, creepQueue[1][0]->hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[1][0]->type]));
+                                creeps[1].push_back(new Creep(flyingLeft, 1, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type]));
                             }
                         }
                         timeLeft[i] = interval[i];
@@ -898,7 +931,6 @@ int Game::update(sf::Vector2i mousePos)
             if (time > wave * 30)   //new wave
             {
                 wave++;
-
 
                 //remove sold towers
                 for (unsigned int i = 0; i < towersSold.size(); ++i)
@@ -920,6 +952,8 @@ int Game::update(sf::Vector2i mousePos)
                     {
                         creepQueue[i][0]->timeLeft = creepQueue[i][0]->cooldown;
                     }
+                    currentCreeps[i] = *creepQueue[i][0];   //make a copy of the creep stats at THIS TIME
+
                     creepQueue[i][1] = creepQueue[i][2];
                     creepQueue[i][2] = creepQueue[i][3];
                     creepQueue[i][3] = &creepStats[i][0];   //latest in queue should be the default creep type
@@ -1608,23 +1642,6 @@ void Game::keyboardSelector(sf::Vector2i mousePos)
         else
         {
             prevKeys[i].hotkey4 = false;
-        }
-
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
-        {
-            creeps[0].push_back(new Creep(distancesRight, 0, 0, 1, 50, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[0][0]->type]));
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
-        {
-            creeps[1].push_back(new Creep(distancesLeft, 1, 0, 1, 50, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[creepQueue[1][0]->type]));
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::N))
-        {
-            money[0] += 100;
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Multiply))
-        {
-            money[1] += 100;
         }
 
         if (selectorCoordinates[i].y < 0)
