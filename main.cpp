@@ -14,7 +14,7 @@ std::string descriptions[12];
 
 int main(int argc, char *argv[])
 {
-    settings.fastForwardSpeed = 4;      //not sure if i'll make these changable..
+    settings.fastForwardSpeed = 8;      //not sure if i'll make these changable..
     settings.doubleBuffered = false;
 
     initializeStats();

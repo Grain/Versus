@@ -1,6 +1,9 @@
 #include "game.h"
 
 const char * const Game::baseStats[] = {"Tower 1\n", "Tower 2\n", "Tower 3\n", ""};
+const char * const Game::tutorialText1[] = {"Welcome to the Versus tutorial! Make sure you are\nfamiliar with your controls, viewable in the settings menu.", "Versus is a two player tower defence game. You must\ndefend your base while attacking your enemy's base.", "Every 30 seconds, a wave of creeps will spawn.", "When a creep reaches the enemy base, they will lose a life.", "The object of the game is to reduce your opponent's lives\nto 0.", "To do this, you must upgrade your creeps and defend\nyourself against the enemy's creeps using towers. Both\nof these require money.", "There are two ways of earning money. Every time an\nenemy creep is killed, you gain $50.", "Every time one of your creeps is killed, you gain between\n$0 to $50. The closer the creep was to the enemy's base\nwhen it was killed, the more you will earn.", "Don't forget to fast forward or pause using the buttons to the\nleft. You can also press esc to pause and use a custom\nhotkey to fast forward.", " "};
+const char * const Game::tutorialText2[] = {"Welcome to the Versus defence tutorial!", "Towers are used to defend your base against enemy\ncreeps. Try selecting a box on your side of the grid and\nbuilding a tower. By moving your selector over different\ntowers, you can see descriptions and statistics of towers.", "Hopefully you built your tower in the path of this enemy\ncreep! Move your selector over the tower to see its range.\nTowers will only fire at creeps if they are in range.", "Select the tower you just created, and upgrade it. You'll\nnotice you have 3 choices. When you first build a tower,\nit is a basic tower. You can upgrade it to one of 3\nsecondary towers. There are 3 basic towers in the game,\nand therefore 9 secondary towers.", "Select the tower again. You'll notice there is only 1 upgrade.\nSecondary towers can be upgraded to a maximum of 3\nlevels. These levels are shown on the tower as yellow\nsquares.", "Build another tower, then select it and sell it. You will\nrecieve half the total money you spent on it back. Notice\nhow the tower appears darker. It can no longer shoot, and\nwill disappear from the grid when the next wave spawns.", "Creeps cannot move through towers. Build your towers so\ncreeps have to take a longer path through the maze, and\nyour towers are able to do more damage.", "Creeps will always take the optimal path. Build wisely!", " "};
+const char * const Game::tutorialText3[] = {"Welcome to the Versus offence tutorial!", "Creeps are used to attack the enemy base.", "There are 4 types of creeps. ", "When a creep reaches the enemy base, they will lose a life.", "The object of the game is to reduce your opponent's lives\nto 0.", "To do this, you must upgrade your creeps and defend\nyourself against the enemy's creeps using towers. Both\nof these require money.", "There are two ways of earning money. Every time an\nenemy creep is killed, you gain $50.", "Every time one of your creeps is killed, you gain between\n$0 to $50. The closer the creep was to the enemy's base\nwhen it was killed, the more you will earn.", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf", "asdfasdf"};
 
 /***************************************************************/
 /*******************CONSTRUCTORS********************************/
@@ -195,12 +198,11 @@ Game::Game()
     //tutorial text
     tutorial.setCharacterSize(16);
     tutorial.setColor(sf::Color::Black);
-    tutorial.setPosition(XRES / 2 + 80, 440);
-    tutorial.setString("test");
+    tutorial.setPosition(XRES / 2 + 80, 450);
 
     tutorialBackground.setFillColor(sf::Color(0, 0, 0, 100));
-    tutorialBackground.setSize({tutorial.getGlobalBounds().width + 20, tutorial.getGlobalBounds().height + 20});
-    tutorialBackground.setPosition(tutorial.getGlobalBounds().left - 10, tutorial.getGlobalBounds().top - 10);
+
+    setTutorial("Test");
 
     //cached textures
     for (int a = 1; a < 4; ++a) //tower icons
@@ -374,7 +376,9 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
     middleCoordinates[0] = middleCoordinates[1] = 0;
     buttonCoordinates[0] = buttonCoordinates[1] = 0;
 
-    money[0] = money[1] = 500;  //temp
+    money[0] = money[1] = 500;
+
+    textCount = -2;
 
     pauseText.setString("Paused");
     pauseText.setOrigin(pauseText.getGlobalBounds().width / 2, pauseText.getGlobalBounds().height / 2);
@@ -452,9 +456,9 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
         creepStats[i][3].type = 3;
 
         creepQueue[i][0] = &creepStats[i][0];
-        creepQueue[i][1] = &creepStats[i][1];   //temp, beginning should all be type 0
-        creepQueue[i][2] = &creepStats[i][2];
-        creepQueue[i][3] = &creepStats[i][3];
+        creepQueue[i][1] = &creepStats[i][0];
+        creepQueue[i][2] = &creepStats[i][0];
+        creepQueue[i][3] = &creepStats[i][0];
 
         interval[i] = timeLeft[i] = amountLeft[i] = 0;
     }
@@ -473,6 +477,39 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
             flyingLeft[a][b] = distancesLeft[a][b];
             flyingRight[a][b] = distancesRight[a][b];
         }
+    }
+
+    if (mission == 1)
+    {
+        creepStats[0][2].amount = 1;
+        creepStats[0][0].amount = 0;
+        creepStats[1][0].amount = 0;
+        creepQueue[0][1] = &creepStats[0][2];
+    }
+    if (mission == 2)
+    {
+        creepStats[0][0].amount = 0;
+        creepStats[1][0].amount = 1;
+        creepStats[1][0].hp = 1;
+
+        money[0] = 2000;
+    }
+    if (mission == 3)
+    {
+        creepStats[1][0].amount = 0;
+
+        money[0] = 2000;
+
+        newTower({22, 5}, 1);
+        newTower({21, 4}, 2);
+        newTower({21, 3}, 2);
+        newTower({21, 2}, 0);
+        newTower({21, 1}, 0);
+        newTower({19, 0}, 2);
+        newTower({19, 1}, 2);
+        newTower({19, 2}, 0);
+        newTower({19, 3}, 1);
+        newTower({19, 4}, 1);
     }
 
     speedUp = false;
@@ -536,6 +573,10 @@ void Game::draw(sf::RenderWindow * window)
         {
             gameButtons[i][a].draw(temp);
         }
+        if (mission == 1)
+        {
+            temp->draw(livesText[i]);
+        }
     }
 
     for(int i = begin; i < end; ++i)
@@ -579,8 +620,11 @@ void Game::draw(sf::RenderWindow * window)
         }
 
         temp->draw(moneyText[i]);
-        temp->draw(livesText[i]);
         temp->draw(info[i]);
+        if (mission != 1)
+        {
+            temp->draw(livesText[i]);
+        }
     }
     temp->draw(timerBackground);
     temp->draw(timerBar);
@@ -589,7 +633,7 @@ void Game::draw(sf::RenderWindow * window)
     temp->draw(fastForward);
 
     //tutorial text
-    if (mission == 1)
+    if (mission >= 1 && mission <= 3)
     {
         temp->draw(tutorialBackground);
         temp->draw(tutorial);
@@ -640,6 +684,62 @@ int Game::update(sf::Vector2i mousePos)
 
         mouseSelector(mousePos);
         keyboardSelector(mousePos);
+
+        //tutorial text
+        if (mission == 1)
+        {
+            if (textCount > 7)
+            {
+                //end tutorial
+                paused = true;
+                resume.setVisible(false);
+                exit.setVisible(true);
+
+                pauseText.setString("You have completed the basic tutorial!");
+                pauseText.setOrigin(pauseText.getGlobalBounds().width / 2, pauseText.getGlobalBounds().height / 2);
+            }
+            else if (textCount * 15 < time)
+            {
+                setTutorial(tutorialText1[textCount + 2]);
+                textCount++;
+            }
+        }
+        if (mission == 2)
+        {
+            if (textCount > 6)
+            {
+                //end tutorial
+                paused = true;
+                resume.setVisible(false);
+                exit.setVisible(true);
+
+                pauseText.setString("You have completed the defence tutorial!");
+                pauseText.setOrigin(pauseText.getGlobalBounds().width / 2, pauseText.getGlobalBounds().height / 2);
+            }
+            if (textCount * 15 < time)
+            {
+                setTutorial(tutorialText2[textCount + 2]);
+                textCount++;
+            }
+        }
+        if (mission == 3)
+        {
+            if (textCount > 10)
+            {
+                //end tutorial
+                paused = true;
+                resume.setVisible(false);
+                exit.setVisible(true);
+
+                pauseText.setString("You have completed the offence tutorial!");
+                pauseText.setOrigin(pauseText.getGlobalBounds().width / 2, pauseText.getGlobalBounds().height / 2);
+            }
+            if (textCount * 15 < time)
+            {
+                setTutorial(tutorialText3[textCount + 2]);
+                textCount++;
+            }
+        }
 
         //game buttons
         for(int i = 0; i < 2; ++i)
@@ -962,8 +1062,11 @@ int Game::update(sf::Vector2i mousePos)
                     interval[i] = (20.0 / creepQueue[i][0]->amount) * FPS;  //spawn creeps over 20 seconds
                     timeLeft[i] = 0;
 
-                    creepStats[i][0].hp += 25;
-                    creepStats[i][0].amount += 2;
+                    if (mission == 0)   //only in multiplyaer
+                    {
+                        creepStats[i][0].hp += 25;
+                        creepStats[i][0].amount += 2;
+                    }
 
                     updateButtons(i);
                 }
@@ -2345,4 +2448,13 @@ std::string Game::creepUpgrade(int side, int type)
     sprintf(temp2, "Creep type %d upgrade", type);
     temp1 += temp2;
     return temp1;
+}
+
+void Game::setTutorial(std::string text)
+{
+    //play sound
+    tutorial.setString(text);
+
+    tutorialBackground.setSize({tutorial.getGlobalBounds().width + 20, tutorial.getGlobalBounds().height + 20});
+    tutorialBackground.setPosition(tutorial.getGlobalBounds().left - 10, tutorial.getGlobalBounds().top - 10);
 }

@@ -60,9 +60,13 @@ class Game
         void notify(int, std::string, int seconds = 3);
         std::string creepData(int, int);
         std::string creepUpgrade(int, int);
+        void setTutorial(std::string);
 
         //vars
         static const char * const baseStats[];
+        static const char * const tutorialText1[];
+        static const char * const tutorialText2[];
+        static const char * const tutorialText3[];
 
         Players players;
         sf::Vector2i prevMouse;
@@ -147,6 +151,7 @@ class Game
         //tutorial stuff
         sf::RectangleShape tutorialBackground;
         sf::Text tutorial;
+        int textCount;
 
         int mission;    //0 = multiplayer, 1 - 4 = single player
 
