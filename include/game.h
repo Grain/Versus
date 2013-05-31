@@ -58,7 +58,7 @@ class Game
         void updateButtons(int);
         void explode(sf::Vector2i);
         void notify(int, std::string, int seconds = 3);
-        std::string creepData(int, int);
+        std::string creepData(int, int, bool = false);
         std::string creepUpgrade(int, int);
         void setTutorial(std::string);
 
