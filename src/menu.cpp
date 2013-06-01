@@ -211,6 +211,11 @@ Menu::Menu()
     singleMenu[4]->loadTexture("resources/mission4.png");
     singleMenu[4]->setVisible(false);
 
+    highScore.setCharacterSize(20);
+    highScore.setColor(sf::Color::Black);
+    highScore.setPosition(600, 300);
+
+    updateScore();
     updateSettings();
 }
 
@@ -280,6 +285,11 @@ void Menu::draw(sf::RenderWindow * window)
         {
             temp->draw(*settingsText[i]);
         }
+    }
+
+    if (singleMenu[0]->getVisible())
+    {
+        temp->draw(highScore);
     }
 
     if (isBinding)
@@ -446,6 +456,20 @@ int Menu::update(sf::Vector2i mousePos)
     }
 
     return 0;
+}
+
+void Menu::updateScore()
+{
+    FILE * ifp = fopen("highscore", "r");
+    int score = 0;
+
+    if (ifp != NULL)
+    {
+        fscanf(ifp, "%d", &score);
+    }
+    char temp[50];
+    sprintf(temp, "High score: %d waves", score);
+    highScore.setString(temp);
 }
 
 void Menu::readSettings()

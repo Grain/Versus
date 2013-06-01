@@ -19,6 +19,7 @@ class Menu
         //functions
         void draw(sf::RenderWindow*);
         int update(sf::Vector2i);
+        void updateScore();
     protected:
     private:
         static const char * const keyNames[];
@@ -39,6 +40,8 @@ class Menu
         sf::RectangleShape bindBackground;
         sf::Text bindText;
         char bindMessage[256];
+
+        sf::Text highScore;
 
         std::vector <Button*> mainMenu;
         std::vector <Button*> settingsMenu;

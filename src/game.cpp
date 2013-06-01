@@ -479,14 +479,21 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
 
     if (mission == 1)
     {
-        creepStats[0][2].amount = 1;
         creepStats[0][0].amount = 0;
+        creepStats[0][1].amount = 0;
+        creepStats[0][2].amount = 1;
+        creepStats[0][3].amount = 0;
+
         creepStats[1][0].amount = 0;
         creepQueue[0][1] = &creepStats[0][2];
     }
     if (mission == 2)
     {
         creepStats[0][0].amount = 0;
+        creepStats[0][1].amount = 0;
+        creepStats[0][2].amount = 0;
+        creepStats[0][3].amount = 0;
+
         creepStats[1][0].amount = 1;
         creepStats[1][0].hp = 1;
 
@@ -495,6 +502,11 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
     if (mission == 3)
     {
         creepStats[1][0].amount = 0;
+
+        creepStats[0][0].amount = 0;
+        creepStats[0][1].amount = 0;
+        creepStats[0][2].amount = 0;
+        creepStats[0][3].amount = 0;
 
         money[0] = 5000;
         money[1] = 2000;
@@ -510,6 +522,12 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
         newTower({19, 2}, 0);
         newTower({19, 3}, 1);
         newTower({19, 4}, 1);
+    }
+
+    if (mission == 4)
+    {
+        creepStats[0][0].amount = 0;
+        setTutorial("Welcome to survival mode! Your objective is to defend for\nas long as possible. Enemy creeps will gain 50 hp every\nwave, instead of the usual 25. Only basic creeps will spawn.");
     }
 
     updateButtons(0);
@@ -636,7 +654,7 @@ void Game::draw(sf::RenderWindow * window)
     temp->draw(fastForward);
 
     //tutorial text
-    if (mission >= 1 && mission <= 3)
+    if (mission != 0)
     {
         temp->draw(tutorialBackground);
         temp->draw(tutorial);
@@ -1063,7 +1081,7 @@ int Game::update(sf::Vector2i mousePos)
                     interval[i] = (20.0 / creepQueue[i][0]->amount) * FPS;  //spawn creeps over 20 seconds
                     timeLeft[i] = 0;
 
-                    if (mission == 0)   //only in multiplayer
+                    if (mission == 0)   //multiplayer
                     {
                         creepStats[i][0].hp += 25;
                         creepStats[i][0].amount += 2;
@@ -1073,6 +1091,12 @@ int Game::update(sf::Vector2i mousePos)
                         creepStats[i][0].hp += 25;
                         creepStats[i][0].amount += 2;
                         creepStats[1][0].amount = 0;
+                    }
+                    else if (mission == 4)  //survival
+                    {
+                        creepStats[i][0].hp += 50;
+                        creepStats[i][0].amount += 2;
+                        creepStats[0][0].amount = 0;
                     }
 
                     updateButtons(i);
@@ -1138,6 +1162,18 @@ int Game::update(sf::Vector2i mousePos)
                 if (mission == 3)
                 {
                     pauseText.setString("You have completed the offence tutorial!");
+                }
+                if (mission == 4)
+                {
+                    if (highScore(wave))
+                    {
+                        sprintf(temp, "You survived for %d waves!\nThat's a new high score!", wave);
+                    }
+                    else
+                    {
+                        sprintf(temp, "You survived for %d waves!", wave);
+                    }
+                    pauseText.setString(temp);
                 }
                 else
                 {
@@ -2480,4 +2516,26 @@ void Game::setTutorial(std::string text)
 
     tutorialBackground.setSize({tutorial.getGlobalBounds().width + 20, tutorial.getGlobalBounds().height + 20});
     tutorialBackground.setPosition(tutorial.getGlobalBounds().left - 10, tutorial.getGlobalBounds().top - 10);
+}
+
+bool Game::highScore(int i)
+{
+    FILE * ifp = fopen("highscore", "r");
+    int score = 0;
+
+    if (ifp != NULL)
+    {
+        fscanf(ifp, "%d", &score);
+        fclose(ifp);
+    }
+
+    if (i > score)
+    {
+        FILE * ofp = fopen("highscore", "w");
+        fprintf(ofp, "%d", i);
+        fclose(ofp);
+
+        return true;
+    }
+    return false;
 }

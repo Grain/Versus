@@ -61,6 +61,7 @@ class Game
         std::string creepData(int, int, bool = false);
         std::string creepUpgrade(int, int);
         void setTutorial(std::string);
+        bool highScore(int);
 
         //vars
         static const char * const baseStats[];

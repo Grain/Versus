@@ -89,8 +89,8 @@ void initializeStats()
 
     //1.2 lvl 0
     towerStats[0][2][0].cost = 100;
-    towerStats[0][2][0].damage = 1;
-    towerStats[0][2][0].fireRate = 2;
+    towerStats[0][2][0].damage = 3;
+    towerStats[0][2][0].fireRate = 3;
     towerStats[0][2][0].homing = false;
     towerStats[0][2][0].range = 102;
     towerStats[0][2][0].speed = 3;
@@ -98,8 +98,8 @@ void initializeStats()
 
     //1.2 lvl 1
     towerStats[0][2][1].cost = 100;
-    towerStats[0][2][1].damage = 2;
-    towerStats[0][2][1].fireRate = 2;
+    towerStats[0][2][1].damage = 4;
+    towerStats[0][2][1].fireRate = 3;
     towerStats[0][2][1].homing = false;
     towerStats[0][2][1].range = 102;
     towerStats[0][2][1].speed = 3;
@@ -107,8 +107,8 @@ void initializeStats()
 
     //1.2 lvl 2
     towerStats[0][2][2].cost = 100;
-    towerStats[0][2][2].damage = 3;
-    towerStats[0][2][2].fireRate = 2;
+    towerStats[0][2][2].damage = 5;
+    towerStats[0][2][2].fireRate = 3;
     towerStats[0][2][2].homing = false;
     towerStats[0][2][2].range = 102;
     towerStats[0][2][2].speed = 3;
@@ -116,7 +116,7 @@ void initializeStats()
 
     //1.2 lvl 3
     towerStats[0][2][3].cost = 100;
-    towerStats[0][2][3].damage = 4;
+    towerStats[0][2][3].damage = 5;
     towerStats[0][2][3].fireRate = 2;
     towerStats[0][2][3].homing = false;
     towerStats[0][2][3].range = 102;
@@ -368,8 +368,8 @@ void initializeStats()
 
     //3.3 lvl 1
     towerStats[2][3][1].cost = 100;
-    towerStats[2][3][1].damage = 30;
-    towerStats[2][3][1].fireRate = 20;
+    towerStats[2][3][1].damage = 40;
+    towerStats[2][3][1].fireRate = 30;
     towerStats[2][3][1].homing = false;
     towerStats[2][3][1].range = 61;
     towerStats[2][3][1].speed = 4;
@@ -377,8 +377,8 @@ void initializeStats()
 
     //3.3 lvl 2
     towerStats[2][3][2].cost = 150;
-    towerStats[2][3][2].damage = 40;
-    towerStats[2][3][2].fireRate = 20;
+    towerStats[2][3][2].damage = 50;
+    towerStats[2][3][2].fireRate = 30;
     towerStats[2][3][2].homing = false;
     towerStats[2][3][2].range = 61;
     towerStats[2][3][2].speed = 4;
@@ -386,8 +386,8 @@ void initializeStats()
 
     //3.3 lvl 3
     towerStats[2][3][3].cost = 150;
-    towerStats[2][3][3].damage = 40;
-    towerStats[2][3][3].fireRate = 15;
+    towerStats[2][3][3].damage = 60;
+    towerStats[2][3][3].fireRate = 30;
     towerStats[2][3][3].homing = false;
     towerStats[2][3][3].range = 61;
     towerStats[2][3][3].speed = 4;
