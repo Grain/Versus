@@ -11,9 +11,14 @@ GameAudio::GameAudio()
     music.setVolume(settings.musicVolume * 10);
     music.play();
 
-    buffer[0].loadFromFile("resources/test1.wav");
-    buffer[1].loadFromFile("resources/test2.wav");
-    buffer[2].loadFromFile("resources/test3.wav");
+    char temp[30];
+    for(int i = 0; i < 12; ++i)
+    {
+        sprintf(temp, "resources/hit%d.wav", i);
+        buffer[i].loadFromFile(temp);
+    }
+
+    buffer[12].loadFromFile("resources/sell.wav");
 }
 
 /***************************************************************/

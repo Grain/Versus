@@ -166,6 +166,8 @@ void Projectile::update()
                 }
             }
 
+            gameAudio.play((GameAudio::sound)type);
+
             animate = true;
             image.setSize(graphicSize);
             image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
@@ -237,7 +239,6 @@ void Projectile::update()
             {
                 if (image.getGlobalBounds().intersects(target->getGlobalBounds()))      //HIT!
                 {
-                    //TODO: different effects here
                     switch(type)
                     {
                         case 0:
@@ -278,6 +279,9 @@ void Projectile::update()
                             }
                             break;
                     }
+
+                    gameAudio.play((GameAudio::sound)type);
+
                     animate = true;
                     image.setSize(graphicSize);
                     image.setOrigin(graphicSize.x / 2, graphicSize.y / 2);
