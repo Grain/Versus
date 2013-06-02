@@ -75,6 +75,7 @@ int main(int argc, char *argv[])
                     case 1:
                         inGame = false;
                         menu.updateScore();
+                        menu.updateTips();
                         break;
                     case 2:
                         window.close();

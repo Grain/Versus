@@ -20,10 +20,14 @@ class Menu
         void draw(sf::RenderWindow*);
         int update(sf::Vector2i);
         void updateScore();
+        void updateTips();
     protected:
     private:
         static const char * const keyNames[];
         static const char * const hotkeyNames[];
+        static const char * const tipList[];
+
+        static const int NUMBEROFTIPS = 2;
         //functions
         void readSettings();
         void writeSettings();
@@ -50,6 +54,9 @@ class Menu
 
         int currentKey;
         bool isBinding;
+
+        sf::Text tips;
+        sf::RectangleShape tipsBackground;
 };
 
 #endif // MENU_H

@@ -6,6 +6,7 @@
 
 const char * const Menu::keyNames[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Esc", "LCtrl", "LShift", "LAlt", "LOS", "RCtrl", "RShift", "RAlt", "ROS", "Menu", "[", "]", ";", ",", ".", "'", "/", "\\", "~", "=", "-", "Space", "Return", "Backspace", "Tab", "PgUp", "PgDown", "End", "Home", "Insert", "Del", "Num+", "Num-", "Num*", "Num/", "Left", "Right", "Up", "Down", "Num0", "Num1", "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "F13", "F14", "F15", "Pause"};
 const char * const Menu::hotkeyNames[] = {"left player up", "left player down", "left player left", "left player right", "left player select", "left player back", "left player fast forward", "left player hotkey 1", "left player hotkey 2", "left player hotkey 3", "left player hotkey 4", "right player up", "right player down", "right player left", "right player right", "right player select", "right player back", "right player fast forward", "right player hotkey 1", "right player hotkey 2", "right player hotkey 3", "right player hotkey 4"};
+const char * const Menu::tipList[] = {"TIP: hack more", "TIP: hack less"};
 
 Menu::Menu()
 {
@@ -211,9 +212,18 @@ Menu::Menu()
     singleMenu[4]->loadTexture("resources/mission4.png");
     singleMenu[4]->setVisible(false);
 
+    //high score text
     highScore.setCharacterSize(20);
     highScore.setColor(sf::Color::Black);
     highScore.setPosition(600, 300);
+
+    //tips
+    tips.setCharacterSize(16);
+    tips.setColor(sf::Color::Black);
+    tips.setPosition(XRES - 40, YRES - 40);
+    tipsBackground.setFillColor(sf::Color(255, 255, 255));
+
+    updateTips();
 
     updateScore();
     updateSettings();
@@ -277,6 +287,12 @@ void Menu::draw(sf::RenderWindow * window)
     for(unsigned int i = 0; i < singleMenu.size(); ++i)
     {
         singleMenu[i]->draw(temp);
+    }
+
+    if (mainMenu[0]->getVisible())
+    {
+        temp->draw(tipsBackground);
+        temp->draw(tips);
     }
 
     if (settingsMenu[0]->getVisible())
@@ -369,6 +385,7 @@ int Menu::update(sf::Vector2i mousePos)
                         {
                             settingsMenu[a]->setVisible(false);
                         }
+                        updateTips();
                         background.setTexture(&mainBackgroundTexture);
                         writeSettings();
                         break;
@@ -437,6 +454,7 @@ int Menu::update(sf::Vector2i mousePos)
                         {
                             singleMenu[a]->setVisible(false);
                         }
+                        updateTips();
                         break;
                     case 1: //mission 1
                         return 1;
@@ -747,4 +765,12 @@ bool Menu::checkDuplicates()
         }
     }
     return false;
+}
+
+void Menu::updateTips()
+{
+    tips.setString(tipList[rand() % NUMBEROFTIPS]);
+    tips.setOrigin(tips.getGlobalBounds().width, tips.getGlobalBounds().height);
+    tipsBackground.setSize({tips.getGlobalBounds().width + 20, tips.getGlobalBounds().height + 20});
+    tipsBackground.setPosition(tips.getGlobalBounds().left - 10, tips.getGlobalBounds().top - 10);
 }
