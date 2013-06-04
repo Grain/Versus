@@ -36,6 +36,8 @@ int main(int argc, char *argv[])
 
     srand(time(NULL));
 
+    menu.updateTips();
+
     window.setFramerateLimit(FPS);
 
     // run the program as long as the window is open

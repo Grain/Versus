@@ -29,18 +29,18 @@ double distance(sf::Vector2f a, sf::Vector2f b)
 
 void initializeStats()
 {
-    descriptions[0] = "Basic tower 0\n\nA crappy tower\n\n";
-    descriptions[1] = "Basic tower 1\n\nA rapid fire tower\n\n";
-    descriptions[2] = "Basic tower 2\n\nA crappy tower\n\n";
-    descriptions[3] = "Basic tower 3\n\nA tower that places random\nbuffs on your creeps\n\n";
-    descriptions[4] = "Basic tower 4\n\nA crappy tower..that\nshoots missiles!\n\n";
-    descriptions[5] = "Basic tower 5\n\nA snipa tower\n\n";
-    descriptions[6] = "Basic tower 6\n\nA missile tower that does\ndamage in an area\n\n";
-    descriptions[7] = "Basic tower 7\n\nA missile tower that\nheals your creeps in an area\n\n";
-    descriptions[8] = "Basic tower 8\n\nA crappy splash tower\n\n";
-    descriptions[9] = "Basic tower 9\n\nA crappy splash slow tower\n\n";
-    descriptions[10] = "Basic tower 10\n\nA crappy splash damage\namplification tower\n\n";
-    descriptions[11] = "Basic tower 11\n\nA crappy splash tower\n\n";
+    descriptions[0] = "Basic bullet tower\nA bullet-shooting tower.\n\n";
+    descriptions[1] = "Bullet tower\nA bullet-shooting tower.\n\n";
+    descriptions[2] = "Laser tower\nA tower that does sustained\ndamage on a target.\n\n";
+    descriptions[3] = "Buff tower\nA tower that places 1 of 3\nbuffs on a friendly creep.\nEach buff lasts for 10\nseconds.\n\n";
+    descriptions[4] = "Basic missile tower\nA missile-shooting tower.\n\n";
+    descriptions[5] = "Sniper tower\nA tower that has long\nrange and high damage,\nbut shoots slowly.\n\n";
+    descriptions[6] = "Missile tower\nA missile-shooting tower.\nThe missile does damage\nin an area.\n\n";
+    descriptions[7] = "Healing missile tower\nA missile-shooting tower\nthat heals your creeps\nin an area.\n\n";
+    descriptions[8] = "Basic area tower\nA tower that does damage\nto all enemies in an area.\n\n";
+    descriptions[9] = "Slow tower\nA tower that slows all\nenemies in an area. The\neffects lasts for 3 seconds.\n\n";
+    descriptions[10] = "Damage amplification tower\nA tower that increases\ndamage dealt to all enemies\nin an area. The effects lasts\nfor 3 seconds.\n\n";
+    descriptions[11] = "Area tower\nA tower that does damage\nto all enemies in an area.\n\n";
 
     //basic 1
     towerStats[0][0][0].cost = 100;

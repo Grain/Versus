@@ -1,8 +1,7 @@
 #include "game.h"
 
-const char * const Game::baseStats[] = {"Tower 1\n", "Tower 2\n", "Tower 3\n", ""};
 const char * const Game::tutorialText1[] = {"Welcome to the Versus tutorial! Make sure you are\nfamiliar with your controls, viewable in the settings menu.", "Versus is a two player tower defence game. You must\ndefend your base while attacking your enemy's base.", "Every 30 seconds, a wave of creeps will spawn.", "When a creep reaches the enemy base, they will lose a life.", "The object of the game is to reduce your opponent's lives\nto 0.", "To do this, you must upgrade your creeps and defend\nyourself against the enemy's creeps using towers. Both\nof these require money.", "There are two ways of earning money. Every time an\nenemy creep is killed, you gain $50.", "Every time one of your creeps is killed, you gain between\n$0 to $50. The closer the creep was to the enemy's base\nwhen it was killed, the more you will earn.", "Don't forget to fast forward or pause using the buttons to the\nleft. You can also press esc to pause and use a custom\nhotkey to fast forward.", "Don't forget to fast forward or pause using the buttons to the\nleft. You can also press esc to pause and use a custom\nhotkey to fast forward."};
-const char * const Game::tutorialText2[] = {"Welcome to the Versus defence tutorial!", "Towers are used to defend your base against enemy\ncreeps. Try selecting a box on your side of the grid and\nbuilding a tower. By moving your selector over different\ntowers, you can see descriptions and statistics of towers.", "Hopefully you built your tower in the path of this enemy\ncreep! Move your selector over the tower to see its range.\nTowers will only fire at creeps if they are in range.", "Select the tower you just created, and upgrade it. You'll\nnotice you have 3 choices. When you first build a tower,\nit is a basic tower. You can upgrade it to one of 3\nsecondary towers. There are 3 basic towers in the game,\nand therefore 9 secondary towers.", "Select the tower again. You'll notice there is only 1 upgrade.\nSecondary towers can be upgraded to a maximum of 3\nlevels. These levels are shown on the tower as yellow\nsquares.", "Build another tower, then select it and sell it. You will\nrecieve half the total money you spent on it back. Notice\nhow the tower appears darker. It can no longer shoot, and\nwill disappear from the grid when the next wave spawns.", "Creeps cannot move through towers. Build your towers so\ncreeps have to take a longer path through the maze, and\nyour towers are able to do more damage.", "Creeps will always take the optimal path. Build wisely!", "Creeps will always take the optimal path. Build wisely!"};
+const char * const Game::tutorialText2[] = {"Welcome to the Versus defence tutorial!", "Towers are used to defend your base against enemy\ncreeps. Try selecting a box on your side of the grid and\nbuilding a tower. By moving your selector over different\ntowers, you can see descriptions and statistics of towers.", "Hopefully you built your tower in the path of this enemy\ncreep! Move your selector over the tower to see its range.\nTowers will only fire at creeps if they are in range.", "Select the tower you just created, and upgrade it. You'll\nnotice you have 3 choices. When you first build a tower,\nit is a basic tower. You can upgrade it to one of 3\nsecondary towers. There are 3 basic towers in the game,\nand therefore 9 secondary towers.", "Select the tower again. You'll notice there is only 1 upgrade.\nSecondary towers can be upgraded to a maximum of 3\nlevels. These levels are shown on the tower as yellow\nsquares.", "Build another tower, then select it and sell it. You will\nrecieve half the total money you spent on it back. Notice\nhow the tower appears darker. It can no longer shoot, and\nwill disappear from the grid when the next wave spawns.", "Creeps cannot move through towers. Build your towers so\ncreeps have to take a longer path through your maze, and\nyour towers are able to do more damage.", "Creeps will always take the optimal path. Build wisely!", "Creeps will always take the optimal path. Build wisely!"};
 const char * const Game::tutorialText3[] = {"Welcome to the Versus offence tutorial!", "Creeps are used to attack the enemy base. A wave of\ncreeps will spawn every 30 seconds.", "There are 4 different types of creeps in Versus. The top\nrow of buttons shows the types of creeps in upcoming\nwaves. The highlighted button shows the current wave.", "Select the button to the right of the current wave button.\nChoose one of the other creep types. The next wave you\nsend will be made up of creeps of this type.", "Notice how one of the buttons on the bottom row has turned\ndark. Special creeps can only be used once every several\nminutes. The number on the button shows how many\nseconds are left before it can be used again.", "Now try selecting one of the buttons on the bottom row.\nYou can upgrade this creep to have more health.", "The basic creep wave will have 2 more creeps and 25\nmore hp every wave. Special creep waves will always\nhave 5 creeps.", "Upgrade your creeps to win the round to finish this tutorial!"};
 
 /***************************************************************/
@@ -203,6 +202,29 @@ Game::Game()
     tutorialBackground.setFillColor(sf::Color(0, 0, 0, 100));
 
     setTutorial("Test");
+
+    //base stats
+    for (int i = 0; i < 3; ++i)
+    {
+        char temp2[200];
+        sprintf(temp2, "Cost: $%d\n\n", towerStats[i][0][0].cost);
+        baseStats[i] += temp2;
+
+        sprintf(temp2, "%s", descriptions[towerStats[i][0][0].type].c_str());
+        baseStats[i] += temp2;
+
+        sprintf(temp2, "Damage: %d\n", towerStats[i][0][0].damage);
+        baseStats[i] += temp2;
+
+        sprintf(temp2, "Fire rate: %.1f / second\nRange: %d\n", (double)FPS / towerStats[i][0][0].fireRate, towerStats[i][0][0].range);
+        baseStats[i] += temp2;
+
+        if (towerStats[i][0][0].type < 8)    //not splash tower, put speed
+        {
+            sprintf(temp2, "Projectile speed: %.1f", towerStats[i][0][0].speed);
+            baseStats[i] += temp2;
+        }
+    }
 
     //cached textures
     for (int a = 1; a < 4; ++a) //tower icons
@@ -502,11 +524,6 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
     if (mission == 3)
     {
         creepStats[1][0].amount = 0;
-
-        creepStats[0][0].amount = 0;
-        creepStats[0][1].amount = 0;
-        creepStats[0][2].amount = 0;
-        creepStats[0][3].amount = 0;
 
         money[0] = 5000;
         money[1] = 2000;
@@ -1163,7 +1180,7 @@ int Game::update(sf::Vector2i mousePos)
                 {
                     pauseText.setString("You have completed the offence tutorial!");
                 }
-                if (mission == 4)
+                else if (mission == 4)
                 {
                     if (highScore(wave))
                     {

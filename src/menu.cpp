@@ -6,7 +6,7 @@
 
 const char * const Menu::keyNames[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Esc", "LCtrl", "LShift", "LAlt", "LOS", "RCtrl", "RShift", "RAlt", "ROS", "Menu", "[", "]", ";", ",", ".", "'", "/", "\\", "~", "=", "-", "Space", "Return", "Backspace", "Tab", "PgUp", "PgDown", "End", "Home", "Insert", "Del", "Num+", "Num-", "Num*", "Num/", "Left", "Right", "Up", "Down", "Num0", "Num1", "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "F13", "F14", "F15", "Pause"};
 const char * const Menu::hotkeyNames[] = {"left player up", "left player down", "left player left", "left player right", "left player select", "left player back", "left player fast forward", "left player hotkey 1", "left player hotkey 2", "left player hotkey 3", "left player hotkey 4", "right player up", "right player down", "right player left", "right player right", "right player select", "right player back", "right player fast forward", "right player hotkey 1", "right player hotkey 2", "right player hotkey 3", "right player hotkey 4"};
-const char * const Menu::tipList[] = {"TIP: hack more", "TIP: hack less"};
+const char * const Menu::tipList[] = {"The laser shot by the laser tower is outside the visible spectrum.", "Towers will target the creep farthest ahead.", "Creeps will always spawn in the first 20 seconds of every 30 second interval.", "Try having two paths for enemy creeps to go through, and blocking\none so they have to go back through the second path.", "Try blocking some creeps inside a box of towers.\n;)", "Sending a strong and fast creep wave may distract enemy towers\nenough for your previous wave of creeps to make it through.", "In multiplayer mode, both players must press the fast forward button to fast forward.", "Use the hotkey buttons to bypass selecting the tower or button.", "Some towers' projectiles will find a new target if its original target dies.", "When a creep effect is applied, previous effects of the same type are removed.", "Creep upgrades will only be put into effect when a new wave is sent.", "The buffs placed by the buff tower are speed, armor, and regeneration.\nThe speed and armor buff are based on a percentage, but the\nregeneration is a static amount.", "Purple = damage amplification, aqua = slow, yellow = armor, green = regen, red = speed"};
 
 Menu::Menu()
 {
@@ -222,8 +222,6 @@ Menu::Menu()
     tips.setColor(sf::Color::Black);
     tips.setPosition(XRES - 40, YRES - 40);
     tipsBackground.setFillColor(sf::Color(255, 255, 255));
-
-    updateTips();
 
     updateScore();
     updateSettings();

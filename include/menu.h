@@ -27,7 +27,7 @@ class Menu
         static const char * const hotkeyNames[];
         static const char * const tipList[];
 
-        static const int NUMBEROFTIPS = 2;
+        static const int NUMBEROFTIPS = 13;
         //functions
         void readSettings();
         void writeSettings();

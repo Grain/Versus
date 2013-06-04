@@ -64,7 +64,6 @@ class Game
         bool highScore(int);
 
         //vars
-        static const char * const baseStats[];
         static const char * const tutorialText1[];
         static const char * const tutorialText2[];
         static const char * const tutorialText3[];
@@ -155,6 +154,8 @@ class Game
         int textCount;
 
         int mission;    //0 = multiplayer, 1 - 4 = single player
+
+        std::string baseStats[4];
 
         //some cached textures
         sf::Texture towerIcons[3][4];
