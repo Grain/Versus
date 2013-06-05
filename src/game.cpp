@@ -319,7 +319,7 @@ Game::Game()
         explosionTextures[a].loadFromFile(temp);
     }
 
-    creepUpgradeTexture.loadFromFile("resources/creepUpgrade.png");
+    creepUpgradeTexture.loadFromFile("resources/upgrade.png");
 
     ////////////////
 
@@ -2312,6 +2312,14 @@ void Game::buttonPressed(int player, int button)
                             money[player] += towerAt(selectorCoordinates[player])->sell();
                             gameAudio.play(GameAudio::sell);
                         }
+                        else
+                        {
+                            notify(player, "This tower has been sold");
+                        }
+                    }
+                    else
+                    {
+                        notify(player, "Nothing to sell");
                     }
                 }
                 else
@@ -2331,6 +2339,14 @@ void Game::buttonPressed(int player, int button)
                             money[player] += towerAt(selectorCoordinates[player])->sell();
                             gameAudio.play(GameAudio::sell);
                         }
+                        else
+                        {
+                            notify(player, "This tower has been sold");
+                        }
+                    }
+                    else
+                    {
+                        notify(player, "Nothing to sell");
                     }
                 }
                 else
@@ -2427,7 +2443,7 @@ void Game::updateButtons(int player)
                     if (tempType.z >= 3)        //max level
                         gameButtons[player][4].setTexture(&unselected);
                     else
-                        gameButtons[player][4].setTexture(&towerIcons[tempType.x - 1][tempType.y]);
+                        gameButtons[player][4].setTexture(&creepUpgradeTexture);    //but it's really just a general upgrade texture :D
                     gameButtons[player][5].setTexture(&unselected);
                     gameButtons[player][6].setTexture(&unselected);
                 }

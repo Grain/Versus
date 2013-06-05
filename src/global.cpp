@@ -243,7 +243,7 @@ void initializeStats()
     //2.3 lvl 0
     towerStats[1][3][0].cost = 100;
     towerStats[1][3][0].damage = 30;
-    towerStats[1][3][0].fireRate = 30;
+    towerStats[1][3][0].fireRate = 40;
     towerStats[1][3][0].homing = true;
     towerStats[1][3][0].range = 184;
     towerStats[1][3][0].speed = 1.5;
@@ -331,7 +331,7 @@ void initializeStats()
     towerStats[2][2][0].type = 10;
 
     //3.2 lvl 1
-    towerStats[2][2][1].cost = 120;
+    towerStats[2][2][1].cost = 150;
     towerStats[2][2][1].damage = 20;
     towerStats[2][2][1].fireRate = 30;
     towerStats[2][2][1].homing = false;
