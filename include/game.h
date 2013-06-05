@@ -67,6 +67,7 @@ class Game
         static const char * const tutorialText1[];
         static const char * const tutorialText2[];
         static const char * const tutorialText3[];
+        static const char * const creepDescriptions[];
 
         Players players;
         sf::Vector2i prevMouse;

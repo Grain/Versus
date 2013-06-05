@@ -6,7 +6,7 @@
 
 const char * const Menu::keyNames[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Esc", "LCtrl", "LShift", "LAlt", "LOS", "RCtrl", "RShift", "RAlt", "ROS", "Menu", "[", "]", ";", ",", ".", "'", "/", "\\", "~", "=", "-", "Space", "Return", "Backspace", "Tab", "PgUp", "PgDown", "End", "Home", "Insert", "Del", "Num+", "Num-", "Num*", "Num/", "Left", "Right", "Up", "Down", "Num0", "Num1", "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "F13", "F14", "F15", "Pause"};
 const char * const Menu::hotkeyNames[] = {"left player up", "left player down", "left player left", "left player right", "left player select", "left player back", "left player fast forward", "left player hotkey 1", "left player hotkey 2", "left player hotkey 3", "left player hotkey 4", "right player up", "right player down", "right player left", "right player right", "right player select", "right player back", "right player fast forward", "right player hotkey 1", "right player hotkey 2", "right player hotkey 3", "right player hotkey 4"};
-const char * const Menu::tipList[] = {"The laser shot by the laser tower is outside the visible spectrum.", "Towers will target the creep farthest ahead.", "Creeps will always spawn in the first 20 seconds of every 30 second interval.", "Try having two paths for enemy creeps to go through, and blocking\none so they have to go back through the second path.", "Try blocking some creeps inside a box of towers.\n;)", "Sending a strong and fast creep wave may distract enemy towers\nenough for your previous wave of creeps to make it through.", "In multiplayer mode, both players must press the fast forward button to fast forward.", "Use the hotkey buttons to bypass selecting the tower or button.", "Some towers' projectiles will find a new target if its original target dies.", "When a creep effect is applied, previous effects of the same type are removed.", "Creep upgrades will only be put into effect when a new wave is sent.", "The buffs placed by the buff tower are speed, armor, and regeneration.\nThe speed and armor buff are based on a percentage, but the\nregeneration is a static amount.", "Purple = damage amplification, aqua = slow, yellow = armor, green = regen, red = speed"};
+const char * const Menu::tipList[] = {"github.com/Grain/Versus", "The laser shot by the laser tower is outside the visible spectrum.", "Towers will target the creep farthest ahead.", "Creeps will always spawn in the first 20 seconds of every 30 second interval.", "Try having two paths for enemy creeps to go through, and blocking\none so they have to go back through the second path.", "Try blocking some creeps inside a box of towers.\n;)", "Sending a strong and fast creep wave may distract enemy towers\nenough for your previous wave of creeps to make it through.", "In multiplayer mode, both players must press the fast forward button to fast forward.", "Use the hotkey buttons to bypass selecting the tower or button.", "Some towers' projectiles will find a new target if its original target dies.", "When a creep effect is applied, previous effects of the same type are removed.", "Creep upgrades will only be put into effect when a new wave is sent.", "The buffs placed by the buff tower are speed, armor, and regeneration.\nThe speed and armor buff are based on a percentage, but the\nregeneration is a static amount.", "Purple = damage amplification, aqua = slow, yellow = armor, green = regen, red = speed"};
 
 Menu::Menu()
 {
@@ -38,23 +38,23 @@ Menu::Menu()
 
     //MAIN MENU
     mainMenu.push_back(new Button());   //single player
-    mainMenu[0]->initialize(100, 50);
-    mainMenu[0]->setPosition({100, 225});
+    mainMenu[0]->initialize(200, 50);
+    mainMenu[0]->setPosition({100, 200});
     mainMenu[0]->loadTexture("resources/singlePlayer.png");
 
     mainMenu.push_back(new Button());   //multi player
-    mainMenu[1]->initialize(100, 50);
-    mainMenu[1]->setPosition({100, 300});
+    mainMenu[1]->initialize(200, 50);
+    mainMenu[1]->setPosition({100, 260});
     mainMenu[1]->loadTexture("resources/multiPlayer.png");
 
     mainMenu.push_back(new Button());   //options
-    mainMenu[2]->initialize(100, 50);
-    mainMenu[2]->setPosition({100, 375});
+    mainMenu[2]->initialize(200, 50);
+    mainMenu[2]->setPosition({100, 320});
     mainMenu[2]->loadTexture("resources/settings.png");
 
     mainMenu.push_back(new Button());   //exit button
-    mainMenu[3]->initialize(100, 50);
-    mainMenu[3]->setPosition({100, 450});
+    mainMenu[3]->initialize(200, 50);
+    mainMenu[3]->setPosition({100, 430});
     mainMenu[3]->loadTexture("resources/exit.png");
 
     //SETTINGS text
@@ -189,39 +189,40 @@ Menu::Menu()
     singleMenu[0]->setVisible(false);
 
     singleMenu.push_back(new Button());   //mission 1
-    singleMenu[1]->initialize(400, 175);
-    singleMenu[1]->setPosition({75, 50});
+    singleMenu[1]->initialize(300, 50);
+    singleMenu[1]->setPosition({100, 200});
     singleMenu[1]->loadTexture("resources/mission1.png");
     singleMenu[1]->setVisible(false);
 
     singleMenu.push_back(new Button());   //mission 2
-    singleMenu[2]->initialize(400, 175);
-    singleMenu[2]->setPosition({549, 50});
+    singleMenu[2]->initialize(300, 50);
+    singleMenu[2]->setPosition({100, 260});
     singleMenu[2]->loadTexture("resources/mission2.png");
     singleMenu[2]->setVisible(false);
 
     singleMenu.push_back(new Button());   //mission 3
-    singleMenu[3]->initialize(400, 175);
-    singleMenu[3]->setPosition({75, 275});
+    singleMenu[3]->initialize(300, 50);
+    singleMenu[3]->setPosition({100, 320});
     singleMenu[3]->loadTexture("resources/mission3.png");
     singleMenu[3]->setVisible(false);
 
     singleMenu.push_back(new Button());   //mission 4
-    singleMenu[4]->initialize(400, 175);
-    singleMenu[4]->setPosition({549, 275});
+    singleMenu[4]->initialize(300, 50);
+    singleMenu[4]->setPosition({100, 380});
     singleMenu[4]->loadTexture("resources/mission4.png");
     singleMenu[4]->setVisible(false);
 
     //high score text
     highScore.setCharacterSize(20);
     highScore.setColor(sf::Color::Black);
-    highScore.setPosition(600, 300);
+    highScore.setPosition(450, 390);
+    highScoreBackground.setFillColor(sf::Color::White);
 
     //tips
     tips.setCharacterSize(16);
     tips.setColor(sf::Color::Black);
     tips.setPosition(XRES - 40, YRES - 40);
-    tipsBackground.setFillColor(sf::Color(255, 255, 255));
+    tipsBackground.setFillColor(sf::Color::White);
 
     updateScore();
     updateSettings();
@@ -303,6 +304,7 @@ void Menu::draw(sf::RenderWindow * window)
 
     if (singleMenu[0]->getVisible())
     {
+        temp->draw(highScoreBackground);
         temp->draw(highScore);
     }
 
@@ -486,6 +488,16 @@ void Menu::updateScore()
     char temp[50];
     sprintf(temp, "High score: %d waves", score);
     highScore.setString(temp);
+    highScoreBackground.setSize({highScore.getGlobalBounds().width + 20, highScore.getGlobalBounds().height + 20});
+    highScoreBackground.setPosition(highScore.getGlobalBounds().left - 10, highScore.getGlobalBounds().top - 10);
+}
+
+void Menu::updateTips()
+{
+    tips.setString(tipList[rand() % NUMBEROFTIPS]);
+    tips.setOrigin(tips.getGlobalBounds().width, tips.getGlobalBounds().height);
+    tipsBackground.setSize({tips.getGlobalBounds().width + 20, tips.getGlobalBounds().height + 20});
+    tipsBackground.setPosition(tips.getGlobalBounds().left - 10, tips.getGlobalBounds().top - 10);
 }
 
 void Menu::readSettings()
@@ -763,12 +775,4 @@ bool Menu::checkDuplicates()
         }
     }
     return false;
-}
-
-void Menu::updateTips()
-{
-    tips.setString(tipList[rand() % NUMBEROFTIPS]);
-    tips.setOrigin(tips.getGlobalBounds().width, tips.getGlobalBounds().height);
-    tipsBackground.setSize({tips.getGlobalBounds().width + 20, tips.getGlobalBounds().height + 20});
-    tipsBackground.setPosition(tips.getGlobalBounds().left - 10, tips.getGlobalBounds().top - 10);
 }

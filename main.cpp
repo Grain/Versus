@@ -97,19 +97,19 @@ int main(int argc, char *argv[])
                     case 0:
                         break;
                     case 1:
-                        game.newGame(Game::left, sf::Color::Cyan, sf::Color::Magenta, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128), 1);
+                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128), 1);
                         inGame = true;
                         break;
                     case 2:
-                        game.newGame(Game::left, sf::Color::Cyan, sf::Color::Magenta, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128), 2);
+                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128), 2);
                         inGame = true;
                         break;
                     case 3:
-                        game.newGame(Game::left, sf::Color::Cyan, sf::Color::Magenta, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128), 3);
+                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128), 3);
                         inGame = true;
                         break;
                     case 4:
-                        game.newGame(Game::left, sf::Color::Cyan, sf::Color::Magenta, sf::Color(255, 255, 0, 128), sf::Color(0, 255, 0, 128), 4);
+                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128), 4);
                         inGame = true;
                         break;
                     case 5:

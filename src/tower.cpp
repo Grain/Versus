@@ -248,11 +248,14 @@ void Tower::setRotation(double i)
 
 void Tower::setRotationTarget(sf::Vector2f i)
 {
-    sf::Vector2f center = {position.x + Tower::getSize().x / 2, position.y + Tower::getSize().y / 2};
-    double angle = atan((i.x - center.x)/(center.y - i.y)) * 180 / 3.14159265;
-    if(center.y - i.y < 0)
-        angle += 180;
-    turret.setRotation(angle);
+    if (stats.type < 8)   //area towers do not face target
+    {
+        sf::Vector2f center = {position.x + Tower::getSize().x / 2, position.y + Tower::getSize().y / 2};
+        double angle = atan((i.x - center.x)/(center.y - i.y)) * 180 / 3.14159265;
+        if(center.y - i.y < 0)
+            angle += 180;
+        turret.setRotation(angle);
+    }
 }
 
 void Tower::setCoordinates(sf::Vector2i i)
@@ -283,6 +286,11 @@ Projectile * Tower::update()
     if (sold)
     {
         return NULL;
+    }
+
+    if (stats.type >= 8)
+    {
+        turret.setRotation(turret.getRotation() + type.z + 1);
     }
 
     std::vector<Creep*> * temp;

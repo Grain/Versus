@@ -27,7 +27,7 @@ class Menu
         static const char * const hotkeyNames[];
         static const char * const tipList[];
 
-        static const int NUMBEROFTIPS = 13;
+        static const int NUMBEROFTIPS = 14;
         //functions
         void readSettings();
         void writeSettings();
@@ -45,6 +45,7 @@ class Menu
         sf::Text bindText;
         char bindMessage[256];
 
+        sf::RectangleShape highScoreBackground;
         sf::Text highScore;
 
         std::vector <Button*> mainMenu;
