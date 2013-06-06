@@ -12,8 +12,7 @@ Menu::Menu()
 {
     if (settings.doubleBuffered)
     {
-        if(!canvas.create(XRES, YRES))
-            printf("Error creating menu renderTexture\n");
+        canvas.create(XRES, YRES);
     }
 
     readSettings();

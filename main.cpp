@@ -1,3 +1,7 @@
+//Paul He
+//June 2013
+//Versus - a two player tower defence game
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 

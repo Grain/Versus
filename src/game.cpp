@@ -325,8 +325,7 @@ Game::Game()
 
     if (settings.doubleBuffered)
     {
-        if(!canvas.create(XRES, YRES))
-            printf("Error creating game renderTexture\n");
+        canvas.create(XRES, YRES);
     }
 }
 
