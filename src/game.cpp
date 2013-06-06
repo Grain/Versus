@@ -1032,22 +1032,22 @@ int Game::update(sf::Vector2i mousePos)
                         {
                             if (currentCreeps[i].type != 3)
                             {
-                                creeps[0].push_back(new Creep(distancesRight, 0, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type]));
+                                creeps[0].push_back(new Creep(distancesRight, 0, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type], 0));
                             }
                             else
                             {
-                                creeps[0].push_back(new Creep(flyingRight, 0, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type]));
+                                creeps[0].push_back(new Creep(flyingRight, 0, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type], 0));
                             }
                         }
                         else
                         {
                             if (currentCreeps[i].type != 3)
                             {
-                                creeps[1].push_back(new Creep(distancesLeft, 1, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type]));
+                                creeps[1].push_back(new Creep(distancesLeft, 1, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type], 1));
                             }
                             else
                             {
-                                creeps[1].push_back(new Creep(flyingLeft, 1, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type]));
+                                creeps[1].push_back(new Creep(flyingLeft, 1, currentCreeps[i].type, currentCreeps[i].speed, currentCreeps[i].hp, &buffs[0], &buffs[1], &buffs[2], &buffs[3], &buffs[4], &creepBody[currentCreeps[i].type], 1));
                             }
                         }
                         timeLeft[i] = interval[i];

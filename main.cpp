@@ -31,6 +31,11 @@ int main(int argc, char *argv[])
 
     Game game;
     Menu menu;
+
+    sf::Image icon;
+    icon.loadFromFile("resources/icon.png");
+    window.setIcon(256, 256, icon.getPixelsPtr());
+
     bool inGame = false;
     bool focused = true;
 
@@ -97,24 +102,24 @@ int main(int argc, char *argv[])
                     case 0:
                         break;
                     case 1:
-                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128), 1);
+                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 80), sf::Color(255, 255, 0, 80), 1);
                         inGame = true;
                         break;
                     case 2:
-                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128), 2);
+                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 80), sf::Color(255, 255, 0, 80), 2);
                         inGame = true;
                         break;
                     case 3:
-                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128), 3);
+                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 80), sf::Color(255, 255, 0, 80), 3);
                         inGame = true;
                         break;
                     case 4:
-                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128), 4);
+                        game.newGame(Game::left, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 80), sf::Color(255, 255, 0, 80), 4);
                         inGame = true;
                         break;
                     case 5:
                         inGame = true;
-                        game.newGame(Game::both, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 128), sf::Color(255, 255, 0, 128), 0);
+                        game.newGame(Game::both, sf::Color::Blue, sf::Color::Red, sf::Color(0, 255, 0, 80), sf::Color(255, 255, 0, 80), 0);
                         break;
                     case 10:
                         window.close();

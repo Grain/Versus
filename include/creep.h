@@ -7,7 +7,7 @@ class Creep
 {
     public:
         //ctor/dtor
-        Creep(int [][GRIDY], int, int, int, int, sf::Texture*, sf::Texture*, sf::Texture*, sf::Texture*, sf::Texture*, sf::Texture*);
+        Creep(int [][GRIDY], int, int, int, int, sf::Texture*, sf::Texture*, sf::Texture*, sf::Texture*, sf::Texture*, sf::Texture*, int);
         Creep();
         virtual ~Creep();
         //getters

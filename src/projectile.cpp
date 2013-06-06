@@ -17,12 +17,12 @@ Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Towe
             graphicSize = {10, 10};
             break;
         case 1: //1.1
-            image.setSize({2, 5});  //machine gun tower
-            graphicSize = {5, 5};
+            image.setSize({2, 5});  //normal
+            graphicSize = {10, 10};
             break;
         case 2: //1.2
-            image.setSize({4, 4});      //normal
-            graphicSize = {10, 10};
+            image.setSize({4, 4});      //laser
+            graphicSize = {5, 5};
             break;
         case 3: //1.3
             image.setSize({10, 10});    //buff tower
@@ -48,15 +48,15 @@ Projectile::Projectile(Creep * tempTarget, std::vector<Creep*>* tempCreeps, Towe
             image.setSize({4, 4});
             graphicSize = {120, 120};
             break;
-        case 9: //2.1                           //slow
+        case 9: //3.1                           //slow
             image.setSize({4, 4});
             graphicSize = {120, 120};
             break;
-        case 10: //2.2
+        case 10: //3.2
             image.setSize({4, 4});              //damage amp
             graphicSize = {120, 120};
             break;
-        case 11: //2.3
+        case 11: //3.3
             image.setSize({4, 4});              //damage
             graphicSize = {120, 120};
             break;

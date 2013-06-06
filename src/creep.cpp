@@ -4,7 +4,7 @@
 /*******************CONSTRUCTORS********************************/
 /***************************************************************/
 
-Creep::Creep(int temp[][GRIDY], int i, int tempType, int tempSpeed, int tempHp, sf::Texture * buff0, sf::Texture * buff1, sf::Texture * buff2, sf::Texture * buff3, sf::Texture * buff4, sf::Texture * tempBody)
+Creep::Creep(int temp[][GRIDY], int i, int tempType, int tempSpeed, int tempHp, sf::Texture * buff0, sf::Texture * buff1, sf::Texture * buff2, sf::Texture * buff3, sf::Texture * buff4, sf::Texture * tempBody, int tempSide)
 {
     side = i;
     distances = temp;
@@ -17,14 +17,17 @@ Creep::Creep(int temp[][GRIDY], int i, int tempType, int tempSpeed, int tempHp, 
     animation = 0;
     body.setTextureRect(sf::IntRect(animation, 0, body.getSize().x, body.getSize().y));
 
-    health.setFillColor(sf::Color::Red);
+    if (tempSide == 0)
+        health.setFillColor(sf::Color::Red);
+    else
+        health.setFillColor(sf::Color::Green);
     health.setSize({body.getSize().x, HEALTHHEIGHT});
     health.setPosition({body.getGlobalBounds().left, body.getGlobalBounds().top - health.getSize().y - HEALTHDISTANCE});
     healthOutline.setSize({body.getSize().x, HEALTHHEIGHT});
     healthOutline.setPosition(health.getPosition());
     healthOutline.setOutlineColor(sf::Color::Black);
     healthOutline.setOutlineThickness(1);
-    healthOutline.setFillColor(sf::Color::Transparent);
+    healthOutline.setFillColor(sf::Color::Black);
 
     if (side == 0)
     {
