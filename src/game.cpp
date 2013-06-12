@@ -544,6 +544,9 @@ void Game::newGame(Game::Players temp, sf::Color leftSelector, sf::Color rightSe
     if (mission == 4)
     {
         creepStats[0][0].amount = 0;
+        creepStats[0][1].amount = 0;
+        creepStats[0][2].amount = 0;
+        creepStats[0][3].amount = 0;
         setTutorial("Welcome to survival mode! Your objective is to defend for\nas long as possible. Enemy creeps will gain 50 hp every\nwave, instead of the usual 25. Only basic creeps will spawn.");
     }
 
