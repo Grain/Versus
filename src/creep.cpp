@@ -343,12 +343,6 @@ void Creep::buff(int tempType, int tempSeverity)
     {
         buffs[tempType].x = 3 * FPS;   //3 secs for debuffs
     }
-    if (tempType == 3)  //regen
-    {
-        buffs[tempType].y = (int)(maxHp * (tempSeverity / 100.0));
-    }
-    else
-    {
-        buffs[tempType].y = tempSeverity;
-    }
+
+    buffs[tempType].y = tempSeverity;
 }
