@@ -66,6 +66,8 @@ extern GameAudio gameAudio;
 extern Stats towerStats[3][4][4];
 extern std::string descriptions[12];
 
+extern sf::Font commonFont;
+
 const int XRES = 1024;
 const int YRES = 576;
 

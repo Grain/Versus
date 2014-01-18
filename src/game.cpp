@@ -22,6 +22,7 @@ Game::Game()
     background.setPosition(0, 0);
     background.setTexture(&backgroundTexture);
 
+    timer.setFont(commonFont);
     timer.setColor(sf::Color(128, 128, 128));
     timer.setCharacterSize(26);
     timer.setStyle(sf::Text::Bold);
@@ -66,6 +67,7 @@ Game::Game()
     pauseBackground.setSize({XRES, YRES});
     pauseBackground.setPosition({0, 0});
     pauseBackground.setFillColor(sf::Color(0, 0, 0, 128));
+    pauseText.setFont(commonFont);
     pauseText.setCharacterSize(30);
     pauseText.setColor(sf::Color::White);
     pauseText.setPosition(XRES / 2, 100);
@@ -139,6 +141,7 @@ Game::Game()
             creepOverlay[i][a].setFillColor(sf::Color(0, 0, 0, 128));
             creepOverlay[i][a].setPosition(gameButtons[i][8 + a].getPosition());
 
+            creepTime[i][a].setFont(commonFont);
             creepTime[i][a].setCharacterSize(14);
             creepTime[i][a].setColor(sf::Color::Black);
             creepTime[i][a].setString("");
@@ -146,6 +149,7 @@ Game::Game()
         }
 
         //money
+        moneyText[i].setFont(commonFont);
         moneyText[i].setCharacterSize(24);
         moneyText[i].setColor(sf::Color::Black);
         moneyText[i].setString("$100");
@@ -160,12 +164,14 @@ Game::Game()
         }
 
         //lives text
+        livesText[i].setFont(commonFont);
         livesText[i].setCharacterSize(18);
         livesText[i].setColor(sf::Color::Black);
         livesText[i].setString("Lives: 10");
         livesText[i].setPosition(moneyText[i].getPosition().x, 540);
 
         //notifications text
+        notifications[i].setFont(commonFont);
         notifications[i].setCharacterSize(24);
         notifications[i].setColor(sf::Color::Black);
         notifications[i].setString("test");
@@ -181,6 +187,7 @@ Game::Game()
         }
 
         //info text
+        info[i].setFont(commonFont);
         info[i].setCharacterSize(12);
         info[i].setColor(sf::Color::Black);
         info[i].setString("");
@@ -196,6 +203,7 @@ Game::Game()
     }
 
     //tutorial text
+    tutorial.setFont(commonFont);
     tutorial.setCharacterSize(16);
     tutorial.setColor(sf::Color::Black);
     tutorial.setPosition(XRES / 2 + 80, 450);

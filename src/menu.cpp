@@ -29,6 +29,7 @@ Menu::Menu()
     bindBackground.setSize({XRES, YRES});
     bindBackground.setPosition({0, 0});
     bindBackground.setFillColor(sf::Color(0, 0, 0, 128));
+    bindText.setFont(commonFont);
     bindText.setColor(sf::Color::White);
     bindText.setCharacterSize(30);
     bindText.setPosition({XRES / 2, YRES / 2});
@@ -212,12 +213,14 @@ Menu::Menu()
     singleMenu[4]->setVisible(false);
 
     //high score text
+    highScore.setFont(commonFont);
     highScore.setCharacterSize(20);
     highScore.setColor(sf::Color::Black);
     highScore.setPosition(450, 390);
     highScoreBackground.setFillColor(sf::Color::White);
 
     //tips
+    tips.setFont(commonFont);
     tips.setCharacterSize(16);
     tips.setColor(sf::Color::Black);
     tips.setPosition(XRES - 40, YRES - 40);

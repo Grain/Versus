@@ -15,6 +15,7 @@ Settings settings;
 GameAudio gameAudio;
 Stats towerStats[3][4][4];
 std::string descriptions[12];
+sf::Font commonFont;
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +31,8 @@ int main(int argc, char *argv[])
             settings.doubleBuffered = !settings.doubleBuffered;
         }
     }
+
+    commonFont.loadFromFile("arial.ttf");
 
     sf::RenderWindow window(sf::VideoMode(XRES, YRES), "Versus", sf::Style::Close);
 
